@@ -1,0 +1,4 @@
+{
+  "login": "nobus",
+  "direction": ["up", "down", "left", "right"]
+}

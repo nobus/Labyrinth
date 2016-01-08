@@ -1,0 +1,15 @@
+{
+  "allMap": [[]],
+  "changeMap": [{
+    "x": 0,
+    "y": 0,
+    "id": 0
+  }],
+  "changePosition": {
+    "login": "nobus",
+    "old_x": 0,
+    "old_y": 0,
+    "new_x": 1,
+    "new_y": 0
+  }
+}
