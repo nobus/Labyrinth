@@ -3,12 +3,28 @@
 <html lang='en'>
 
 <head>
+  <title>Test client</title>
+
+  <style>
+    .canvas-block {
+      border-style: outset;
+      float: left;
+    }
+    .console-block {
+      float: left;
+      width: 200px;
+      height: 700px;
+      overflow: auto;
+      background: #000;
+      color: #00ff00;
+    }
+  </style>
+
   <script src='http://code.jquery.com/jquery-1.11.3.min.js'></script>
   <!-- https://github.com/caleb531/jcanvas -->
   <script src='jcanvas.min.js'></script>
 
   <script>
-
     function GetURLParameter (sParam) {
       var sPageURL = decodeURIComponent(window.location.search.substring(1));
       var sURLVariables = sPageURL.split('&');
@@ -24,8 +40,23 @@
     }
 
     function AddMessageToConsole (message) {
-      var htmlString = $('#console').html() + message + '</br>';
+      var htmlString = $('#console').html() + '<p>' + message + '</p>';
       $('#console').html(htmlString);
+      var top = $('#console').get(0).scrollHeight;
+      $('#console').scrollTop(top);
+    }
+
+    function DrawSquare(color, y, x) {
+      var elemSize = 7;
+
+      $('#labyrinth').drawRect({
+        fillStyle: color,
+        x: x * elemSize,
+        y: y * elemSize,
+        width: elemSize,
+        height: elemSize,
+        fromCenter: false
+      });
     }
 
     function DrawMap (labMap) {
@@ -41,14 +72,7 @@
             var colorStyle = '#fff';
           }
 
-          $('#labyrinth').drawRect({
-            fillStyle: colorStyle,
-            x: ii * 5,
-            y: i * 5,
-            width: 5,
-            height: 5,
-            fromCenter: false
-          });
+          DrawSquare(colorStyle, i, ii);
         }
       }
     }
@@ -61,36 +85,15 @@
           var colorStyle = '#fff';
         }
 
-        $('#labyrinth').drawRect({
-          fillStyle: colorStyle,
-          x: item.x * 5,
-          y: item.y * 5,
-          width: 5,
-          height: 5,
-          fromCenter: false
-        });
+        DrawSquare(colorStyle, item.y, item.x);
       });
     }
 
     function ChangePosition(changePosition) {
-      $('#labyrinth').drawRect({
-        fillStyle: '#ff0000',
-        y: changePosition.y * 5,
-        x: changePosition.x * 5,
-        width: 5,
-        height: 5,
-        fromCenter: false
-      });
+      DrawSquare('#ff0000', changePosition.y, changePosition.x);
 
       if ('oldY' in changePosition && 'oldX' in changePosition) {
-        $('#labyrinth').drawRect({
-          fillStyle: '#fff',
-          y: changePosition.oldY * 5,
-          x: changePosition.oldX * 5,
-          width: 5,
-          height: 5,
-          fromCenter: false
-        });
+        DrawSquare('#fff', changePosition.oldY, changePosition.oldX);
       }
     }
 
@@ -157,11 +160,12 @@
 </head>
 
 <body>
-  Test client </br>
+  <div class="canvas-block">
+    <canvas id='labyrinth' width="700" height="700"></canvas> </br>
+  </div>
 
-  <canvas id='labyrinth' width="500" height="500"></canvas> </br>
+  <div id='console' class='console-block'></div>
 
-  <span id='console'></span>
 </body>
 
 </html>
