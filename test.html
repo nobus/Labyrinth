@@ -75,18 +75,18 @@
     function ChangePosition(changePosition) {
       $('#labyrinth').drawRect({
         fillStyle: '#ff0000',
-        x: changePosition.x * 5,
         y: changePosition.y * 5,
+        x: changePosition.x * 5,
         width: 5,
         height: 5,
         fromCenter: false
       });
 
-      if (changePosition.oldX && changePosition.oldY) {
+      if ('oldY' in changePosition && 'oldX' in changePosition) {
         $('#labyrinth').drawRect({
           fillStyle: '#fff',
-          x: changePosition.oldX * 5,
           y: changePosition.oldY * 5,
+          x: changePosition.oldX * 5,
           width: 5,
           height: 5,
           fromCenter: false
