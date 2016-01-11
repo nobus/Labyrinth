@@ -90,18 +90,25 @@
     }
 
     function ChangePosition(changePosition) {
-      DrawSquare('#00aa00', changePosition.y, changePosition.x);
+      var yourColor = '#00aa00';
+      var neighborColor = '#0000aa';
+
+      if (changePosition.login === myLogin) {
+        DrawSquare(yourColor, changePosition.y, changePosition.x);
+      } else {
+        DrawSquare(neighborColor, changePosition.y, changePosition.x);
+      }
 
       if ('oldY' in changePosition && 'oldX' in changePosition) {
         DrawSquare('#fff', changePosition.oldY, changePosition.oldX);
       }
     }
 
-    var login = GetURLParameter('login');
+    var myLogin = GetURLParameter('login');
     var socket = new WebSocket('ws://localhost:8080/');
 
     socket.onopen = function() {
-      socket.send(JSON.stringify({'login': login}));
+      socket.send(JSON.stringify({'login': myLogin}));
       AddMessageToConsole('Connection done.');
 
       $(document).keypress(function (event) {
@@ -119,7 +126,7 @@
           }
 
           if (direction) {
-            socket.send(JSON.stringify({'login': login, 'direction': direction}));
+            socket.send(JSON.stringify({'login': myLogin, 'direction': direction}));
           }
         }
 

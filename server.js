@@ -127,7 +127,8 @@ wss.on('connection', function(ws) {
     console.log('%s: received: %s', Date.now()/1000, rawMessage);
 
     var message = JSON.parse(rawMessage);
-    connPool[thisId]['login'] = message.login;
+    var login = message.login;
+    connPool[thisId]['login'] = login;
 
     if ('direction' in message && 'position' in connPool[thisId]) {
       // user would like changes his position and he has old position
@@ -136,6 +137,11 @@ wss.on('connection', function(ws) {
       if (new_position) {
         connPool[thisId]['position'] = new_position;
         resp = {'changePosition': new_position};
+        resp.changePosition.login = login;
+
+        resp = JSON.stringify(resp);
+        console.log('%s: send: %s', Date.now()/1000, resp);
+        wss.broadcast(resp);
       }
     } else {
       // user would like changes his position and he has not old position
@@ -144,14 +150,21 @@ wss.on('connection', function(ws) {
       var position = SearchStartPosition();
       connPool[thisId]['position'] = position;
 
-      resp = {'allMap': labMap, 'changePosition': {'x': position.x, 'y': position.y}};
+      resp = {'allMap': labMap, 'changePosition': {'x': position.x, 'y': position.y, 'login': login}};
+
+      resp = JSON.stringify(resp);
+      console.log('%s: send: %s', Date.now()/1000, resp);
+      ws.send(resp);
     }
 
+    /*
     if (resp) {
       resp = JSON.stringify(resp);
       console.log('%s: send: %s', Date.now()/1000, resp);
       ws.send(resp);
     }
+    */
+
   });
 
   ws.on('close', function() {
