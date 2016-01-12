@@ -13,25 +13,6 @@ function log(message) {
 
 /**
  *
- * @param wigth X
- * @param hight Y
- * @returns {Array} new map of the Labyrinth
- */
-function InitMap (wigth, hight) {
-  var labMap = [];
-
-  for (var i = 0; i < hight; i++) {
-    labMap.push(Array.apply(null, Array(wigth)).map(function(_, i) {return 0;}));
-  }
-
-  return labMap;
-}
-
-// create new map
-var labMap = InitMap(100, 100);
-
-/**
- *
  * @param min the lower limit of the range
  * @param max the upper limit of the range
  * @returns {number} random number between min and max
@@ -40,6 +21,60 @@ function GetRandom(min, max) {
   return Math.random() * (max - min + 1) + min;
 }
 
+function GetRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function CreateHorizontalLine (labMap, height, width, max) {
+  var startY = GetRandomInt(0, height - max);
+  var startX = GetRandomInt(0, width);
+  var length = GetRandomInt(2, max);
+
+  for (var i = 0; i < length; i++) {
+    labMap[startY][startX + i] = 1;
+  }
+}
+
+function CreateVerticalLine (labMap, height, width, max) {
+  var startY = GetRandomInt(0, height - max);
+  var startX = GetRandomInt(0, width);
+  var length = GetRandomInt(2, max);
+
+  for (var i = 0; i < length; i++) {
+    labMap[startY + i][startX] = 1;
+  }
+}
+
+
+/**
+ *
+ * @param height Y
+ * @param width X
+ * @returns {Array} new map of the Labyrinth
+ */
+function InitMap (height, width) {
+  var labMap = [];
+
+  for (var i = 0; i < height; i++) {
+    labMap.push(Array.apply(null, Array(width)).map(function (_, i) {
+      return 0;
+    }));
+  }
+
+  for (i = 0; i < 100; i++) {
+    if (i % 3 === 0) {
+      CreateHorizontalLine(labMap, height, width, 20);
+    }
+    if (i % 3 === 1) {
+      CreateVerticalLine(labMap, height, width, 20);
+    }
+  }
+
+  return labMap;
+}
+
+// create new map
+var labMap = InitMap(100, 100);
 
 /**
  * search start position for new user
@@ -91,8 +126,8 @@ const tmax = 9000;    // maximum delay for change the map
 setTimeout(function runThis() {
   log('Change the Map!');
 
-  var y = Math.floor(GetRandom(0, 99));
-  var x = Math.floor(GetRandom(0, 99));
+  var y = GetRandomInt(0, 99);
+  var x = GetRandomInt(0, 99);
   var elementId;
 
   if (labMap[y][x] === 1) {
