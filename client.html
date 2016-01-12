@@ -59,6 +59,17 @@
       });
     }
 
+    function DrawLine(color, startY, startX, endY, endX) {
+      var elemSize = 7;
+
+      $('#labyrinth').drawLine({
+        strokeStyle: color,
+        strokeWidth: elemSize,
+        x1: startX, y1: startY,
+        x2: endX, y2: endY
+      });
+    }
+
     function DrawMap (labMap) {
       for (var i = 0; i < labMap.length; i++) {
         var mapRow = labMap[i];
@@ -85,7 +96,13 @@
           var colorStyle = '#fff';
         }
 
-        DrawSquare(colorStyle, item.y, item.x);
+        for (var i = 0; i < item.length; i++) {
+          if (item.type === 'vertical') {
+            DrawSquare(colorStyle, item.startY + i, item.startX);
+          } else {
+            DrawSquare(colorStyle, item.startY, item.startX + i);
+          }
+        }
       });
     }
 

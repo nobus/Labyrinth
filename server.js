@@ -25,23 +25,30 @@ function GetRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function CreateHorizontalLine (labMap, height, width, max) {
-  var startY = GetRandomInt(0, height - max);
-  var startX = GetRandomInt(0, width);
-  var length = GetRandomInt(2, max);
 
-  for (var i = 0; i < length; i++) {
-    labMap[startY][startX + i] = 1;
+function GetLineParams (height, width, max) {
+  var ret = {};
+
+  ret.startY = GetRandomInt(0, height - max);
+  ret.startX = GetRandomInt(0, width);
+  ret.length = GetRandomInt(3, max);
+
+  return ret;
+}
+
+function CreateHorizontalLine (labMap, height, width, max) {
+  var params = GetLineParams(height, width, max);
+
+  for (var i = 0; i < params.length; i++) {
+    labMap[params.startY][params.startX + i] = 1;
   }
 }
 
 function CreateVerticalLine (labMap, height, width, max) {
-  var startY = GetRandomInt(0, height - max);
-  var startX = GetRandomInt(0, width);
-  var length = GetRandomInt(2, max);
+  var params = GetLineParams(height, width, max);
 
-  for (var i = 0; i < length; i++) {
-    labMap[startY + i][startX] = 1;
+  for (var i = 0; i < params.length; i++) {
+    labMap[params.startY + i][params.startX] = 1;
   }
 }
 
@@ -62,10 +69,10 @@ function InitMap (height, width) {
   }
 
   for (i = 0; i < 100; i++) {
-    if (i % 3 === 0) {
+    if (i % 2 === 0) {
       CreateHorizontalLine(labMap, height, width, 20);
     }
-    if (i % 3 === 1) {
+    if (i % 2 === 1) {
       CreateVerticalLine(labMap, height, width, 20);
     }
   }
@@ -126,6 +133,7 @@ const tmax = 9000;    // maximum delay for change the map
 setTimeout(function runThis() {
   log('Change the Map!');
 
+  /*
   var y = GetRandomInt(0, 99);
   var x = GetRandomInt(0, 99);
   var elementId;
@@ -138,12 +146,30 @@ setTimeout(function runThis() {
     labMap[y][x] = elementId;
   }
   // else that user === 3
+  */
 
-  if (elementId) {
-    // send to users command to change their maps
-    var changeMap = {'changeMap': [{'y': y, 'x': x, 'id': elementId}]};
-    wss.broadcast(changeMap);
+  var params = GetLineParams(100, 100, 20);
+  var elementId = GetRandomInt(0, 1);
+
+  if (GetRandomInt(0, 1) === 0) {
+    // horizontal line!
+    params.type = 'horizontal';
+
+    for (var i = 0; i < params.length; i++) {
+      labMap[params.startY][params.startX + i] = elementId;
+    }
+  } else {
+    // vertical line!
+    params.type = 'vertical';
+
+    for (var i = 0; i < params.length; i++) {
+      labMap[params.startY + i][params.startX] = elementId;
+    }
   }
+
+  // send to users command to change their maps
+  var changeMap = {'changeMap': [{'startY': params.startY, 'startX': params.startX, 'length': params.length, 'type': params.type, 'id': elementId}]};
+  wss.broadcast(changeMap);
 
   setTimeout(runThis, GetRandom(tmin, tmax));
 }, GetRandom(tmin, tmax));

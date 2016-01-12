@@ -1,8 +1,10 @@
 {
   "allMap": [[]],
   "changeMap": [{
-    "x": 0,
-    "y": 0,
+    "startY": 0,
+    "startX": 0,
+    "length": 3,
+    "type": "vertical",
     "id": 0
   }],
   "changePosition": {
