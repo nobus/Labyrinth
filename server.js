@@ -1,8 +1,15 @@
 
 // https://github.com/websockets/ws/
 var WebSocketServer = require('ws').Server;
-
 var wss = new WebSocketServer({ port: 8080 });
+
+/**
+ *
+ * @param message
+ */
+function log(message) {
+  console.log('%s: %s', Date.now() / 1000, message);
+}
 
 /**
  *
@@ -78,11 +85,11 @@ function GetNewPosition(curPosition, direction) {
 }
 
 var connPool = {};  // dictionary for user data
-var tmin = 1000;    // minimum delay for change the map
-var tmax = 9000;    // maximum delay for change the map
+const tmin = 1000;    // minimum delay for change the map
+const tmax = 9000;    // maximum delay for change the map
 
 setTimeout(function runThis() {
-  console.log(Date.now() / 1000);
+  log('Change the Map!');
 
   var y = Math.floor(GetRandom(0, 99));
   var x = Math.floor(GetRandom(0, 99));
@@ -100,15 +107,19 @@ setTimeout(function runThis() {
   if (elementId) {
     // send to users command to change their maps
     var changeMap = {'changeMap': [{'y': y, 'x': x, 'id': elementId}]};
-    wss.broadcast(JSON.stringify(changeMap));
+    wss.broadcast(changeMap);
   }
 
   setTimeout(runThis, GetRandom(tmin, tmax));
 }, GetRandom(tmin, tmax));
 
 wss.broadcast = function broadcast(data) {
+  if (wss.clients.length) {
+    data = JSON.stringify(data);
+    log('Send broadcast: ' + data);
+  }
+
   wss.clients.forEach(function each(client) {
-    console.log(data);
     client.send(data);
   });
 };
@@ -121,10 +132,9 @@ wss.on('connection', function(ws) {
 
   ws.on('message', function(rawMessage) {
     // we accept message from user!
-
     var resp; // it will be our response for user
 
-    console.log('%s: received: %s', Date.now()/1000, rawMessage);
+    log('Received: ' + rawMessage);
 
     var message = JSON.parse(rawMessage);
     var login = message.login;
@@ -139,41 +149,31 @@ wss.on('connection', function(ws) {
         resp = {'changePosition': new_position};
         resp.changePosition.login = login;
 
-        resp = JSON.stringify(resp);
-        console.log('%s: send: %s', Date.now()/1000, resp);
         wss.broadcast(resp);
       }
     } else {
       // user would like changes his position and he has not old position
       // because is connecting at server just now
-      console.log('New user!! %s, %d', message.login, thisId);
+      log('New user!! ' + message.login + ' '  + thisId);
       var position = SearchStartPosition();
       connPool[thisId]['position'] = position;
 
       resp = {'allMap': labMap, 'changePosition': {'x': position.x, 'y': position.y, 'login': login}};
 
       resp = JSON.stringify(resp);
-      console.log('%s: send: %s', Date.now()/1000, resp);
+      log('Send: %' + resp);
       ws.send(resp);
     }
-
-    /*
-    if (resp) {
-      resp = JSON.stringify(resp);
-      console.log('%s: send: %s', Date.now()/1000, resp);
-      ws.send(resp);
-    }
-    */
 
   });
 
   ws.on('close', function() {
-    console.log('Client %s disconnected.', connPool[thisId]['login']);
+    log('Client disconnected: ' + connPool[thisId]['login']);
     delete connPool[thisId];
   });
 
   ws.on('error', function(e) {
-    console.log('Client %s error: %s', connPool[thisId]['login'], e.message);
+    log('Client ' + connPool[thisId]['login'] + ' error: ' + e.message);
   });
 
 });
