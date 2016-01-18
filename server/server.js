@@ -17,35 +17,35 @@ function log(message) {
  * @param max the upper limit of the range
  * @returns {number} random number between min and max
  */
-function GetRandom(min, max) {
+function getRandom(min, max) {
   return Math.random() * (max - min + 1) + min;
 }
 
-function GetRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
+function getRandomInt(min, max) {
+  return Math.floor(getRandom(min, max));
 }
 
 
-function GetLineParams (height, width, max) {
+function getLineParams (height, width, max) {
   var ret = {};
 
-  ret.startY = GetRandomInt(0, height - max);
-  ret.startX = GetRandomInt(0, width);
-  ret.length = GetRandomInt(3, max);
+  ret.startY = getRandomInt(0, height - max);
+  ret.startX = getRandomInt(0, width);
+  ret.length = getRandomInt(3, max);
 
   return ret;
 }
 
-function CreateHorizontalLine (labMap, height, width, max) {
-  var params = GetLineParams(height, width, max);
+function createHorizontalLine (labMap, height, width, max) {
+  var params = getLineParams(height, width, max);
 
   for (var i = 0; i < params.length; i++) {
     labMap[params.startY][params.startX + i] = 1;
   }
 }
 
-function CreateVerticalLine (labMap, height, width, max) {
-  var params = GetLineParams(height, width, max);
+function createVerticalLine (labMap, height, width, max) {
+  var params = getLineParams(height, width, max);
 
   for (var i = 0; i < params.length; i++) {
     labMap[params.startY + i][params.startX] = 1;
@@ -59,7 +59,7 @@ function CreateVerticalLine (labMap, height, width, max) {
  * @param width X
  * @returns {Array} new map of the Labyrinth
  */
-function InitMap (height, width) {
+function initMap (height, width) {
   var labMap = [];
 
   for (var i = 0; i < height; i++) {
@@ -70,10 +70,10 @@ function InitMap (height, width) {
 
   for (i = 0; i < 100; i++) {
     if (i % 2 === 0) {
-      CreateHorizontalLine(labMap, height, width, 20);
+      createHorizontalLine(labMap, height, width, 20);
     }
     if (i % 2 === 1) {
-      CreateVerticalLine(labMap, height, width, 20);
+      createVerticalLine(labMap, height, width, 20);
     }
   }
 
@@ -81,13 +81,13 @@ function InitMap (height, width) {
 }
 
 // create new map
-var labMap = InitMap(100, 100);
+var labMap = initMap(100, 100);
 
 /**
  * search start position for new user
  * @returns {{y: number, x: number}}
  */
-function SearchStartPosition () {
+function searchStartPosition () {
   for (var i = 0; i < labMap.length; i++) {
     for (var ii = 0; ii < labMap[i].length; ii++) {
       if (labMap[i][ii] === 0) {
@@ -133,25 +133,10 @@ const tmax = 9000;    // maximum delay for change the map
 setTimeout(function runThis() {
   log('Change the Map!');
 
-  /*
-  var y = GetRandomInt(0, 99);
-  var x = GetRandomInt(0, 99);
-  var elementId;
+  var params = getLineParams(100, 100, 20);
+  var elementId = getRandomInt(0, 1);
 
-  if (labMap[y][x] === 1) {
-    elementId = 0;
-    labMap[y][x] = elementId;
-  } else if (labMap[y][x] === 0) {
-    elementId = 1;
-    labMap[y][x] = elementId;
-  }
-  // else that user === 3
-  */
-
-  var params = GetLineParams(100, 100, 20);
-  var elementId = GetRandomInt(0, 1);
-
-  if (GetRandomInt(0, 1) === 0) {
+  if (getRandomInt(0, 1) === 0) {
     // horizontal line!
     params.type = 'horizontal';
 
@@ -171,8 +156,8 @@ setTimeout(function runThis() {
   var changeMap = {'changeMap': [{'startY': params.startY, 'startX': params.startX, 'length': params.length, 'type': params.type, 'id': elementId}]};
   wss.broadcast(changeMap);
 
-  setTimeout(runThis, GetRandom(tmin, tmax));
-}, GetRandom(tmin, tmax));
+  setTimeout(runThis, getRandom(tmin, tmax));
+}, getRandom(tmin, tmax));
 
 wss.broadcast = function broadcast(data) {
   if (wss.clients.length) {
@@ -216,7 +201,7 @@ wss.on('connection', function(ws) {
       // user would like changes his position and he has not old position
       // because is connecting at server just now
       log('New user!! ' + message.login + ' '  + thisId);
-      var position = SearchStartPosition();
+      var position = searchStartPosition();
       connPool[thisId]['position'] = position;
 
       resp = {'allMap': labMap, 'changePosition': {'x': position.x, 'y': position.y, 'login': login}};
