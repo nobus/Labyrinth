@@ -6,5 +6,5 @@ Quick start:
 - cd Labyrinth/server
 - npm install
 - node ./server.js
-- In browser open URL file:///path_to_dir_of_Labyrinth/client.html?login=your_nick
+- In browser open URL file:///path_to_dir_of_Labyrinth/client/client.html?login=your_nick
 - Profit!!!1
