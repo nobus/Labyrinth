@@ -8,8 +8,7 @@ const wss = new WebSocketServer({ port: 8080 });
  * @param message
  */
 function log(message) {
-  const curTs = Date.now() / 1000
-  console.log(`${curTs}: ${message}`);
+  console.log(`${Date.now() / 1000}: ${message}`);
 }
 
 /**
