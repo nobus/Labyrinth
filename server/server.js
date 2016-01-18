@@ -114,7 +114,7 @@ const offsets = {
  *          or undefined if block ahead
  * @constructor
  */
-function GetNewPosition(curPosition, direction) {
+function getNewPosition(curPosition, direction) {
   const offset = offsets[direction];
 
   const newY = curPosition.y + offset.y;
@@ -128,8 +128,8 @@ function GetNewPosition(curPosition, direction) {
 }
 
 var connPool = {};  // dictionary for user data
-const tmin = 1000;    // minimum delay for change the map
-const tmax = 9000;    // maximum delay for change the map
+const tmin = 1000;  // minimum delay for change the map
+const tmax = 9000;  // maximum delay for change the map
 
 setTimeout(function runThis() {
   log('Change the Map!');
@@ -154,7 +154,17 @@ setTimeout(function runThis() {
   }
 
   // send to users command to change their maps
-  const changeMap = {'changeMap': [{'startY': params.startY, 'startX': params.startX, 'length': params.length, 'type': params.type, 'id': elementId}]};
+  const changeMap = {
+    'changeMap': [
+      {
+        'startY': params.startY,
+        'startX': params.startX,
+        'length': params.length,
+        'type': params.type,
+        'id': elementId}
+    ]
+  };
+
   wss.broadcast(changeMap);
 
   setTimeout(runThis, getRandom(tmin, tmax));
@@ -174,39 +184,54 @@ wss.broadcast = function broadcast(data) {
 var clientId = 0;
 
 wss.on('connection', function(ws) {
-  const thisId = ++clientId;  // increment id counter
-  connPool[thisId] = {};    // set up structure for this connection
+  // increment id counter
+  const thisId = ++clientId;
 
+  // set up structure for this connection
+  connPool[thisId] = {};
+
+  // we accept message from user!
   ws.on('message', function(rawMessage) {
-    // we accept message from user!
-    var resp; // it will be our response for user
+    // it will be our response for user
+    var resp;
 
     log(`Received: ${rawMessage}`);
 
     const message = JSON.parse(rawMessage);
     connPool[thisId]['login'] = message.login;
 
-    if ('direction' in message && 'position' in connPool[thisId]) {
+    if (message.direction && 'position' in connPool[thisId]) {
       // user would like changes his position and he has old position
-      const new_position = GetNewPosition(connPool[thisId]['position'], message.direction);
+      const new_position = getNewPosition(connPool[thisId]['position'], message.direction);
 
       if (new_position) {
         connPool[thisId]['position'] = new_position;
+
         resp = {'changePosition': new_position};
         resp.changePosition.login = message.login;
 
         wss.broadcast(resp);
       }
     } else {
-      // user would like changes his position and he has not old position
-      // because is connecting at server just now
+      /**
+       * user would like changes his position and he has not old position
+       * because is connecting at server just now
+       */
       log(`New user!! ${message.login} ${thisId}`);
       const position = searchStartPosition();
       connPool[thisId]['position'] = position;
 
-      resp = {'allMap': labMap, 'changePosition': {'x': position.x, 'y': position.y, 'login': message.login}};
+      resp = {
+        allMap: labMap,
+        changePosition: {
+          x: position.x,
+          y: position.y,
+          login: message.login
+        }
+      };
 
       resp = JSON.stringify(resp);
+
       log(`Send: ${resp}`);
       ws.send(resp);
     }
