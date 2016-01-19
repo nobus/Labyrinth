@@ -42,7 +42,7 @@ function getLineParams (height, width, max) {
 function createHorizontalLine (labMap, height, width, max) {
   const params = getLineParams(height, width, max);
 
-  for (var i = 0; i < params.length; i++) {
+  for (let i = 0; i < params.length; i++) {
     labMap[params.startY][params.startX + i] = 1;
   }
 }
@@ -50,7 +50,7 @@ function createHorizontalLine (labMap, height, width, max) {
 function createVerticalLine (labMap, height, width, max) {
   const params = getLineParams(height, width, max);
 
-  for (var i = 0; i < params.length; i++) {
+  for (let i = 0; i < params.length; i++) {
     labMap[params.startY + i][params.startX] = 1;
   }
 }
@@ -63,15 +63,15 @@ function createVerticalLine (labMap, height, width, max) {
  * @returns {Array} new map of the Labyrinth
  */
 function initMap (height, width) {
-  var labMap = [];
+  let labMap = [];
 
-  for (var i = 0; i < height; i++) {
+  for (let i = 0; i < height; i++) {
     labMap.push(Array.apply(null, Array(width)).map(function (_, i) {
       return 0;
     }));
   }
 
-  for (i = 0; i < 100; i++) {
+  for (let i = 0; i < 100; i++) {
     if (i % 2 === 0) {
       createHorizontalLine(labMap, height, width, 20);
     }
@@ -91,8 +91,8 @@ const labMap = initMap(100, 100);
  * @returns {{y: number, x: number}}
  */
 function searchStartPosition () {
-  for (var i = 0; i < labMap.length; i++) {
-    for (var ii = 0; ii < labMap[i].length; ii++) {
+  for (let i = 0; i < labMap.length; i++) {
+    for (let ii = 0; ii < labMap[i].length; ii++) {
       if (labMap[i][ii] === 0) {
         return {'y': i, 'x': ii};
       }
@@ -199,9 +199,6 @@ wss.on('connection', function(ws) {
 
   // we accept message from user!
   ws.on('message', function(rawMessage) {
-    // it will be our response for user
-    var resp;
-
     log(`Received: ${rawMessage}`);
 
     const message = JSON.parse(rawMessage);
@@ -214,7 +211,7 @@ wss.on('connection', function(ws) {
       if (new_position) {
         connPool[thisId]['position'] = new_position;
 
-        resp = {'changePosition': new_position};
+        let resp = {'changePosition': new_position};
         resp.changePosition.login = message.login;
 
         wss.broadcast(resp);
@@ -228,7 +225,7 @@ wss.on('connection', function(ws) {
       const position = searchStartPosition();
       connPool[thisId]['position'] = position;
 
-      resp = {
+      let resp = {
         allMap: labMap,
         changePosition: {
           x: position.x,
