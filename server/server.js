@@ -1,4 +1,7 @@
 
+'use strict';
+
+
 // https://github.com/websockets/ws/
 const WebSocketServer = require('ws').Server;
 const wss = new WebSocketServer({ port: 8080 });
@@ -88,8 +91,8 @@ const labMap = initMap(100, 100);
  * @returns {{y: number, x: number}}
  */
 function searchStartPosition () {
-  for (const i = 0; i < labMap.length; i++) {
-    for (const ii = 0; ii < labMap[i].length; ii++) {
+  for (var i = 0; i < labMap.length; i++) {
+    for (var ii = 0; ii < labMap[i].length; ii++) {
       if (labMap[i][ii] === 0) {
         return {'y': i, 'x': ii};
       }
@@ -126,9 +129,14 @@ function getNewPosition(curPosition, direction) {
   }
 }
 
-var connPool = {};  // dictionary for user data
-const tmin = 1000;  // minimum delay for change the map
-const tmax = 9000;  // maximum delay for change the map
+// dictionary for user data
+var connPool = {};
+
+// minimum delay for change the map
+const tmin = 1000;
+
+// maximum delay for change the map
+const tmax = 9000;
 
 setTimeout(function runThis() {
   log('Change the Map!');
@@ -140,14 +148,14 @@ setTimeout(function runThis() {
     // horizontal line!
     params.type = 'horizontal';
 
-    for (var i = 0; i < params.length; i++) {
+    for (let i = 0; i < params.length; i++) {
       labMap[params.startY][params.startX + i] = elementId;
     }
   } else {
     // vertical line!
     params.type = 'vertical';
 
-    for (var i = 0; i < params.length; i++) {
+    for (let i = 0; i < params.length; i++) {
       labMap[params.startY + i][params.startX] = elementId;
     }
   }
