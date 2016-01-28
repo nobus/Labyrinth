@@ -4,7 +4,7 @@
 
 // https://github.com/websockets/ws/
 const WebSocketServer = require('ws').Server;
-const wss = new WebSocketServer({ port: 8080 });
+const wss = new WebSocketServer({ port: 8081 });
 
 /**
  *
@@ -124,7 +124,12 @@ function getNewPosition(curPosition, direction) {
 
   if (newX >= 0 && newX < labMap.length && newY >= 0 && newY < labMap.length) {
     if (labMap[newY][newX] === 0) {
-      return {'y': newY, 'x': newX, 'oldY': curPosition.y, 'oldX': curPosition.x};
+      return {
+        'y': newY,
+        'x': newX,
+        'oldY': curPosition.y,
+        'oldX': curPosition.x,
+        'direction': direction};
     }
   }
 }
