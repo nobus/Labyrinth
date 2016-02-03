@@ -112,7 +112,7 @@ const offsets = {
  *
  * @param curPosition {y, x} current user position
  * @param direction 'up', or 'down', or 'left', or 'right'
- * @returns {{y: *, x: *, oldY: *, oldX: *}} new and old position
+ * @returns {{y: *, x: *, direction: *}} new position and direction
  *          or undefined if block ahead
  * @constructor
  */
@@ -127,8 +127,6 @@ function getNewPosition(curPosition, direction) {
       return {
         'y': newY,
         'x': newX,
-        'oldY': curPosition.y,
-        'oldX': curPosition.x,
         'direction': direction};
     }
   }
