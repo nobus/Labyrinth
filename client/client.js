@@ -19,7 +19,9 @@ $(document).ready(function() {
   animate();
 
   var myLogin = getURLParameter('login');
-  var socket = new WebSocket('ws://localhost:8081/');
+  var host = window.document.location.host.replace(/:.*/, '');
+
+  var socket = new WebSocket('ws://' + host + ':8081/');
 
   function animate() {
     requestAnimationFrame(animate);
