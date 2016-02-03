@@ -8,5 +8,5 @@ Quick start:
 - node ./server.js
 - install some web server (for example, we have labyrinth.conf for nginx)
 - edit configuration and start your web server
-- in browser open client (for example http://localhost:8000/?login=your_nick)
+- in browser open client (for example http://localhost:8000/?login=your_nick )
 - Profit!!!1
