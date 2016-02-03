@@ -6,5 +6,7 @@ Quick start:
 - cd Labyrinth/server
 - npm install
 - node ./server.js
-- In browser open URL file:///path_to_dir_of_Labyrinth/client/client.html?login=your_nick
+- install some web server (for example, we have labyrinth.conf for nginx)
+- edit configuration and start your web server
+- in browser open client (for example http:///localhost:8000/?login=your_nick)
 - Profit!!!1
