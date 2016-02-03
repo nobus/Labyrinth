@@ -109,21 +109,26 @@ $(document).ready(function() {
     });
   }
 
+  function createPlayerSprite(login) {
+    var playerSprite = PIXI.Sprite.fromImage('img/player.png');
+
+    if (login === myLogin) {
+      playerSprite.y = 320;
+      playerSprite.x = 320;
+
+      stage.addChild(playerSprite);
+    } else {
+      mapContainer.addChild(playerSprite);
+    }
+
+    return playerSprite;
+  }
+
   function changePosition(changePosition) {
     var login = changePosition.login;
 
     if (playerSprites[login] === undefined) {
-      var playerSprite = PIXI.Sprite.fromImage('img/player.png');
-      playerSprites[login] = playerSprite;
-
-      if (login === myLogin) {
-        playerSprite.y = 320;
-        playerSprite.x = 320;
-
-        stage.addChild(playerSprite);
-      } else {
-        mapContainer.addChild(playerSprite);
-      }
+      playerSprites[login] = createPlayerSprite(login);
     }
 
     if (login === myLogin) {
