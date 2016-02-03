@@ -1,0 +1,21 @@
+{
+  "name": "labyrinth",
+  "version": "0.0.1",
+  "description": "Roguelike MMO Labyrinth",
+  "license": "MIT",
+  "author": "Maks Klimin",
+  "contributors": [
+    {
+      "name": "Maks Klimin",
+      "email": "meganobus@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nobus/Labyrinth.git"
+  },
+  "main": "server/server.js",
+  "dependencies": {
+    "ws": "^1.0.0"
+  }
+}
