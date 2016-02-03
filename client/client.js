@@ -124,16 +124,38 @@ $(document).ready(function() {
     return playerSprite;
   }
 
+  function moveMapAroundPlayer(direction) {
+    if (direction === 'up') {
+      mapContainer.y += 32;
+    }
+
+    if (direction === 'down') {
+      mapContainer.y -= 32;
+    }
+
+    if (direction === 'left') {
+      mapContainer.x += 32;
+    }
+
+    if (direction === 'right') {
+      mapContainer.x -= 32;
+    }
+  }
+
   function changePosition(changePosition) {
     var login = changePosition.login;
 
     if (playerSprites[login] === undefined) {
       playerSprites[login] = createPlayerSprite(login);
+
+      mapContainer.y = changePosition.y + 320;
+      mapContainer.x = changePosition.x + 320;
     }
 
     if (login === myLogin) {
-      mapContainer.x = changePosition.x * 32;
-      mapContainer.y = changePosition.y * 32;
+      if (changePosition.direction) {
+        moveMapAroundPlayer(changePosition.direction);
+      }
     } else {
       playerSprites[login].y = changePosition.y * 32;
       playerSprites[login].x = changePosition.x * 32;
