@@ -113,24 +113,25 @@ $(document).ready(function() {
     var login = changePosition.login;
 
     if (playerSprites[login] === undefined) {
-      playerSprites[login] = PIXI.Sprite.fromImage('img/player.png');
+      var playerSprite = PIXI.Sprite.fromImage('img/player.png');
+      playerSprites[login] = playerSprite;
 
       if (login === myLogin) {
-        playerSprites[login].y = 320;
-        playerSprites[login].x = 320;
-      }
+        playerSprite.y = 320;
+        playerSprite.x = 320;
 
-      stage.addChild(playerSprites[login]);
+        stage.addChild(playerSprite);
+      } else {
+        mapContainer.addChild(playerSprite);
+      }
     }
 
     if (login === myLogin) {
       mapContainer.x = changePosition.x * 32;
       mapContainer.y = changePosition.y * 32;
-
     } else {
       playerSprites[login].y = changePosition.y * 32;
       playerSprites[login].x = changePosition.x * 32;
-
     }
 
   }
