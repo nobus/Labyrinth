@@ -17,5 +17,8 @@
   "main": "server/server.js",
   "dependencies": {
     "ws": "^1.0.0"
+  },
+  "scripts": {
+    "start": "node server/server.js"
   }
 }
