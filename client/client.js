@@ -111,19 +111,25 @@ $(document).ready(function() {
     });
   }
 
-  function createPlayerSprite(login) {
+  function createPlayerSprite(login, y, x) {
     var playerSprite = PIXI.Sprite.fromImage('img/player.png');
+    playerSprites[login] = playerSprite;
 
     if (login === myLogin) {
       playerSprite.y = 320;
       playerSprite.x = 320;
 
       stage.addChild(playerSprite);
+      setMapAroundPlayer(y, x);
     } else {
       mapContainer.addChild(playerSprite);
+      movePlayer(login, y, x);
     }
+  }
 
-    return playerSprite;
+  function setMapAroundPlayer(y, x) {
+    mapContainer.y = y + 320;
+    mapContainer.x = x + 320;
   }
 
   function moveMapAroundPlayer(direction) {
@@ -144,25 +150,17 @@ $(document).ready(function() {
     }
   }
 
-  function changePosition(changePosition) {
-    var login = changePosition.login;
+  function movePlayer(login, y, x) {
+    playerSprites[login].y = y * 32;
+    playerSprites[login].x = x * 32;
+  }
 
-    if (playerSprites[login] === undefined) {
-      playerSprites[login] = createPlayerSprite(login);
-
-      mapContainer.y = changePosition.y + 320;
-      mapContainer.x = changePosition.x + 320;
-    }
-
+  function changePosition(login, direction, y, x) {
     if (login === myLogin) {
-      if (changePosition.direction) {
-        moveMapAroundPlayer(changePosition.direction);
-      }
+      moveMapAroundPlayer(direction);
     } else {
-      playerSprites[login].y = changePosition.y * 32;
-      playerSprites[login].x = changePosition.x * 32;
+      movePlayer(login, y, x);
     }
-
   }
 
   socket.onopen = function () {
@@ -214,7 +212,16 @@ $(document).ready(function() {
     }
 
     if (message.changePosition) {
-      changePosition(message.changePosition);
+      var login = message.changePosition.login;
+      var y = message.changePosition.y;
+      var x = message.changePosition.x;
+
+      if (playerSprites[login] === undefined) {
+        createPlayerSprite(login, y, x);
+      } else {
+        var direction = message.changePosition.direction;
+        changePosition(login, direction, y, x);
+      }
     }
   };
 
