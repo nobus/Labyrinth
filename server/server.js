@@ -33,7 +33,7 @@ function getLineParams (height, width, max) {
   const ret = {};
 
   ret.startY = getRandomInt(0, height - max);
-  ret.startX = getRandomInt(0, width);
+  ret.startX = getRandomInt(0, width - max);
   ret.length = getRandomInt(3, max);
 
   return ret;
@@ -71,12 +71,12 @@ function initMap (height, width) {
     }));
   }
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 300; i++) {
     if (i % 2 === 0) {
-      createHorizontalLine(labMap, height, width, 20);
+      createHorizontalLine(labMap, height, width, 10);
     }
     if (i % 2 === 1) {
-      createVerticalLine(labMap, height, width, 20);
+      createVerticalLine(labMap, height, width, 10);
     }
   }
 
