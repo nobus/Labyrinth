@@ -1,3 +1,4 @@
+'use strict';
 
 $(document).ready(function() {
   var globalMap = [];
@@ -33,7 +34,7 @@ $(document).ready(function() {
     var sURLVariables = sPageURL.split('&');
     var sParameterName;
 
-    for (i = 0; i < sURLVariables.length; i++) {
+    for (var i = 0; i < sURLVariables.length; i++) {
       sParameterName = sURLVariables[i].split('=');
 
       if (sParameterName[0] === sParam) {
