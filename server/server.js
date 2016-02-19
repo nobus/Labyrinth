@@ -2,6 +2,15 @@
 'use strict';
 
 
+module.exports = {
+  getRandom: getRandom,
+  getRandomInt: getRandomInt,
+  getLineParams: getLineParams,
+  initMap: initMap,
+  searchStartPosition: searchStartPosition
+};
+
+
 // https://github.com/websockets/ws/
 const WebSocketServer = require('ws').Server;
 const wss = new WebSocketServer({ port: 8081 });
