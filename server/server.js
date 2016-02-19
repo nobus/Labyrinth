@@ -27,17 +27,31 @@ function log(message) {
  *
  * @param min the lower limit of the range
  * @param max the upper limit of the range
- * @returns {number} random number between min and max
+ * @returns {number} random float number between min and max
  */
 function getRandom(min, max) {
   return Math.random() * (max - min + 1) + min;
 }
 
+
+/**
+ *
+ * @param min the lower limit of the range
+ * @param max the upper limit of the range
+ * @returns {number} random int number between min and max
+ */
 function getRandomInt(min, max) {
   return Math.floor(getRandom(min, max));
 }
 
 
+/**
+ *
+ * @param height - height of the game Map
+ * @param width - width of the game Map
+ * @param max - maximum line's length
+ * @returns {Object} where startY and startX - start point of the line
+ */
 function getLineParams (height, width, max) {
   const ret = {};
 
@@ -48,6 +62,14 @@ function getLineParams (height, width, max) {
   return ret;
 }
 
+
+/**
+ * draw horizontal line on the Map
+ * @param labMap - Object of the Map
+ * @param height - height of the game Map
+ * @param width - width of the game Map
+ * @param max - maximum line's length
+ */
 function createHorizontalLine (labMap, height, width, max) {
   const params = getLineParams(height, width, max);
 
@@ -56,6 +78,14 @@ function createHorizontalLine (labMap, height, width, max) {
   }
 }
 
+
+/**
+ * draw vertical line on the Map
+ * @param labMap - Object of the Map
+ * @param height - height of the game Map
+ * @param width - width of the game Map
+ * @param max - maximum line's length
+ */
 function createVerticalLine (labMap, height, width, max) {
   const params = getLineParams(height, width, max);
 
