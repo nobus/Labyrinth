@@ -68,7 +68,7 @@ describe('server', function () {
       let labMap = server.initMap(mapY, mapX);
       let pos = server.searchStartPosition();
       let mapElem = labMap[pos.y][pos.x];
-      
+
       assert(mapElem === 0, 'return true position');
 
     });
