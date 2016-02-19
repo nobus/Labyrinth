@@ -19,7 +19,8 @@
     "ws": "^1.0.0"
   },
   "devDependencies": {
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "chai": "^1.9.1"
   },
   "scripts": {
     "start": "node server/server.js"
