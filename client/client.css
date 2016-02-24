@@ -1,13 +1,15 @@
 .canvas-block {
-    border-style: outset;
     float: left;
+    width: 55%;
+    border-style: outset;
 }
 
-.backpack-block {
+.backpack-block, .chat-block {
     float: left;
-    width: 200px;
-    height: 700px;
+    width: 20%;
+    height: 90%;
     overflow: auto;
     background: #000;
     color: #00ff00;
+    border-style: outset;
 }

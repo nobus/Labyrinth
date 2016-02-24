@@ -6,7 +6,14 @@ $(document).ready(function() {
   var playerSprites = {};
 
   var stage = new PIXI.Container();
-  var renderer = PIXI.autoDetectRenderer(640, 640);
+
+  var canvasWidth = $('.canvas-block').width();
+  var canvasHeight = $(window).height() - ($(window).height() * 0.05);
+
+  var sideLength = Math.floor((canvasWidth < canvasHeight) ? canvasWidth: canvasHeight);
+  var scale = sideLength / 640;
+
+  var renderer = PIXI.autoDetectRenderer(sideLength, sideLength);
 
   var mapContainer = new PIXI.Container();
 
@@ -60,8 +67,9 @@ $(document).ready(function() {
         }
 
         if (mapSprite) {
-          mapSprite.x = 32 * ii;
-          mapSprite.y = 32 * i;
+          mapSprite.scale.set(scale);
+          mapSprite.x = 32 * ii * scale;
+          mapSprite.y = 32 * i * scale;
 
           mapContainer.addChild(mapSprite);
 
@@ -81,6 +89,8 @@ $(document).ready(function() {
         } else if (item.id === 0) {
           mapSprite = PIXI.Sprite.fromImage("img/ground.png");
         }
+
+        mapSprite.scale.set(scale);
 
         var y = item.startY;
         var x = item.startX;
@@ -107,11 +117,12 @@ $(document).ready(function() {
 
   function createPlayerSprite(login, y, x) {
     var playerSprite = PIXI.Sprite.fromImage('img/player.png');
+    playerSprite.scale.set(scale);
     playerSprites[login] = playerSprite;
 
     if (login === myLogin) {
-      playerSprite.y = 320;
-      playerSprite.x = 320;
+      playerSprite.y = 320 * scale;
+      playerSprite.x = 320 * scale;
 
       stage.addChild(playerSprite);
       setMapAroundPlayer(y, x);
@@ -122,31 +133,31 @@ $(document).ready(function() {
   }
 
   function setMapAroundPlayer(y, x) {
-    mapContainer.y = y + 320;
-    mapContainer.x = x + 320;
+    mapContainer.y = y + 320 * scale;
+    mapContainer.x = x + 320 * scale;
   }
 
   function moveMapAroundPlayer(direction) {
     if (direction === 'up') {
-      mapContainer.y += 32;
+      mapContainer.y += 32 * scale;
     }
 
     if (direction === 'down') {
-      mapContainer.y -= 32;
+      mapContainer.y -= 32 * scale;
     }
 
     if (direction === 'left') {
-      mapContainer.x += 32;
+      mapContainer.x += 32 * scale;
     }
 
     if (direction === 'right') {
-      mapContainer.x -= 32;
+      mapContainer.x -= 32 * scale;
     }
   }
 
   function movePlayer(login, y, x) {
-    playerSprites[login].y = y * 32;
-    playerSprites[login].x = x * 32;
+    playerSprites[login].y = y * 32 * scale;
+    playerSprites[login].x = x * 32 * scale;
   }
 
   function changePosition(login, direction, y, x) {
