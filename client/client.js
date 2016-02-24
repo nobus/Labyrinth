@@ -43,13 +43,6 @@ $(document).ready(function() {
     }
   }
 
-  function addMessageToConsole(message) {
-    var htmlString = $('#console').html() + '<p>' + message + '</p>';
-    $('#console').html(htmlString);
-    var top = $('#console').get(0).scrollHeight;
-    $('#console').scrollTop(top);
-  }
-
   function drawMap(labMap) {
     for (var i = 0; i < labMap.length; i++) {
       globalMap.push([]);
@@ -166,7 +159,7 @@ $(document).ready(function() {
 
   socket.onopen = function () {
     socket.send(JSON.stringify({'login': myLogin}));
-    addMessageToConsole('Connection done.');
+    console.log('Connection done.');
 
     $(document).keypress(function (event) {
       if (socket) {
@@ -192,16 +185,16 @@ $(document).ready(function() {
 
   socket.onclose = function (event) {
     if (event.wasClean) {
-      addMessageToConsole('Connection closed.');
+      console.log('Connection closed.');
     } else {
-      addMessageToConsole('Connection broken.'); // for example, server died
+      console.log('Connection broken.'); // for example, server died
     }
-    addMessageToConsole('Code: ' + event.code + ' reason: ' + event.reason);
+    console.log('Code: ' + event.code + ' reason: ' + event.reason);
   };
 
   socket.onmessage = function (event) {
     var rawMessage = event.data;
-    addMessageToConsole('Data received: ' + rawMessage.length);
+    console.log('Data received: ' + rawMessage.length);
     var message = JSON.parse(rawMessage);
 
     if (message.allMap) {
@@ -227,7 +220,7 @@ $(document).ready(function() {
   };
 
   socket.onerror = function (error) {
-    addMessageToConsole('Error ' + error.message);
+    console.log('Error ' + error.message);
   };
 
 });
