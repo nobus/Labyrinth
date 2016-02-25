@@ -1,8 +1,6 @@
 'use strict';
 
 $(document).ready(function() {
-  var playerSprites = {};
-
   var stage = new PIXI.Container();
 
   var canvasWidth = $(window).width() * 0.6;
@@ -60,33 +58,11 @@ $(document).ready(function() {
     $('.chat-block').scrollTop(top);
   }
 
-  function createPlayerSprite(login, y, x) {
-    var playerSprite = PIXI.Sprite.fromImage('img/player.png');
-    playerSprite.scale.set(scale);
-    playerSprites[login] = playerSprite;
-
-    if (login === myLogin) {
-      playerSprite.y = 320 * scale;
-      playerSprite.x = 320 * scale;
-
-      stage.addChild(playerSprite);
-      setMapAroundPlayer(mapContainer, y, x, scale);
-    } else {
-      mapContainer.addChild(playerSprite);
-      movePlayer(login, y, x);
-    }
-  }
-
-  function movePlayer(login, y, x) {
-    playerSprites[login].y = y * 32 * scale;
-    playerSprites[login].x = x * 32 * scale;
-  }
-
   function changePosition(login, direction, y, x) {
     if (login === myLogin) {
       moveMapAroundPlayer(mapContainer, direction, scale);
     } else {
-      movePlayer(login, y, x);
+      movePlayer(login, y, x, scale);
     }
   }
 
@@ -144,7 +120,7 @@ $(document).ready(function() {
       var x = message.changePosition.x;
 
       if (playerSprites[login] === undefined) {
-        createPlayerSprite(login, y, x);
+        createPlayerSprite(login, myLogin, y, x, stage, mapContainer, scale);
       } else {
         var direction = message.changePosition.direction;
         changePosition(login, direction, y, x);
