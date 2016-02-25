@@ -7,8 +7,8 @@ $(document).ready(function() {
 
   var stage = new PIXI.Container();
 
-  var canvasWidth = $('.canvas-block').width();
-  var canvasHeight = $(window).height() - ($(window).height() * 0.05);
+  var canvasWidth = $(window).width() * 0.6;
+  var canvasHeight = $(window).height() * 0.95;
 
   var sideLength = Math.floor((canvasWidth < canvasHeight) ? canvasWidth: canvasHeight);
   var scale = sideLength / 640;
