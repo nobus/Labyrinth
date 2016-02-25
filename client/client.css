@@ -6,7 +6,7 @@
 .backpack-block, .chat-block {
     float: left;
     width: 20%;
-    height: 90%;
+    height: 500px;
     overflow: auto;
     background: #000;
     color: #00ff00;
