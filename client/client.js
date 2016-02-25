@@ -24,6 +24,10 @@ $(document).ready(function() {
 
   $('.canvas-block').append(renderer.view);
 
+  $('.chat-block').draggable();
+  $('.backpack-block').draggable();
+  $('.canvas-block').draggable();
+
   animate();
 
   var myLogin = getURLParameter('login');
