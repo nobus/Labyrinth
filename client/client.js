@@ -180,13 +180,13 @@ $(document).ready(function() {
       if (socket) {
         var direction;
 
-        if (event.keyCode === 119) {          // w
+        if (event.charCode === 119) {          // w
           direction = 'up';
-        } else if (event.keyCode === 115) {   // s
+        } else if (event.charCode === 115) {   // s
           direction = 'down';
-        } else if (event.keyCode === 97) {    // a
+        } else if (event.charCode === 97) {    // a
           direction = 'left';
-        } else if (event.keyCode === 100) {   // d
+        } else if (event.charCode === 100) {   // d
           direction = 'right';
         }
 
