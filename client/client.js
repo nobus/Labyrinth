@@ -1,8 +1,6 @@
 'use strict';
 
 $(document).ready(function() {
-  var globalMap = [];
-
   var playerSprites = {};
 
   var stage = new PIXI.Container();
@@ -62,71 +60,6 @@ $(document).ready(function() {
     $('.chat-block').scrollTop(top);
   }
 
-  function drawMap(labMap) {
-    for (var i = 0; i < labMap.length; i++) {
-      globalMap.push([]);
-
-      var mapRow = labMap[i];
-
-      for (var ii = 0; ii < mapRow.length; ii++) {
-      var mapSprite;
-        var element = mapRow[ii];
-
-        if (element === 1) {
-          mapSprite = PIXI.Sprite.fromImage("img/wall.png");
-        } else if (element === 0) {
-          mapSprite = PIXI.Sprite.fromImage("img/ground.png");
-        }
-
-        if (mapSprite) {
-          mapSprite.scale.set(scale);
-          mapSprite.x = 32 * ii * scale;
-          mapSprite.y = 32 * i * scale;
-
-          mapContainer.addChild(mapSprite);
-
-          globalMap[i].push(mapSprite);
-        }
-      }
-    }
-  }
-
-  function changeMap(changeMap) {
-    changeMap.forEach(function (item) {
-      for (var i = 0; i < item.length; i++) {
-        var mapSprite;
-
-        if (item.id === 1) {
-          mapSprite = PIXI.Sprite.fromImage("img/wall.png");
-        } else if (item.id === 0) {
-          mapSprite = PIXI.Sprite.fromImage("img/ground.png");
-        }
-
-        mapSprite.scale.set(scale);
-
-        var y = item.startY;
-        var x = item.startX;
-
-        if (item.type === 'vertical') {
-          y += i;
-        } else {
-          x += i;
-        }
-
-        var oldMapSprite = globalMap[y][x];
-
-        mapSprite.x = oldMapSprite.x;
-        mapSprite.y = oldMapSprite.y;
-
-        mapContainer.removeChild(oldMapSprite);
-        mapContainer.addChild(mapSprite);
-
-        globalMap[y][x] = mapSprite;
-
-      }
-    });
-  }
-
   function createPlayerSprite(login, y, x) {
     var playerSprite = PIXI.Sprite.fromImage('img/player.png');
     playerSprite.scale.set(scale);
@@ -137,33 +70,10 @@ $(document).ready(function() {
       playerSprite.x = 320 * scale;
 
       stage.addChild(playerSprite);
-      setMapAroundPlayer(y, x);
+      setMapAroundPlayer(mapContainer, y, x, scale);
     } else {
       mapContainer.addChild(playerSprite);
       movePlayer(login, y, x);
-    }
-  }
-
-  function setMapAroundPlayer(y, x) {
-    mapContainer.y = y + 320 * scale;
-    mapContainer.x = x + 320 * scale;
-  }
-
-  function moveMapAroundPlayer(direction) {
-    if (direction === 'up') {
-      mapContainer.y += 32 * scale;
-    }
-
-    if (direction === 'down') {
-      mapContainer.y -= 32 * scale;
-    }
-
-    if (direction === 'left') {
-      mapContainer.x += 32 * scale;
-    }
-
-    if (direction === 'right') {
-      mapContainer.x -= 32 * scale;
     }
   }
 
@@ -174,7 +84,7 @@ $(document).ready(function() {
 
   function changePosition(login, direction, y, x) {
     if (login === myLogin) {
-      moveMapAroundPlayer(direction);
+      moveMapAroundPlayer(mapContainer, direction, scale);
     } else {
       movePlayer(login, y, x);
     }
@@ -221,11 +131,11 @@ $(document).ready(function() {
     var message = JSON.parse(rawMessage);
 
     if (message.allMap) {
-      drawMap(message.allMap);
+      drawMap(message.allMap, mapContainer, scale);
     }
 
     if (message.changeMap) {
-      changeMap(message.changeMap);
+      changeMap(message.changeMap, mapContainer, scale);
     }
 
     if (message.changePosition) {
