@@ -9,7 +9,7 @@ function drawMap(labMap, mapContainer, scale) {
     var mapRow = labMap[i];
 
     for (var ii = 0; ii < mapRow.length; ii++) {
-    var mapSprite;
+      var mapSprite;
       var element = mapRow[ii];
 
       if (element === 1) {
