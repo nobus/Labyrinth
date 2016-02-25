@@ -50,14 +50,6 @@ $(document).ready(function() {
     }
   }
 
-  function addMessageToChat(message) {
-    // for the future
-    var htmlString = $('.chat-block').html() + '<p>' + message + '</p>';
-    $('.chat-block').html(htmlString);
-    var top = $('.chat-block').get(0).scrollHeight;
-    $('.chat-block').scrollTop(top);
-  }
-
   function changePosition(login, direction, y, x) {
     if (login === myLogin) {
       moveMapAroundPlayer(mapContainer, direction, scale);
@@ -131,5 +123,4 @@ $(document).ready(function() {
   socket.onerror = function (error) {
     console.log('Error ' + error.message);
   };
-
 });
