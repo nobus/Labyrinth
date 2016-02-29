@@ -1,17 +1,17 @@
 'use strict';
 
 $(document).ready(function() {
-  var stage = new PIXI.Container();
+  const stage = new PIXI.Container();
 
-  var canvasWidth = $(window).width() * 0.6;
-  var canvasHeight = $(window).height() * 0.95;
+  const canvasWidth = $(window).width() * 0.6;
+  const canvasHeight = $(window).height() * 0.95;
 
-  var sideLength = Math.floor((canvasWidth < canvasHeight) ? canvasWidth: canvasHeight);
-  var scale = sideLength / 640;
+  const sideLength = Math.floor((canvasWidth < canvasHeight) ? canvasWidth: canvasHeight);
+  const scale = sideLength / 640;
 
-  var renderer = PIXI.autoDetectRenderer(sideLength, sideLength);
+  const renderer = PIXI.autoDetectRenderer(sideLength, sideLength);
 
-  var mapContainer = new PIXI.Container();
+  const mapContainer = new PIXI.Container();
 
   mapContainer.x = 0;
   mapContainer.y = 0;
@@ -26,10 +26,10 @@ $(document).ready(function() {
 
   animate();
 
-  var myLogin = getURLParameter('login');
-  var host = window.document.location.host.replace(/:.*/, '');
+  const myLogin = getURLParameter('login');
+  const host = window.document.location.host.replace(/:.*/, '');
 
-  var socket = new WebSocket('ws://' + host + ':8081/');
+  const socket = new WebSocket('ws://' + host + ':8081/');
 
   function animate() {
     requestAnimationFrame(animate);
@@ -37,11 +37,11 @@ $(document).ready(function() {
   }
 
   function getURLParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1));
-    var sURLVariables = sPageURL.split('&');
-    var sParameterName;
+    const sPageURL = decodeURIComponent(window.location.search.substring(1));
+    const sURLVariables = sPageURL.split('&');
+    let sParameterName;
 
-    for (var i = 0; i < sURLVariables.length; i++) {
+    for (let i = 0; i < sURLVariables.length; i++) {
       sParameterName = sURLVariables[i].split('=');
 
       if (sParameterName[0] === sParam) {
@@ -64,7 +64,7 @@ $(document).ready(function() {
 
     $(document).keypress(function (event) {
       if (socket) {
-        var direction;
+        let direction;
 
         if (event.charCode === 119) {          // w
           direction = 'up';
@@ -94,9 +94,9 @@ $(document).ready(function() {
   };
 
   socket.onmessage = function (event) {
-    var rawMessage = event.data;
+    const rawMessage = event.data;
     console.log('Data received: ' + rawMessage.length);
-    var message = JSON.parse(rawMessage);
+    const message = JSON.parse(rawMessage);
 
     if (message.allMap) {
       drawMap(message.allMap, mapContainer, scale);
@@ -107,14 +107,14 @@ $(document).ready(function() {
     }
 
     if (message.changePosition) {
-      var login = message.changePosition.login;
-      var y = message.changePosition.y;
-      var x = message.changePosition.x;
+      let login = message.changePosition.login;
+      let y = message.changePosition.y;
+      let x = message.changePosition.x;
 
       if (playerSprites[login] === undefined) {
         createPlayerSprite(login, myLogin, y, x, stage, mapContainer, scale);
       } else {
-        var direction = message.changePosition.direction;
+        let direction = message.changePosition.direction;
         changePosition(login, direction, y, x);
       }
     }

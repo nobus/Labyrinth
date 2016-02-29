@@ -1,14 +1,14 @@
 'use strict';
 
-var globalMap = [];
+const globalMap = [];
 
 function drawMap(labMap, mapContainer, scale) {
-  for (var i = 0; i < labMap.length; i++) {
+  for (let i = 0; i < labMap.length; i++) {
     globalMap.push([]);
 
-    var mapRow = labMap[i];
+    let mapRow = labMap[i];
 
-    for (var ii = 0; ii < mapRow.length; ii++) {
+    for (let ii = 0; ii < mapRow.length; ii++) {
       var mapSprite;
       var element = mapRow[ii];
 
@@ -33,7 +33,7 @@ function drawMap(labMap, mapContainer, scale) {
 
 function changeMap(changeMap, mapContainer, scale) {
   changeMap.forEach(function (item) {
-    for (var i = 0; i < item.length; i++) {
+    for (let i = 0; i < item.length; i++) {
       var mapSprite;
 
       if (item.id === 1) {
@@ -44,8 +44,8 @@ function changeMap(changeMap, mapContainer, scale) {
 
       mapSprite.scale.set(scale);
 
-      var y = item.startY;
-      var x = item.startX;
+      let y = item.startY;
+      let x = item.startX;
 
       if (item.type === 'vertical') {
         y += i;
@@ -53,7 +53,7 @@ function changeMap(changeMap, mapContainer, scale) {
         x += i;
       }
 
-      var oldMapSprite = globalMap[y][x];
+      let oldMapSprite = globalMap[y][x];
 
       mapSprite.x = oldMapSprite.x;
       mapSprite.y = oldMapSprite.y;

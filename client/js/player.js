@@ -3,7 +3,7 @@
 var playerSprites = {};
 
 function createPlayerSprite(login, myLogin, y, x, stage, mapContainer, scale) {
-  var playerSprite = PIXI.Sprite.fromImage('img/player.png');
+  const playerSprite = PIXI.Sprite.fromImage('img/player.png');
   playerSprite.scale.set(scale);
   playerSprites[login] = playerSprite;
 
