@@ -34,7 +34,7 @@ function drawMap(labMap, mapContainer, scale) {
 function changeMap(changeMap, mapContainer, scale) {
   changeMap.forEach(function (item) {
     for (let i = 0; i < item.length; i++) {
-      var mapSprite;
+      let mapSprite;
 
       if (item.id === 1) {
         mapSprite = PIXI.Sprite.fromImage("img/wall.png");
