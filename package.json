@@ -16,7 +16,8 @@
   },
   "main": "server/server.js",
   "dependencies": {
-    "ws": "^1.0.0"
+    "ws": "^1.0.0",
+    "rethinkdb": "^2.2.2"
   },
   "devDependencies": {
     "mocha": "^2.2.5",
