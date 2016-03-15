@@ -43,4 +43,17 @@ export class LabyrinthDB {
       if (err) throw err;
     });
   }
+
+  checkMap () {
+    r.db(this.dbName).table('worldmap').count().run(this.conn, function (err, res) {
+      if (err) throw err;
+
+      // res eq 0 if table is empty
+      return res;
+    });
+
+  }
+
+  writeNewWorldMap(worldMapArray) {
+  }
 }
