@@ -8,7 +8,7 @@ export class LabyrinthDB {
     this.conn = conn;
     this.dbName = dbName;
 
-    this.tableList = ['chat'];
+    this.tableList = ['chat', 'worldmap'];
 
     this.checkDB();
   }
