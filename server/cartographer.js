@@ -88,9 +88,9 @@ function createVerticalLine (labMap, height, width, max) {
  *
  * @param height Y
  * @param width X
- * @returns {Array} new map of the Labyrinth
+ * @returns {Array} new map of the Labyrinth's location
  */
-function generateWorldMap (height, width) {
+function generateLocationMap (height, width) {
   let labMap = [];
 
   for (let i = 0; i < height; i++) {
@@ -115,10 +115,13 @@ if (require.main === module) {
   rethinkDB.connect( {host: 'localhost', port: 28015}, function(err, conn) {
     if (err) throw err;
 
-    const ldb = new labyrinthDB.LabyrinthDB(conn, 'labyrinth');
+    const ldb = new labyrinthDB.LabyrinthDB(conn, 'labyrinth', ['startLocation'],
+            function (tableName) {
+              log('Map generator started.');
+              ldb.writeNewLocationMap(tableName, generateLocationMap(100, 100));
+              log('Map generator ended.')
+            });
 
-    if (!ldb.checkMap()) {
-      ldb.writeNewWorldMap(generateWorldMap(100, 100));
-    }
+    ldb.initDB();
   });
 }
