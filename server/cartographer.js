@@ -53,6 +53,7 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
 
   /**
    * draw horizontal line on the Map
+   * @param locationMap - array for location's map
    * @param height - height of the game Map
    * @param width - width of the game Map
    * @param max - maximum line's length
@@ -68,6 +69,7 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
 
   /**
    * draw vertical line on the Map
+   * @param locationMap - array for location's map
    * @param height - height of the game Map
    * @param width - width of the game Map
    * @param max - maximum line's length
@@ -88,7 +90,7 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
    * @returns {Array} new map of the Labyrinth's location
    */
   static generateLocationMap(height, width) {
-    let locationMap = []
+    let locationMap = [];
 
     for (let i = 0; i < height; i++) {
       locationMap.push(Array.apply(null, Array(width)).map(function (_, i) {
