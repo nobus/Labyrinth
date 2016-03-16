@@ -4,11 +4,10 @@ var r = require('rethinkdb');
 
 
 export class LabyrinthDB {
-  constructor (conn, dbName, tableList, custInit) {
+  constructor (conn, dbName, tableList) {
     this.conn = conn;
     this.dbName = dbName;
     this.tableList = tableList;
-    this.custInit = custInit;
   }
 
   initDB () {
@@ -37,34 +36,8 @@ export class LabyrinthDB {
   }
 
   createTable (tableName) {
-    const _this = this;
-
     r.db(this.dbName).tableCreate(tableName).run(this.conn, function (err, res) {
       if (err) throw err;
-
-      _this.custInit(tableName);
-    });
-  }
-
-  writeNewLocationMap(tableName, worldMapArray) {
-    let buffer = [];
-
-    for (let y = 0; y < worldMapArray.length; y++) {
-      let mapRow = worldMapArray[y];
-
-      for (let x = 0; x < mapRow.length; x++) {
-        let elem = {};
-        elem['x'] = x;
-        elem['y'] = y;
-        elem['type'] = mapRow[x];
-        buffer.push(elem);
-      }
-    }
-
-    r.db(this.dbName).table(tableName).insert(buffer).run(this.conn, function (err, res) {
-      if (err) throw err;
-
-      console.log(`Location map done. We inserted ${res['inserted']} elements to ${tableName} for you!`)
     });
   }
 }
