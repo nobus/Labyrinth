@@ -8,6 +8,8 @@ export class LabyrinthDB {
     this.conn = conn;
     this.dbName = dbName;
     this.tableList = tableList;
+
+    this.conn.use(dbName);
   }
 
   initDB () {
