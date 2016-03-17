@@ -113,7 +113,7 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
   createTable (tableName) {
     const _this = this;
 
-    rethinkDB.db(this.dbName).tableCreate(tableName).run(this.conn, function (err, res) {
+    rethinkDB.tableCreate(tableName).run(this.conn, function (err, res) {
       if (err) throw err;
 
       log('Map generator started.');
@@ -140,7 +140,6 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
     const _this = this;
 
     rethinkDB
-      .db(this.dbName)
       .table(tableName)
       .insert(buffer)
       .run(this.conn, function (err, res) {
@@ -150,14 +149,12 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
         log('Let\'s create the index!');
 
         rethinkDB
-          .db(_this.dbName)
           .table(tableName)
           .indexCreate('coord', [rethinkDB.row('x'), rethinkDB.row('y')])
           .run(_this.conn, function(err, res) {
             if (err) throw err;
 
             rethinkDB
-              .db(_this.dbName)
               .table(tableName)
               .indexWait('coord')
               .run(_this.conn, function(err, res) {
@@ -170,12 +167,37 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
       });
   }
 
-  mainCicle() {
-    log('Change the Map!');
-  }
 
-  runDB() {
-    setInterval(this.mainCicle, 2000);
+  runDB () {
+    const _this = this;
+
+    setInterval(function () {
+      log('Change the Map!');
+
+      const params = CartographerDB.getLineParams(100, 100, 20);
+      const elementId = getRandomInt(0, 1);
+
+      for (let i = 0; i < params.length; i++) {
+        if (elementId === 0) {
+          params.startX += 1;
+        } else {
+          params.startY += 1;
+        }
+
+        rethinkDB
+          .table('startLocation')
+          .getAll([params.startX, params.startY], {index: 'coord'})
+          .run(_this.conn, function (err, cursor) {
+            if (err) throw err;
+
+            cursor.toArray(function(err, result) {
+              if (err) throw err;
+              log(JSON.stringify(result));
+            });
+
+          });
+      }
+    }, 5000);
   }
 
 }
