@@ -19,6 +19,7 @@ export class LabyrinthDB {
       if (!dbList.find(function (e) {
           return e === _this.dbName
         })) _this.createDB();
+      else _this.runDB();
     });
   }
 
@@ -40,4 +41,6 @@ export class LabyrinthDB {
       if (err) throw err;
     });
   }
+
+  runDB () {}
 }
