@@ -110,6 +110,18 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
     return locationMap;
   }
 
+  createTable (tableName) {
+    const _this = this;
+
+    rethinkDB.db(this.dbName).tableCreate(tableName).run(this.conn, function (err, res) {
+      if (err) throw err;
+
+      log('Map generator started.');
+      _this.writeNewLocationMap(tableName, CartographerDB.generateLocationMap(100, 100));
+      log('Map generator ended.')
+    });
+  }
+
   writeNewLocationMap(tableName, worldMapArray) {
     let buffer = [];
 
@@ -125,23 +137,45 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
       }
     }
 
-    rethinkDB.db(this.dbName).table(tableName).insert(buffer).run(this.conn, function (err, res) {
-      if (err) throw err;
-
-      log(`Location map done. We inserted ${res['inserted']} elements to ${tableName} for you!`)
-    });
-  }
-
-  createTable (tableName) {
     const _this = this;
 
-    rethinkDB.db(this.dbName).tableCreate(tableName).run(this.conn, function (err, res) {
-      if (err) throw err;
+    rethinkDB
+      .db(this.dbName)
+      .table(tableName)
+      .insert(buffer)
+      .run(this.conn, function (err, res) {
+        if (err) throw err;
 
-      log('Map generator started.');
-      _this.writeNewLocationMap(tableName, CartographerDB.generateLocationMap(100, 100));
-      log('Map generator ended.')
-    });
+        log(`Location map done. We inserted ${res['inserted']} elements to ${tableName} for you!`);
+        log('Let\'s create the index!');
+
+        rethinkDB
+          .db(_this.dbName)
+          .table(tableName)
+          .indexCreate('coord', [rethinkDB.row('x'), rethinkDB.row('y')])
+          .run(_this.conn, function(err, res) {
+            if (err) throw err;
+
+            rethinkDB
+              .db(_this.dbName)
+              .table(tableName)
+              .indexWait('coord')
+              .run(_this.conn, function(err, res) {
+                if (err) throw err;
+
+                log(`Index for ${tableName} created!`);
+                _this.runDB();
+              });
+          });
+      });
+  }
+
+  mainCicle() {
+    log('Change the Map!');
+  }
+
+  runDB() {
+    setInterval(this.mainCicle, 2000);
   }
 
 }
