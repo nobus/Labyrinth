@@ -55,11 +55,9 @@ class UserDB extends labyrinthDB.LabyrinthDB {
         cursor.each(function(err, res) {
           if (err) throw err;
 
-          //log(JSON.stringify(res));
-
           if (res.old_val.type != res.new_val.type) {
             _this.locationMap[res.new_val.y][res.new_val.x] = res.new_val.type;
-            //log(`Inserted element ${JSON.stringify(res.new_val)}`);
+            log(`Inserted element ${JSON.stringify(res.new_val)}`);
           }
         });
       });
