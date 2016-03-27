@@ -184,17 +184,15 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
           params.startY += 1;
         }
 
+        log(`${JSON.stringify(params)}, ${elementId}`);
+
         rethinkDB
           .table('startLocation')
           .getAll([params.startX, params.startY], {index: 'coord'})
-          .run(_this.conn, function (err, cursor) {
+          .update({type: elementId})
+          .run(_this.conn, function (err, result) {
             if (err) throw err;
-
-            cursor.toArray(function(err, result) {
-              if (err) throw err;
-              log(JSON.stringify(result));
-            });
-
+            log(JSON.stringify(result));
           });
       }
     }, 5000);
