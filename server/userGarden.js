@@ -148,10 +148,7 @@ class WebAPI {
         }
       });
 
-      ws.on('close', function() {
-        log(`Client disconnected: ${_this.connPool[thisId]['login']}`);
-        delete _this.connPool[thisId];
-      });
+      ws.on('close', this.close(thisId));
 
       ws.on('error', function(e) {
         log(`Client ${_this.connPool[thisId]['login']} error: ${e.message}`);
@@ -159,6 +156,11 @@ class WebAPI {
     });
 
     log('Web API started');
+  }
+
+  close (userId) {
+    log(`Client disconnected: ${this.connPool[userId]['login']}`);
+    delete this.connPool[thisId];
   }
 
   /**
