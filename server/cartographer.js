@@ -116,9 +116,11 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
     rethinkDB.tableCreate(tableName).run(this.conn, function (err, res) {
       if (err) throw err;
 
-      log('Map generator started.');
-      _this.writeNewLocationMap(tableName, CartographerDB.generateLocationMap(100, 100));
-      log('Map generator ended.')
+      if (tableName === 'startLocation') {
+        log('Map generator started.');
+        _this.writeNewLocationMap(tableName, CartographerDB.generateLocationMap(100, 100));
+        log('Map generator ended.');
+      }
     });
   }
 
@@ -204,7 +206,7 @@ if (require.main === module) {
   rethinkDB.connect( {host: 'localhost', port: 28015}, function(err, conn) {
     if (err) throw err;
 
-    const cdb = new CartographerDB(conn, 'labyrinth', ['startLocation']);
+    const cdb = new CartographerDB(conn, 'labyrinth', ['userPosition', 'startLocation']);
     cdb.initDB();
   });
 }
