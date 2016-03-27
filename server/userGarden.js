@@ -100,9 +100,6 @@ class WebAPI {
     this.wss.on('connection', function(ws) {
       // increment id counter
       const thisId = ++_this.clientId;
-
-
-      log(`DEBUGGG ${thisId}`);
       // set up structure for this connection
       _this.connPool[thisId] = {};
 
