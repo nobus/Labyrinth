@@ -160,7 +160,7 @@ class WebAPI {
 
     log('Web API started');
   }
-  
+
   /**
   * search start position for new user
   * @returns {{y: number, x: number}}
