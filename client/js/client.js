@@ -53,8 +53,9 @@ $(document).ready(function() {
   function changePosition(login, direction, y, x) {
     if (login === myLogin) {
       if (direction === undefined) {
-        mapContainer.x -= x * 32 * scale;
+        // it is first message after connect
         mapContainer.y -= y * 32 * scale;
+        mapContainer.x -= x * 32 * scale;
       } else {
         moveMapAroundPlayer(mapContainer, direction, scale);
       }

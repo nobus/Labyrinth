@@ -68,8 +68,8 @@ function changeMap(changeMap, mapContainer, scale) {
 }
 
 function setMapAroundPlayer(mapContainer, y, x, scale) {
-  mapContainer.y = y + 320 * scale;
-  mapContainer.x = x + 320 * scale;
+  mapContainer.y = 320 * scale;
+  mapContainer.x = 320 * scale;
 }
 
 function moveMapAroundPlayer(mapContainer, direction, scale) {
