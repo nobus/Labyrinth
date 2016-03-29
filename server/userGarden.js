@@ -16,6 +16,15 @@ function log(message) {
 
 class UserDB extends labyrinthDB.LabyrinthDB {
   runDB () {
+
+    // dictionary for variant of offset
+    this.offsets = {
+      'up': {'x': 0, 'y': -1},
+      'down': {'x': 0, 'y': 1},
+      'left': {'x': -1, 'y': 0},
+      'right': {'x': 1, 'y': 0}
+    };
+
     this.locationMap = [];
     const _this = this;
 
@@ -86,6 +95,94 @@ class UserDB extends labyrinthDB.LabyrinthDB {
   startWebSocketServer () {
     this.webAPI = new WebAPI(this);
   }
+
+  /**
+  * search start position for new user
+  * @returns {{y: number, x: number}}
+  */
+  searchStartPosition () {
+    for (let i = 0; i < this.locationMap.length; i++) {
+      for (let ii = 0; ii < this.locationMap[i].length; ii++) {
+        if (this.locationMap[i][ii] === 0) {
+          return {'y': i, 'x': ii};
+        }
+      }
+    }
+  }
+
+  /**
+  *
+  * @param curPosition {y, x} current user position
+  * @param direction 'up', or 'down', or 'left', or 'right'
+  * @returns {{y: *, x: *, direction: *}} new position and direction
+  *          or undefined if block ahead
+  * @constructor
+  */
+  getNewPosition(curPosition, direction) {
+    const offset = this.offsets[direction];
+
+    const newY = curPosition.y + offset.y;
+    const newX = curPosition.x + offset.x;
+
+    if (newX >= 0 && newX < this.locationMap.length && newY >= 0 && newY < this.locationMap.length) {
+      if (this.locationMap[newY][newX] === 0) {
+        return {
+        'y': newY,
+        'x': newX,
+        'direction': direction};
+      }
+    }
+  }
+
+
+  processUserActivity (message, ws) {
+    const _this = this;
+
+    rethinkDB
+      .table('userPosition')
+      .filter({login: message.login})
+      .run(this.conn, function (err, cursor) {
+        if (err) throw err;
+
+        cursor.next(function (err, row) {
+            if (err) throw err;
+
+            let position = {x: row.x, y: row.y};
+
+            if (message.direction) {
+              position = _this.getNewPosition(position, message.direction);
+
+              if (position) {
+                rethinkDB
+                  .table('userPosition')
+                  .get(row.id)
+                  .update({login: message.login, x: position.x, y: position.y})
+                  .run(_this.conn, function (err, res) {
+                    if (err) throw  err;
+
+                    let resp = {'changePosition': position};
+                    resp.changePosition.login = message.login;
+
+                    _this.webAPI.wss.broadcast(resp);
+                  });
+              }
+            } else {
+              let resp = {
+                allMap: _this.locationMap,
+                changePosition: {
+                  x: position.x,
+                  y: position.y,
+                  login: message.login
+                }
+              };
+
+              resp = JSON.stringify(resp);
+              log(`Send: ${resp}`);
+              ws.send(resp);
+            }
+        });
+      });
+  }
 }
 
 class WebAPI {
@@ -123,49 +220,10 @@ class WebAPI {
       // set up structure for this connection
       _this.connPool[thisId] = {};
 
-      // we accept message from user!
+      // we accepted message from user!
       ws.on('message', function(rawMessage) {
         log(`Received: ${rawMessage}`);
-
-        const message = JSON.parse(rawMessage);
-        _this.connPool[thisId]['login'] = message.login;
-
-        if (message.direction && 'position' in _this.connPool[thisId]) {
-          // user would like changes his position and he has old position
-          const new_position = _this.getNewPosition(_this.connPool[thisId]['position'], message.direction);
-
-          if (new_position) {
-            _this.connPool[thisId]['position'] = new_position;
-
-            let resp = {'changePosition': new_position};
-            resp.changePosition.login = message.login;
-
-            _this.wss.broadcast(resp);
-          }
-        } else {
-          /**
-          * user would like changes his position and he has not old position
-          * because is connecting at server just now
-          */
-          log(`New user!! ${message.login} ${thisId}`);
-
-          const position = _this.searchStartPosition();
-          _this.connPool[thisId]['position'] = position;
-
-          let resp = {
-            allMap: _this.cdb.locationMap,
-            changePosition: {
-              x: position.x,
-              y: position.y,
-              login: message.login
-            }
-          };
-
-          resp = JSON.stringify(resp);
-
-          log(`Send: ${resp}`);
-          ws.send(resp);
-        }
+        _this.cdb.processUserActivity(JSON.parse(rawMessage), ws);
       });
 
       ws.on('close', function () {
@@ -179,44 +237,6 @@ class WebAPI {
     });
 
     log('Web API started');
-  }
-
-  /**
-  * search start position for new user
-  * @returns {{y: number, x: number}}
-  */
-  searchStartPosition () {
-    for (let i = 0; i < this.cdb.locationMap.length; i++) {
-      for (let ii = 0; ii < this.cdb.locationMap[i].length; ii++) {
-        if (this.cdb.locationMap[i][ii] === 0) {
-          return {'y': i, 'x': ii};
-        }
-      }
-    }
-  }
-
-  /**
-  *
-  * @param curPosition {y, x} current user position
-  * @param direction 'up', or 'down', or 'left', or 'right'
-  * @returns {{y: *, x: *, direction: *}} new position and direction
-  *          or undefined if block ahead
-  * @constructor
-  */
-  getNewPosition(curPosition, direction) {
-    const offset = this.offsets[direction];
-
-    const newY = curPosition.y + offset.y;
-    const newX = curPosition.x + offset.x;
-
-    if (newX >= 0 && newX < this.cdb.locationMap.length && newY >= 0 && newY < this.cdb.locationMap.length) {
-      if (this.cdb.locationMap[newY][newX] === 0) {
-        return {
-        'y': newY,
-        'x': newX,
-        'direction': direction};
-      }
-    }
   }
 }
 
