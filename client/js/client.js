@@ -52,7 +52,12 @@ $(document).ready(function() {
 
   function changePosition(login, direction, y, x) {
     if (login === myLogin) {
-      moveMapAroundPlayer(mapContainer, direction, scale);
+      if (direction === undefined) {
+        mapContainer.x -= x * 32 * scale;
+        mapContainer.y -= y * 32 * scale;
+      } else {
+        moveMapAroundPlayer(mapContainer, direction, scale);
+      }
     } else {
       movePlayer(login, y, x, scale);
     }
@@ -113,10 +118,9 @@ $(document).ready(function() {
 
       if (playerSprites[login] === undefined) {
         createPlayerSprite(login, myLogin, y, x, stage, mapContainer, scale);
-      } else {
-        let direction = message.changePosition.direction;
-        changePosition(login, direction, y, x);
       }
+
+      changePosition(login, message.changePosition.direction, y, x);
     }
   };
 
