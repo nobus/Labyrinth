@@ -6,6 +6,14 @@ const labyrinthDB = require('./labyrinthdb');
 // https://github.com/websockets/ws/
 const WebSocketServer = require('ws').Server;
 
+var program = require('commander');
+
+program
+  .version('0.0.1')
+  .option('-p, --port <n>', 'Port for WebSocket', parseInt)
+  .parse(process.argv);
+
+
 /**
  *
  * @param message
@@ -217,7 +225,7 @@ class WebAPI {
       'right': {'x': 1, 'y': 0}
     };
 
-    this.wss = new WebSocketServer({ port: 8081 });
+    this.wss = new WebSocketServer({ port: program.port });
 
     const _this = this;
 
