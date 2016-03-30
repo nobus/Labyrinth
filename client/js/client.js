@@ -27,9 +27,10 @@ $(document).ready(function() {
   animate();
 
   const myLogin = getURLParameter('login');
+  const port = getURLParameter('port');
   const host = window.document.location.host.replace(/:.*/, '');
 
-  const socket = new WebSocket('ws://' + host + ':8081/');
+  const socket = new WebSocket('ws://' + host + ':' + port + '/');
 
   function animate() {
     requestAnimationFrame(animate);
