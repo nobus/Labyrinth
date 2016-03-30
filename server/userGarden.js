@@ -47,49 +47,51 @@ class UserDB extends labyrinthDB.LabyrinthDB {
           log(`Map buffer is ready, ${i} elements.`);
 
           _this.startWebSocketServer();
-          _this.readChanges();
+          _this.readChanges('startLocation', _this.processChangesFromStartLocation.bind(_this));
         });
       });
   }
 
-  readChanges () {
+  processChangesFromStartLocation (err, cursor) {
     const _this = this;
 
+    if (err) throw err;
+
+    cursor.each(function (err, res) {
+      if (err) throw err;
+
+      let newType = res.new_val.type;
+      let y = res.new_val.y;
+      let x = res.new_val.x;
+
+      if (res.old_val.type != newType) {
+        if (_this.webAPI) {
+          const changeMap = {
+            'changeMap': [
+              {
+                'startY': y,
+                'startX': x,
+                'length': 1,                //hack
+                'type': 'vertical',         //hack
+                'id': newType
+              }
+            ]
+          };
+
+          _this.webAPI.wss.broadcast(changeMap);
+        }
+
+        _this.locationMap[y][x] = newType;
+        log(`Inserted element ${JSON.stringify(res.new_val)}`);
+      }
+    });
+  }
+
+  readChanges (tableName, callback) {
     rethinkDB
-      .table('startLocation', {readMode: 'outdated'})
+      .table(tableName, {readMode: 'outdated'})
       .changes()
-      .run(this.conn, function(err, cursor) {
-        if (err) throw err;
-
-        cursor.each(function(err, res) {
-          if (err) throw err;
-
-          let newType = res.new_val.type;
-          let y = res.new_val.y;
-          let x = res.new_val.x;
-
-          if (res.old_val.type != newType) {
-            _this.locationMap[y][x] = newType;
-            log(`Inserted element ${JSON.stringify(res.new_val)}`);
-
-            if (_this.webAPI) {
-              const changeMap = {
-                'changeMap': [
-                  {
-                    'startY': y,
-                    'startX': x,
-                    'length': 1,                //hack
-                    'type': 'vertical',         //hack
-                    'id': newType
-                  }
-                ]
-              };
-
-              _this.webAPI.wss.broadcast(changeMap);
-            }
-          }
-        });
-      });
+      .run(this.conn, callback);
   }
 
   startWebSocketServer () {
