@@ -48,6 +48,7 @@ class UserDB extends labyrinthDB.LabyrinthDB {
 
           _this.startWebSocketServer();
           _this.readChanges('startLocation', _this.processChangesFromStartLocation.bind(_this));
+          _this.readChanges('userPosition', _this.processChangesFromUserPosition.bind(_this));
         });
       });
   }
@@ -84,6 +85,26 @@ class UserDB extends labyrinthDB.LabyrinthDB {
         _this.locationMap[y][x] = newType;
         log(`Inserted element ${JSON.stringify(res.new_val)}`);
       }
+    });
+  }
+
+  processChangesFromUserPosition (err, cursor) {
+    if (err) throw err;
+    const _this = this;
+
+    cursor.each(function (err, res) {
+      if (err) throw err;
+
+      let resp = {'changePosition': {}};
+
+      resp.changePosition.y = res.new_val.y;
+      resp.changePosition.x = res.new_val.x;
+      resp.changePosition.login = res.new_val.login;
+      resp.changePosition.direction = res.new_val.direction;
+
+      _this.webAPI.wss.broadcast(resp);
+
+      log(`Change user position ${JSON.stringify(res.new_val)}`);
     });
   }
 
@@ -158,14 +179,9 @@ class UserDB extends labyrinthDB.LabyrinthDB {
                 rethinkDB
                   .table('userPosition')
                   .get(row.id)
-                  .update({login: message.login, x: position.x, y: position.y})
+                  .update({login: message.login, x: position.x, y: position.y, direction: message.direction})
                   .run(_this.conn, function (err, res) {
                     if (err) throw  err;
-
-                    let resp = {'changePosition': position};
-                    resp.changePosition.login = message.login;
-
-                    _this.webAPI.wss.broadcast(resp);
                   });
               }
             } else {
