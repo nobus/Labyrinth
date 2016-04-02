@@ -1,7 +1,7 @@
 'use strict';
 
 const rethinkDB = require('rethinkdb');
-const labyrinthDB = require('./labyrinthdb');
+const protoDB = require('./protodb');
 
 // https://github.com/websockets/ws/
 const WebSocketServer = require('ws').Server;
@@ -16,7 +16,7 @@ program
   .parse(process.argv);
 
 
-class UserDB extends labyrinthDB.LabyrinthDB {
+class UserDB extends protoDB.ProtoDB {
   runDB () {
 
     // dictionary for variant of offset

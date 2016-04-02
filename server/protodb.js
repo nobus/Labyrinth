@@ -3,7 +3,7 @@
 var r = require('rethinkdb');
 
 
-export class LabyrinthDB {
+export class ProtoDB {
   constructor (conn, dbName, tableList) {
     this.conn = conn;
     this.dbName = dbName;

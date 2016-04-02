@@ -2,7 +2,7 @@
 
 const rethinkDB = require('rethinkdb');
 
-const labyrinthDB = require('./labyrinthdb');
+const protoDB = require('./protodb');
 const common = require('./common');
 
 
@@ -26,7 +26,7 @@ function getRandomInt(min, max) {
   return Math.floor(getRandom(min, max));
 }
 
-class CartographerDB extends labyrinthDB.LabyrinthDB {
+class CartographerDB extends protoDB.ProtoDB {
   /**
    *
    * @param height - height of the game Map
