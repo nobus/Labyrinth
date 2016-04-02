@@ -6,26 +6,6 @@ const protoDB = require('./protodb');
 const common = require('./common');
 
 
-/**
- *
- * @param min the lower limit of the range
- * @param max the upper limit of the range
- * @returns {number} random float number between min and max
- */
-function getRandom(min, max) {
-  return Math.random() * (max - min + 1) + min;
-}
-
-/**
- *
- * @param min the lower limit of the range
- * @param max the upper limit of the range
- * @returns {number} random int number between min and max
- */
-function getRandomInt(min, max) {
-  return Math.floor(getRandom(min, max));
-}
-
 class CartographerDB extends protoDB.ProtoDB {
   /**
    *
@@ -37,9 +17,9 @@ class CartographerDB extends protoDB.ProtoDB {
   static getLineParams(height, width, max) {
     const ret = {};
 
-    ret.startY = getRandomInt(0, height - max);
-    ret.startX = getRandomInt(0, width - max);
-    ret.length = getRandomInt(3, max);
+    ret.startY = common.getRandomInt(0, height - max);
+    ret.startX = common.getRandomInt(0, width - max);
+    ret.length = common.getRandomInt(3, max);
 
     return ret;
   }
@@ -171,7 +151,7 @@ class CartographerDB extends protoDB.ProtoDB {
       common.log('Change the Map!');
 
       const params = CartographerDB.getLineParams(100, 100, 20);
-      const elementId = getRandomInt(0, 1);
+      const elementId = common.getRandomInt(0, 1);
 
       for (let i = 0; i < params.length; i++) {
         if (elementId === 0) {
