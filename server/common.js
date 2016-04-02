@@ -1,7 +1,10 @@
 
+const now = require('performance-now');
+
 
 module.exports = {
   log: log,
+  timeLogger: timeLogger,
   getRandom: getRandom,
   getRandomInt: getRandomInt
 };
@@ -14,6 +17,21 @@ module.exports = {
 function log(message) {
   console.log(`${Date.now() / 1000}: ${message}`);
 }
+
+
+function timeLogger(f) {
+  return function() {
+    const start = now();
+
+    const result = f.apply(this, arguments); // (*)
+
+    const end = now() - start;
+    log(`function ${f.name} performed ${end} ms`);
+
+    return result;
+  }
+}
+
 
 /**
  *
