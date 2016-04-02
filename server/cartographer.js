@@ -1,16 +1,10 @@
 'use strict';
 
 const rethinkDB = require('rethinkdb');
+
 const labyrinthDB = require('./labyrinthdb');
+const common = require('./common');
 
-
-/**
- *
- * @param message
- */
-function log(message) {
-  console.log(`${Date.now() / 1000}: ${message}`);
-}
 
 /**
  *
@@ -117,9 +111,9 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
       if (err) throw err;
 
       if (tableName === 'startLocation') {
-        log('Map generator started.');
+        common.log('Map generator started.');
         _this.writeNewLocationMap(tableName, CartographerDB.generateLocationMap(100, 100));
-        log('Map generator ended.');
+        common.log('Map generator ended.');
       }
     });
   }
@@ -147,8 +141,8 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
       .run(this.conn, function (err, res) {
         if (err) throw err;
 
-        log(`Location map done. We inserted ${res['inserted']} elements to ${tableName} for you!`);
-        log('Let\'s create the index!');
+        common.log(`Location map done. We inserted ${res['inserted']} elements to ${tableName} for you!`);
+        common.log('Let\'s create the index!');
 
         rethinkDB
           .table(tableName)
@@ -162,7 +156,7 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
               .run(_this.conn, function(err, res) {
                 if (err) throw err;
 
-                log(`Index for ${tableName} created!`);
+                common.log(`Index for ${tableName} created!`);
                 _this.runDB();
               });
           });
@@ -174,7 +168,7 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
     const _this = this;
 
     setInterval(function () {
-      log('Change the Map!');
+      common.log('Change the Map!');
 
       const params = CartographerDB.getLineParams(100, 100, 20);
       const elementId = getRandomInt(0, 1);
@@ -186,7 +180,7 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
           params.startY += 1;
         }
 
-        log(`${JSON.stringify(params)}, ${elementId}`);
+        common.log(`${JSON.stringify(params)}, ${elementId}`);
 
         rethinkDB
           .table('startLocation')
@@ -194,7 +188,7 @@ class CartographerDB extends labyrinthDB.LabyrinthDB {
           .update({type: elementId})
           .run(_this.conn, function (err, result) {
             if (err) throw err;
-            log(JSON.stringify(result));
+            common.log(JSON.stringify(result));
           });
       }
     }, 5000);

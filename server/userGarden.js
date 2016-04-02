@@ -5,22 +5,16 @@ const labyrinthDB = require('./labyrinthdb');
 
 // https://github.com/websockets/ws/
 const WebSocketServer = require('ws').Server;
+const program = require('commander');
 
-var program = require('commander');
+const common = require('./common');
+
 
 program
   .version('0.0.1')
   .option('-p, --port <n>', 'Port for WebSocket', parseInt)
   .parse(process.argv);
 
-
-/**
- *
- * @param message
- */
-function log(message) {
-  console.log(`${Date.now() / 1000}: ${message}`);
-}
 
 class UserDB extends labyrinthDB.LabyrinthDB {
   runDB () {
@@ -52,7 +46,7 @@ class UserDB extends labyrinthDB.LabyrinthDB {
             _this.locationMap[e.y][e.x] = e.type;
           }
 
-          log(`Map buffer is ready, ${i} elements.`);
+          common.log(`Map buffer is ready, ${i} elements.`);
 
           _this.startWebSocketServer();
           _this.readChanges('startLocation', _this.processChangesFromStartLocation.bind(_this));
@@ -91,7 +85,7 @@ class UserDB extends labyrinthDB.LabyrinthDB {
         }
 
         _this.locationMap[y][x] = newType;
-        log(`Inserted element ${JSON.stringify(res.new_val)}`);
+        common.log(`Inserted element ${JSON.stringify(res.new_val)}`);
       }
     });
   }
@@ -112,7 +106,7 @@ class UserDB extends labyrinthDB.LabyrinthDB {
 
       _this.webAPI.wss.broadcast(resp);
 
-      log(`Change user position ${JSON.stringify(res.new_val)}`);
+      common.log(`Change user position ${JSON.stringify(res.new_val)}`);
     });
   }
 
@@ -203,7 +197,7 @@ class UserDB extends labyrinthDB.LabyrinthDB {
               };
 
               resp = JSON.stringify(resp);
-              log(`Send: ${resp}`);
+              common.log(`Send: ${resp}`);
               ws.send(resp);
             }
         });
@@ -232,7 +226,7 @@ class WebAPI {
     this.wss.broadcast = function broadcast(data) {
       if (_this.wss.clients.length) {
         data = JSON.stringify(data);
-        log(`Send broadcast: ${data}`);
+        common.log(`Send broadcast: ${data}`);
       }
 
       _this.wss.clients.forEach(function each(client) {
@@ -248,21 +242,21 @@ class WebAPI {
 
       // we accepted message from user!
       ws.on('message', function(rawMessage) {
-        log(`Received: ${rawMessage}`);
+        common.log(`Received: ${rawMessage}`);
         _this.cdb.processUserActivity(JSON.parse(rawMessage), ws);
       });
 
       ws.on('close', function () {
-        log(`Client disconnected: ${_this.connPool[thisId]['login']}`);
+        common.log(`Client disconnected: ${_this.connPool[thisId]['login']}`);
         delete _this.connPool[thisId];
       });
 
       ws.on('error', function(e) {
-        log(`Client ${_this.connPool[thisId]['login']} error: ${e.message}`);
+        common.log(`Client ${_this.connPool[thisId]['login']} error: ${e.message}`);
       });
     });
 
-    log('Web API started');
+    common.log('Web API started');
   }
 }
 
