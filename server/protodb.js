@@ -12,33 +12,40 @@ export class ProtoDB {
     this.conn.use(dbName);
   }
 
-  initDB () {
-    const _this = this;
+  searchDB (dbList) {
+    let ret = false;
 
+    dbList.find(function (dbName) {
+      if (dbName === this.dbName) {
+        ret = true;
+      }
+    }.bind(this));
+
+    return ret;
+  }
+
+  initDB () {
     rethinkDB
       .dbList()
       .run(this.conn, function (err, dbList) {
+
         if (err) throw err;
 
-        if (!dbList.find(function (e) {
-          return e === _this.dbName
-        })) _this.createDB();
-        else _this.runDB();
-    });
+        if (this.searchDB(dbList)) this.runDB();
+        else this.createDB();
+      }.bind(this));
   }
 
   createDB () {
-    const _this = this;
-
     rethinkDB
       .dbCreate(this.dbName)
       .run(this.conn, function (err, res) {
         if (err) throw err;
 
-        _this.tableList.forEach(function (tableName) {
-          _this.createTable(tableName);
-        });
-      });
+        this.tableList.forEach(function (tableName) {
+          this.createTable(tableName);
+        }.bind(this));
+      }.bind(this));
   }
 
   createTable (tableName) {
