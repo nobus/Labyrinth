@@ -1,6 +1,6 @@
 'use strict';
 
-var r = require('rethinkdb');
+var rethinkDB = require('rethinkdb');
 
 
 export class ProtoDB {
@@ -15,7 +15,7 @@ export class ProtoDB {
   initDB () {
     const _this = this;
 
-    r.dbList().run(this.conn, function (err, dbList) {
+    rethinkDB.dbList().run(this.conn, function (err, dbList) {
       if (err) throw err;
 
       if (!dbList.find(function (e) {
@@ -28,7 +28,7 @@ export class ProtoDB {
   createDB () {
     const _this = this;
 
-    r.dbCreate(this.dbName).run(this.conn, function (err, res) {
+    rethinkDB.dbCreate(this.dbName).run(this.conn, function (err, res) {
       if (err) throw err;
 
       _this.tableList.forEach(function (tableName) {
@@ -39,9 +39,16 @@ export class ProtoDB {
   }
 
   createTable (tableName) {
-    r.db(this.dbName).tableCreate(tableName).run(this.conn, function (err, res) {
+    rethinkDB.db(this.dbName).tableCreate(tableName).run(this.conn, function (err, res) {
       if (err) throw err;
     });
+  }
+
+  readChanges (tableName, callback) {
+    rethinkDB
+      .table(tableName, {readMode: 'outdated'})
+      .changes()
+      .run(this.conn, callback);
   }
 
   runDB () {}

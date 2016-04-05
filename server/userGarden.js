@@ -110,13 +110,6 @@ class UserDB extends protoDB.ProtoDB {
     });
   }
 
-  readChanges (tableName, callback) {
-    rethinkDB
-      .table(tableName, {readMode: 'outdated'})
-      .changes()
-      .run(this.conn, callback);
-  }
-
   startWebSocketServer () {
     this.webAPI = new WebAPI(this);
   }
