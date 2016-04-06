@@ -41,12 +41,12 @@ if (require.main === module) {
         const d = directions[common.getRandomInt(0, 3)];
         socket.send(JSON.stringify({'login': login, 'direction': d}));
 
-      }, 500);
+      }, 500 + common.getRandomInt(0, 400));
     };
 
     socket.onmessage = function (event) {
       const rawMessage = event.data;
-      console.log('Data received: ' + rawMessage.length);
+      common.log(`Data received ${coralLogin}: ${rawMessage.length}`);
     };
 
     socket.onclose = function (event) {
@@ -55,11 +55,11 @@ if (require.main === module) {
       } else {
         console.log('Connection broken.'); // for example, server died
       }
-      console.log('Code: ' + event.code + ' reason: ' + event.reason);
+      console.log(`Code: ${event.code} reason: ${event.reason}`);
     };
 
     socket.onerror = function (error) {
-      console.log('Error ' + error.message);
+      console.log(`Error ${error.message}`);
     };
 
   }
