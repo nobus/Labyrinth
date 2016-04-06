@@ -27,25 +27,25 @@ export class ProtoDB {
   initDB () {
     rethinkDB
       .dbList()
-      .run(this.conn, function (err, dbList) {
+      .run(this.conn, (err, dbList) => {
 
         if (err) throw err;
 
         if (this.searchDB(dbList)) this.runDB();
         else this.createDB();
-      }.bind(this));
+      });
   }
 
   createDB () {
     rethinkDB
       .dbCreate(this.dbName)
-      .run(this.conn, function (err, res) {
+      .run(this.conn, (err, res) => {
         if (err) throw err;
 
-        this.tableList.forEach(function (tableName) {
+        this.tableList.forEach( tableName => {
           this.createTable(tableName);
-        }.bind(this));
-      }.bind(this));
+        });
+      });
   }
 
   createTable (tableName) {
