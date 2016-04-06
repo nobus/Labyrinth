@@ -102,7 +102,7 @@ class UserDB extends protoDB.ProtoDB {
 
       this.webAPI.wss.broadcast(resp);
 
-      common.log(`Change user position ${JSON.stringify(res.new_val)}`);
+      //common.log(`Change user position ${JSON.stringify(res.new_val)}`);
     });
   }
 
@@ -184,7 +184,7 @@ class UserDB extends protoDB.ProtoDB {
               };
 
               resp = JSON.stringify(resp);
-              common.log(`Send: ${resp}`);
+              //common.log(`Send: ${resp}`);
               ws.send(resp);
             }
         });
@@ -211,7 +211,7 @@ class WebAPI {
     this.wss.broadcast = (data) => {
       if (this.wss.clients.length) {
         data = JSON.stringify(data);
-        common.log(`Send broadcast: ${data}`);
+        //common.log(`Send broadcast: ${data}`);
       }
 
       this.wss.clients.forEach(function each(client) {
@@ -227,7 +227,7 @@ class WebAPI {
 
       // we accepted message from user!
       ws.on('message', (rawMessage) => {
-        common.log(`Received: ${rawMessage}`);
+        //common.log(`Received: ${rawMessage}`);
         this.cdb.processUserActivity(JSON.parse(rawMessage), ws);
       });
 
