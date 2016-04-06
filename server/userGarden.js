@@ -151,7 +151,7 @@ class UserDB extends protoDB.ProtoDB {
 
   processUserActivity (message, ws) {
     rethinkDB
-      .table('userPosition')
+      .table('userPosition', {readMode: 'outdated'})
       .filter({login: message.login})
       .run(this.conn,  (err, cursor) => {
         if (err) throw err;
@@ -166,7 +166,7 @@ class UserDB extends protoDB.ProtoDB {
 
               if (position) {
                 rethinkDB
-                  .table('userPosition')
+                  .table('userPosition', {readMode: 'outdated'})
                   .get(row.id)
                   .update({login: message.login, x: position.x, y: position.y, direction: message.direction})
                   .run(this.conn, function (err, res) {
