@@ -1,6 +1,8 @@
 'use strict';
 
-var gcStats = require('gc-stats')();
+const gcStats = require('gc-stats')();
+const eventLoopStats = require('event-loop-stats');
+
 const common = require('./common');
 
 
@@ -16,7 +18,7 @@ export class Metrics {
 
   runMeasures () {
     gcStats.on('stats', (stats) => {
-      console.log('GC happened', stats);
+      common.log(`GC happened ${JSON.stringify(stats)}`);
     });
 
     setInterval( () => {
@@ -26,6 +28,8 @@ export class Metrics {
       this.metrics.heapUsed = mu.heapUsed;
 
       common.log(JSON.stringify(this.metrics));
+      common.log(`event loop stats', ${JSON.stringify(eventLoopStats.sense())}`);
+
     }, this.period);
   }
 }
