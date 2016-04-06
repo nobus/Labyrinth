@@ -5,6 +5,8 @@ const program = require('commander');
 
 const common = require('../server/common');
 
+// node coral/coralClient.js --host localhost --port 8081 --name coral --number 10
+
 program
   .version('0.0.1')
   .option('-h, --host [fqdn||ip]', 'userGarden host')
