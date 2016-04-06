@@ -8,6 +8,7 @@ const WebSocketServer = require('ws').Server;
 const program = require('commander');
 
 const common = require('./common');
+const metrics = require('./metrics');
 
 
 program
@@ -246,6 +247,9 @@ class WebAPI {
 }
 
 if (require.main === module) {
+  const m = new metrics.Metrics(5000);
+  m.runMeasures();
+
   rethinkDB.connect( {host: 'localhost', port: 28015}, function(err, conn) {
     if (err) throw err;
 
