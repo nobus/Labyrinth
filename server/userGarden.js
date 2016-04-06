@@ -28,39 +28,36 @@ class UserDB extends protoDB.ProtoDB {
     };
 
     this.locationMap = [];
-    const _this = this;
 
     rethinkDB
       .table('startLocation', {readMode: 'outdated'})
-      .run(this.conn, function(err, cursor) {
+      .run(this.conn, (err, cursor) => {
         if (err) throw err;
 
-        cursor.toArray(function (err, res) {
+        cursor.toArray( (err, res) => {
           if (err) throw err;
 
-          let i =0;
+          let i = 0;
           for (; i < res.length; i++) {
             let e = res[i];
 
-            if (_this.locationMap[e.y] === undefined) _this.locationMap[e.y] = [];
-            _this.locationMap[e.y][e.x] = e.type;
+            if (this.locationMap[e.y] === undefined) this.locationMap[e.y] = [];
+            this.locationMap[e.y][e.x] = e.type;
           }
 
           common.log(`Map buffer is ready, ${i} elements.`);
 
-          _this.startWebSocketServer();
-          _this.readChanges('startLocation', _this.processChangesFromStartLocation.bind(_this));
-          _this.readChanges('userPosition', _this.processChangesFromUserPosition.bind(_this));
+          this.startWebSocketServer();
+          this.readChanges('startLocation', this.processChangesFromStartLocation.bind(this));
+          this.readChanges('userPosition', this.processChangesFromUserPosition.bind(this));
         });
       });
   }
 
   processChangesFromStartLocation (err, cursor) {
-    const _this = this;
-
     if (err) throw err;
 
-    cursor.each(function (err, res) {
+    cursor.each( (err, res) => {
       if (err) throw err;
 
       let newType = res.new_val.type;
@@ -68,7 +65,7 @@ class UserDB extends protoDB.ProtoDB {
       let x = res.new_val.x;
 
       if (res.old_val.type != newType) {
-        if (_this.webAPI) {
+        if (this.webAPI) {
           const changeMap = {
             'changeMap': [
               {
@@ -81,10 +78,10 @@ class UserDB extends protoDB.ProtoDB {
             ]
           };
 
-          _this.webAPI.wss.broadcast(changeMap);
+          this.webAPI.wss.broadcast(changeMap);
         }
 
-        _this.locationMap[y][x] = newType;
+        this.locationMap[y][x] = newType;
         common.log(`Inserted element ${JSON.stringify(res.new_val)}`);
       }
     });
@@ -92,9 +89,8 @@ class UserDB extends protoDB.ProtoDB {
 
   processChangesFromUserPosition (err, cursor) {
     if (err) throw err;
-    const _this = this;
 
-    cursor.each(function (err, res) {
+    cursor.each( (err, res) => {
       if (err) throw err;
 
       let resp = {'changePosition': {}};
@@ -104,7 +100,7 @@ class UserDB extends protoDB.ProtoDB {
       resp.changePosition.login = res.new_val.login;
       resp.changePosition.direction = res.new_val.direction;
 
-      _this.webAPI.wss.broadcast(resp);
+      this.webAPI.wss.broadcast(resp);
 
       common.log(`Change user position ${JSON.stringify(res.new_val)}`);
     });
@@ -154,34 +150,32 @@ class UserDB extends protoDB.ProtoDB {
 
 
   processUserActivity (message, ws) {
-    const _this = this;
-
     rethinkDB
       .table('userPosition')
       .filter({login: message.login})
-      .run(this.conn, function (err, cursor) {
+      .run(this.conn,  (err, cursor) => {
         if (err) throw err;
 
-        cursor.next(function (err, row) {
+        cursor.next( (err, row) => {
             if (err) throw err;
 
             let position = {x: row.x, y: row.y};
 
             if (message.direction) {
-              position = _this.getNewPosition(position, message.direction);
+              position = this.getNewPosition(position, message.direction);
 
               if (position) {
                 rethinkDB
                   .table('userPosition')
                   .get(row.id)
                   .update({login: message.login, x: position.x, y: position.y, direction: message.direction})
-                  .run(_this.conn, function (err, res) {
+                  .run(this.conn, function (err, res) {
                     if (err) throw  err;
                   });
               }
             } else {
               let resp = {
-                allMap: _this.locationMap,
+                allMap: this.locationMap,
                 changePosition: {
                   x: position.x,
                   y: position.y,
@@ -214,38 +208,36 @@ class WebAPI {
 
     this.wss = new WebSocketServer({ port: program.port });
 
-    const _this = this;
-
-    this.wss.broadcast = function broadcast(data) {
-      if (_this.wss.clients.length) {
+    this.wss.broadcast = (data) => {
+      if (this.wss.clients.length) {
         data = JSON.stringify(data);
         common.log(`Send broadcast: ${data}`);
       }
 
-      _this.wss.clients.forEach(function each(client) {
+      this.wss.clients.forEach(function each(client) {
         client.send(data);
       });
     };
 
-    this.wss.on('connection', function(ws) {
+    this.wss.on('connection', (ws) => {
       // increment id counter
-      const thisId = ++_this.clientId;
+      const thisId = ++this.clientId;
       // set up structure for this connection
-      _this.connPool[thisId] = {};
+      this.connPool[thisId] = {};
 
       // we accepted message from user!
-      ws.on('message', function(rawMessage) {
+      ws.on('message', (rawMessage) => {
         common.log(`Received: ${rawMessage}`);
-        _this.cdb.processUserActivity(JSON.parse(rawMessage), ws);
+        this.cdb.processUserActivity(JSON.parse(rawMessage), ws);
       });
 
-      ws.on('close', function () {
-        common.log(`Client disconnected: ${_this.connPool[thisId]['login']}`);
-        delete _this.connPool[thisId];
+      ws.on('close', () => {
+        common.log(`Client disconnected: ${this.connPool[thisId]['login']}`);
+        delete this.connPool[thisId];
       });
 
-      ws.on('error', function(e) {
-        common.log(`Client ${_this.connPool[thisId]['login']} error: ${e.message}`);
+      ws.on('error', (e) => {
+        common.log(`Client ${this.connPool[thisId]['login']} error: ${e.message}`);
       });
     });
 
