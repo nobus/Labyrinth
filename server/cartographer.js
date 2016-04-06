@@ -85,17 +85,17 @@ class CartographerDB extends protoDB.ProtoDB {
   }
 
   createTable (tableName) {
-    const _this = this;
+    rethinkDB
+      .tableCreate(tableName)
+      .run(this.conn, (err, res) => {
+        if (err) throw err;
 
-    rethinkDB.tableCreate(tableName).run(this.conn, function (err, res) {
-      if (err) throw err;
-
-      if (tableName === 'startLocation') {
-        common.log('Map generator started.');
-        _this.writeNewLocationMap(tableName, CartographerDB.generateLocationMap(100, 100));
-        common.log('Map generator ended.');
-      }
-    });
+        if (tableName === 'startLocation') {
+          common.log('Map generator started.');
+          this.writeNewLocationMap(tableName, CartographerDB.generateLocationMap(100, 100));
+          common.log('Map generator ended.');
+        }
+      });
   }
 
   writeNewLocationMap(tableName, worldMapArray) {
@@ -113,12 +113,10 @@ class CartographerDB extends protoDB.ProtoDB {
       }
     }
 
-    const _this = this;
-
     rethinkDB
       .table(tableName)
       .insert(buffer)
-      .run(this.conn, function (err, res) {
+      .run(this.conn, (err, res) => {
         if (err) throw err;
 
         common.log(`Location map done. We inserted ${res['inserted']} elements to ${tableName} for you!`);
@@ -127,17 +125,17 @@ class CartographerDB extends protoDB.ProtoDB {
         rethinkDB
           .table(tableName)
           .indexCreate('coord', [rethinkDB.row('x'), rethinkDB.row('y')])
-          .run(_this.conn, function(err, res) {
+          .run(this.conn, (err, res) => {
             if (err) throw err;
 
             rethinkDB
               .table(tableName)
               .indexWait('coord')
-              .run(_this.conn, function(err, res) {
+              .run(this.conn, (err, res) => {
                 if (err) throw err;
 
                 common.log(`Index for ${tableName} created!`);
-                _this.runDB();
+                this.runDB();
               });
           });
       });
@@ -145,9 +143,7 @@ class CartographerDB extends protoDB.ProtoDB {
 
 
   runDB () {
-    const _this = this;
-
-    setInterval(function () {
+    setInterval( () => {
       common.log('Change the Map!');
 
       const params = CartographerDB.getLineParams(100, 100, 20);
@@ -166,7 +162,7 @@ class CartographerDB extends protoDB.ProtoDB {
           .table('startLocation')
           .getAll([params.startX, params.startY], {index: 'coord'})
           .update({type: elementId})
-          .run(_this.conn, function (err, result) {
+          .run(this.conn, (err, result) => {
             if (err) throw err;
             common.log(JSON.stringify(result));
           });
