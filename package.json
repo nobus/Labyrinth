@@ -17,6 +17,7 @@
   "main": "server/server.js",
   "dependencies": {
     "commander": "^2.9.0",
+    "gc-stats": "^1.0.0",
     "performance-now": "^0.2.0",
     "rethinkdb": "^2.2.2",
     "ws": "^1.0.0"
