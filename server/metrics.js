@@ -4,8 +4,6 @@ const lynx = require('lynx');
 const gcStats = require('gc-stats')();
 const eventLoopStats = require('event-loop-stats');
 
-const common = require('./common');
-
 
 export class Metrics {
   constructor (period) {
@@ -15,7 +13,6 @@ export class Metrics {
 
   runMeasures () {
     gcStats.on('stats', (stats) => {
-      common.log(`GC happened ${JSON.stringify(stats)}`);
       this.metrics.gauge('gc.pause_ms', stats.pauseMS);
 
       this.metrics.gauge('gc.diff.total_heap_size', stats.diff.totalHeapSize);
