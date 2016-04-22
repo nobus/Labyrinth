@@ -144,7 +144,6 @@ class UserDB extends protoDB.ProtoDB {
 class WebAPI {
   constructor (cdb) {
     this.cdb = cdb;
-    this.connPool = {};
     this.clientId = 0;
 
     // dictionary for variant of offset
@@ -170,8 +169,6 @@ class WebAPI {
     this.wss.on('connection', (ws) => {
       // increment id counter
       const thisId = ++this.clientId;
-      // set up structure for this connection
-      this.connPool[thisId] = {};
 
       // we accepted message from user!
       ws.on('message', (rawMessage) => {
@@ -179,12 +176,11 @@ class WebAPI {
       });
 
       ws.on('close', () => {
-        common.log(`Client disconnected: ${this.connPool[thisId]['login']}`);
-        delete this.connPool[thisId];
+        common.log(`Client disconnected: ${thisId}`);
       });
 
       ws.on('error', (e) => {
-        common.log(`Client ${this.connPool[thisId]['login']} error: ${e.message}`);
+        common.log(`Client ${thisId} error: ${e.message}`);
       });
     });
 
