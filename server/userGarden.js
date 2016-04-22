@@ -20,7 +20,6 @@ program
 
 class UserDB extends protoDB.ProtoDB {
   runDB () {
-
     // dictionary for variant of offset
     this.offsets = {
       'up': {'x': 0, 'y': -1},
@@ -50,43 +49,9 @@ class UserDB extends protoDB.ProtoDB {
           common.log(`Map buffer is ready, ${i} elements.`);
 
           this.startWebSocketServer();
-          this.readChanges('startLocation', this.processChangesFromStartLocation.bind(this));
           this.readChanges('userPosition', this.processChangesFromUserPosition.bind(this));
         });
       });
-  }
-
-  processChangesFromStartLocation (err, cursor) {
-    if (err) throw err;
-
-    cursor.each( (err, res) => {
-      if (err) throw err;
-
-      let newType = res.new_val.type;
-      let y = res.new_val.y;
-      let x = res.new_val.x;
-
-      if (res.old_val.type != newType) {
-        if (this.webAPI) {
-          const changeMap = {
-            'changeMap': [
-              {
-                'startY': y,
-                'startX': x,
-                'length': 1,                //hack
-                'type': 'vertical',         //hack
-                'id': newType
-              }
-            ]
-          };
-
-          this.webAPI.wss.broadcast(changeMap);
-        }
-
-        this.locationMap[y][x] = newType;
-        common.log(`Inserted element ${JSON.stringify(res.new_val)}`);
-      }
-    });
   }
 
   processChangesFromUserPosition (err, cursor) {
@@ -103,27 +68,11 @@ class UserDB extends protoDB.ProtoDB {
       resp.changePosition.direction = res.new_val.direction;
 
       this.webAPI.wss.broadcast(resp);
-
-      //common.log(`Change user position ${JSON.stringify(res.new_val)}`);
     });
   }
 
   startWebSocketServer () {
     this.webAPI = new WebAPI(this);
-  }
-
-  /**
-  * search start position for new user
-  * @returns {{y: number, x: number}}
-  */
-  searchStartPosition () {
-    for (let i = 0; i < this.locationMap.length; i++) {
-      for (let ii = 0; ii < this.locationMap[i].length; ii++) {
-        if (this.locationMap[i][ii] === 0) {
-          return {'y': i, 'x': ii};
-        }
-      }
-    }
   }
 
   /**
@@ -185,9 +134,7 @@ class UserDB extends protoDB.ProtoDB {
                 }
               };
 
-              resp = JSON.stringify(resp);
-              //common.log(`Send: ${resp}`);
-              ws.send(resp);
+              ws.send(JSON.stringify(resp));
             }
         });
       });
@@ -213,7 +160,6 @@ class WebAPI {
     this.wss.broadcast = (data) => {
       if (this.wss.clients.length) {
         data = JSON.stringify(data);
-        //common.log(`Send broadcast: ${data}`);
       }
 
       this.wss.clients.forEach(function each(client) {
@@ -229,7 +175,6 @@ class WebAPI {
 
       // we accepted message from user!
       ws.on('message', (rawMessage) => {
-        //common.log(`Received: ${rawMessage}`);
         this.cdb.processUserActivity(JSON.parse(rawMessage), ws);
       });
 
