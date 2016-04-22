@@ -14,6 +14,7 @@ const metrics = require('./metrics');
 program
   .version('0.0.1')
   .option('-p, --port <n>', 'Port for WebSocket', parseInt)
+  .option('-l, --local', 'Location in the one worker')
   .parse(process.argv);
 
 
