@@ -10,15 +10,6 @@ export class WebAPI {
   constructor (cdb, port) {
     this.cdb = cdb;
     this.clientId = 0;
-
-    // dictionary for variant of offset
-    this.offsets = {
-      'up': {'x': 0, 'y': -1},
-      'down': {'x': 0, 'y': 1},
-      'left': {'x': -1, 'y': 0},
-      'right': {'x': 1, 'y': 0}
-    };
-
     this.wss = new WebSocketServer({ port: port });
 
     this.wss.broadcast = (data) => {
