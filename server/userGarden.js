@@ -19,7 +19,9 @@ program
 
 
 class UserDB extends protoDB.ProtoDB {
-  runDB () {
+  constructor (conn, dbName, tableList, dumpPeriod) {
+    super(conn, dbName, tableList);
+
     // dictionary for variant of offset
     this.offsets = {
       'up': {'x': 0, 'y': -1},
@@ -30,9 +32,11 @@ class UserDB extends protoDB.ProtoDB {
 
     this.locationMap = [];
 
-    this.dumpPeriod = program.dump;
+    this.dumpPeriod = dumpPeriod;
     this.userPositionCache = {};
+  }
 
+  runDB () {
     rethinkDB
       .table('startLocation', {readMode: 'outdated'})
       .run(this.conn, (err, cursor) => {
@@ -67,7 +71,7 @@ class UserDB extends protoDB.ProtoDB {
                   }
 
                   common.log(`User position buffer is ready.`);
-                  common.log(`${JSON.stringify(this.userPositionCache)}`);
+
                   this.startPeriodicalDumper();
                   this.startWebSocketServer();
                 });
@@ -287,7 +291,7 @@ if (require.main === module) {
   rethinkDB.connect( {host: 'localhost', port: 28015}, function(err, conn) {
     if (err) throw err;
 
-    const cdb = new UserDB(conn, 'labyrinth', ['userPosition']);
+    const cdb = new UserDB(conn, 'labyrinth', ['userPosition'], program.dump);
     cdb.initDB();
   });
 }
