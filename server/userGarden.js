@@ -14,7 +14,7 @@ const metrics = require('./metrics');
 program
   .version('0.0.1')
   .option('-p, --port <n>', 'Port for WebSocket', parseInt)
-  .option('-l, --local', 'Location in the one worker')
+  .option('-d, --dump <n>', 'Period for dump of user positions, sec', parseInt)
   .parse(process.argv);
 
 
@@ -29,6 +29,9 @@ class UserDB extends protoDB.ProtoDB {
     };
 
     this.locationMap = [];
+
+    this.dumpPeriod = program.dump;
+    this.userPositionCache = {};
 
     rethinkDB
       .table('startLocation', {readMode: 'outdated'})
@@ -48,10 +51,55 @@ class UserDB extends protoDB.ProtoDB {
 
           common.log(`Map buffer is ready, ${i} elements.`);
 
-          this.startWebSocketServer();
-          this.readChanges('userPosition', this.processChangesFromUserPosition.bind(this));
+          if (this.dumpPeriod) {
+            common.log(`Start local mode, period of dump is ${this.dumpPeriod} sec`);
+            rethinkDB
+              .table('userPosition', {readMode: 'outdated'})
+              .run(this.conn, (err, cursor) => {
+                if (err) throw  err;
+
+                cursor.toArray( (err, res) => {
+                  if (err) throw  err;
+
+                  for (let i = 0; i < res.length; i++) {
+                    let e = res[i];
+                    this.userPositionCache[e.login] = e;
+                  }
+
+                  common.log(`User position buffer is ready.`);
+                  common.log(`${JSON.stringify(this.userPositionCache)}`);
+                  this.startPeriodicalDumper();
+                  this.startWebSocketServer();
+                });
+              });
+
+          } else {
+            this.startWebSocketServer();
+            this.readChanges('userPosition', this.processChangesFromUserPosition.bind(this));
+          }
         });
       });
+  }
+
+  startPeriodicalDumper() {
+    setInterval( () => {
+      common.log(`Let's start the dump`);
+
+      for (let login in this.userPositionCache) {
+        let id = this.userPositionCache[login].id;
+        let x = this.userPositionCache[login].x;
+        let y = this.userPositionCache[login].y;
+        let direction = this.userPositionCache[login].direction;
+
+        rethinkDB
+          .table('userPosition', {readMode: 'outdated'})
+          .get(id)
+          .update({login: login, x: x, y: y, direction: direction})
+          .run(this.conn, function (err, res) {
+            if (err) throw  err;
+          });
+      }
+    }, this.dumpPeriod * 1000);
   }
 
   processChangesFromUserPosition (err, cursor) {
@@ -99,8 +147,52 @@ class UserDB extends protoDB.ProtoDB {
     }
   }
 
+  processUserActivity(message, ws) {
+    if (this.dumpPeriod) {
+      this.processUserActivityWithCache(message, ws);
+    } else {
+      this.processUserActivityWithoutCache(message, ws);
+    }
+  }
 
-  processUserActivity (message, ws) {
+  processUserActivityWithCache(message, ws) {
+    const login = message.login;
+    const userElem = this.userPositionCache[login];
+
+    let position = {x: userElem.x, y: userElem.y};
+
+    if (message.direction) {
+      position = this.getNewPosition(position, message.direction);
+
+      if (position) {
+        this.userPositionCache[login]['x'] = position.x;
+        this.userPositionCache[login]['y'] = position.y;
+        this.userPositionCache[login]['direction'] = position.direction;
+
+        let resp = {'changePosition': {}};
+
+        resp.changePosition.y = position.y;
+        resp.changePosition.x = position.x;
+        resp.changePosition.login = login;
+        resp.changePosition.direction = position.direction;
+
+        this.webAPI.wss.broadcast(resp);
+      }
+    } else {
+      let resp = {
+        allMap: this.locationMap,
+        changePosition: {
+          x: position.x,
+          y: position.y,
+          login: message.login
+        }
+      };
+
+      ws.send(JSON.stringify(resp));
+    }
+  }
+
+  processUserActivityWithoutCache (message, ws) {
     rethinkDB
       .table('userPosition', {readMode: 'outdated'})
       .filter({login: message.login})
