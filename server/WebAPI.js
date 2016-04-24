@@ -43,7 +43,7 @@ export class WebAPI {
     common.log('Web API started');
   }
 
-  sendInitialResponse(ws, login, locationMap, x, y) {
+  static sendInitialResponse(ws, login, locationMap, x, y) {
     let resp = {
       allMap: locationMap,
       changePosition: {
