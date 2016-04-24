@@ -174,16 +174,12 @@ export class UserDB extends protoDB.ProtoDB {
         this.webAPI.wss.broadcast(resp);
       }
     } else {
-      let resp = {
-        allMap: this.locationMap,
-        changePosition: {
-          x: position.x,
-          y: position.y,
-          login: message.login
-        }
-      };
-
-      ws.send(JSON.stringify(resp));
+      this.webAPI.sendInitialResponse(
+        ws,
+        message.login,
+        this.locationMap,
+        position.x,
+        position.y);
     }
   }
 
@@ -212,16 +208,12 @@ export class UserDB extends protoDB.ProtoDB {
                   });
               }
             } else {
-              let resp = {
-                allMap: this.locationMap,
-                changePosition: {
-                  x: position.x,
-                  y: position.y,
-                  login: message.login
-                }
-              };
-
-              ws.send(JSON.stringify(resp));
+              this.webAPI.sendInitialResponse(
+                ws,
+                message.login,
+                this.locationMap,
+                position.x,
+                position.y);
             }
         });
       });
