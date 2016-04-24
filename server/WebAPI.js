@@ -43,26 +43,29 @@ export class WebAPI {
     common.log('Web API started');
   }
 
+  static getChangePosition(login, x, y, direction) {
+    let ret = {};
+
+    ret.login = login;
+    ret.x = x;
+    ret.y = y;
+
+    if (direction) {
+      ret.direction = direction;
+    }
+
+    return ret;
+  }
+
   static sendInitialResponse(ws, login, locationMap, x, y) {
-    let resp = {
-      allMap: locationMap,
-      changePosition: {
-        x: x,
-        y: y,
-        login: login
-      }
-    };
+    let resp = {'changePosition': WebAPI.getChangePosition(login, x, y)};
+    resp.allMap = locationMap;
 
     ws.send(JSON.stringify(resp));
   }
 
   sendChangePositionBroadcast(login, direction, x, y) {
-    let resp = {'changePosition': {}};
-
-    resp.changePosition.y = y;
-    resp.changePosition.x = x;
-    resp.changePosition.login = login;
-    resp.changePosition.direction = direction;
+    let resp = {'changePosition': WebAPI.getChangePosition(login, x, y, direction)};
 
     this.wss.broadcast(resp);
   }
