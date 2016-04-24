@@ -168,7 +168,7 @@ export class UserDB extends protoDB.ProtoDB {
           position.y);
       }
     } else {
-      this.webAPI.sendInitialResponse(
+      WebAPI.WebAPI.sendInitialResponse(
         ws,
         message.login,
         this.locationMap,
@@ -202,7 +202,7 @@ export class UserDB extends protoDB.ProtoDB {
                   });
               }
             } else {
-              this.webAPI.sendInitialResponse(
+              WebAPI.WebAPI.sendInitialResponse(
                 ws,
                 message.login,
                 this.locationMap,
