@@ -55,4 +55,15 @@ export class WebAPI {
 
     ws.send(JSON.stringify(resp));
   }
+
+  sendChangePositionBroadcast(login, direction, x, y) {
+    let resp = {'changePosition': {}};
+
+    resp.changePosition.y = y;
+    resp.changePosition.x = x;
+    resp.changePosition.login = login;
+    resp.changePosition.direction = direction;
+
+    this.wss.broadcast(resp);
+  }
 }

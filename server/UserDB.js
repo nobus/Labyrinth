@@ -103,14 +103,11 @@ export class UserDB extends protoDB.ProtoDB {
     cursor.each( (err, res) => {
       if (err) throw err;
 
-      let resp = {'changePosition': {}};
-
-      resp.changePosition.y = res.new_val.y;
-      resp.changePosition.x = res.new_val.x;
-      resp.changePosition.login = res.new_val.login;
-      resp.changePosition.direction = res.new_val.direction;
-
-      this.webAPI.wss.broadcast(resp);
+      this.webAPI.sendChangePositionBroadcast(
+        res.new_val.login,
+        res.new_val.direction,
+        res.new_val.x,
+        res.new_val.y);
     });
   }
 
@@ -164,14 +161,11 @@ export class UserDB extends protoDB.ProtoDB {
         this.userPositionCache[login]['y'] = position.y;
         this.userPositionCache[login]['direction'] = position.direction;
 
-        let resp = {'changePosition': {}};
-
-        resp.changePosition.y = position.y;
-        resp.changePosition.x = position.x;
-        resp.changePosition.login = login;
-        resp.changePosition.direction = position.direction;
-
-        this.webAPI.wss.broadcast(resp);
+        this.webAPI.sendChangePositionBroadcast(
+          login,
+          position.direction,
+          position.x,
+          position.y);
       }
     } else {
       this.webAPI.sendInitialResponse(
