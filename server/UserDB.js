@@ -47,31 +47,35 @@ export class UserDB extends protoDB.ProtoDB {
           common.log(`Map buffer is ready, ${i} elements.`);
 
           if (this.dumpPeriod) {
-            common.log(`Start local mode, period of dump is ${this.dumpPeriod} sec`);
-            rethinkDB
-              .table('userPosition', {readMode: 'outdated'})
-              .run(this.conn, (err, cursor) => {
-                if (err) throw  err;
-
-                cursor.toArray( (err, res) => {
-                  if (err) throw  err;
-
-                  for (let i = 0; i < res.length; i++) {
-                    let e = res[i];
-                    this.userPositionCache[e.login] = e;
-                  }
-
-                  common.log(`User position buffer is ready.`);
-
-                  this.startPeriodicalDumper();
-                  this.startWebSocketServer();
-                });
-              });
-
+            this.startLocalMode();
           } else {
             this.startWebSocketServer();
             this.readChanges('userPosition', this.processChangesFromUserPosition.bind(this));
           }
+        });
+      });
+  }
+
+  startLocalMode() {
+    common.log(`Start local mode, period of dump is ${this.dumpPeriod} sec`);
+
+    rethinkDB
+      .table('userPosition', {readMode: 'outdated'})
+      .run(this.conn, (err, cursor) => {
+        if (err) throw  err;
+
+        cursor.toArray( (err, res) => {
+          if (err) throw  err;
+
+          for (let i = 0; i < res.length; i++) {
+            let e = res[i];
+            this.userPositionCache[e.login] = e;
+          }
+
+          common.log(`User position buffer is ready.`);
+
+          this.startPeriodicalDumper();
+          this.startWebSocketServer();
         });
       });
   }
