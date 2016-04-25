@@ -22,7 +22,8 @@
     "lynx": "^0.2.0",
     "performance-now": "^0.2.0",
     "rethinkdb": "^2.2.2",
-    "ws": "^1.0.0"
+    "ws": "^1.0.0",
+    "colors": "^1.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
