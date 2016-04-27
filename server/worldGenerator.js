@@ -2,8 +2,7 @@
 
 const rethinkDB = require('rethinkdb');
 const program = require('commander');
-const colors = require('colors');
-const common = require('./common');
+const log = require('./log');
 
 var worldDB = 'labyrinth';
 
@@ -22,9 +21,9 @@ if (require.main === module) {
       .dbCreate(worldDB)
       .run(conn, (err, res) => {
         if (err) {
-          common.log(colors.red(`The world is exist. `
+          log.error(`The world is exist. `
             + `If you really want create a new world, `
-            + `delete the database "${worldDB}".`));
+            + `delete the database "${worldDB}".`);
 
           throw  err;
         }
