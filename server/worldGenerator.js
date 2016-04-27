@@ -19,27 +19,15 @@ if (require.main === module) {
     if (err) throw err;
 
     rethinkDB
-      .dbList()
-      .run(conn, (err, dbList) => {
-        if (err) throw err;
+      .dbCreate(worldDB)
+      .run(conn, (err, res) => {
+        if (err) {
+          common.log(colors.red(`The world is exist. `
+            + `If you really want create a new world, `
+            + `delete the database "${worldDB}".`));
 
-        for (let i = 0; i < dbList.length; i++) {
-          if (dbList[i] === worldDB) {
-            common.log(colors.red(`The world is exist. `
-              + `If you really want create a new world, `
-              + `delete the database "${worldDB}".`));
-
-            process.exit(1);
-          }
+          throw  err;
         }
-
-        rethinkDB
-          .dbCreate(worldDB)
-          .run(this.conn, (err, res) => {
-            if (err) throw err;
-
-
-          });
       });
   });
 }
