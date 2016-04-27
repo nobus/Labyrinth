@@ -4,13 +4,11 @@ const rethinkDB = require('rethinkdb');
 const program = require('commander');
 const log = require('./log');
 
-var worldDB = 'labyrinth';
-
 
 if (require.main === module) {
   program
   .version('0.0.1')
-  .option('-n, --dbname', 'Name of world database')
+  .option('-d, --dbname [name]', 'Name of world database')
   .option('-p, --port <n>', 'Port for RethinkDB, default is 28015', parseInt, {isDefault: 28015})
   .option('-t, --test <n>', 'Create n Corals', parseInt)
   .parse(process.argv);
