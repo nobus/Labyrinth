@@ -5,6 +5,30 @@ const program = require('commander');
 const log = require('./log');
 
 
+class LocationGenerator {
+  constructor (conn) {
+    this.conn = conn;
+  }
+
+  generate () {
+
+  }
+}
+
+
+class WorldGenerator {
+  constructor (conn, worldSize, locationSize) {
+    this.conn = conn;
+    this.worldSize = worldSize;
+    this.locationSize = locationSize;
+  }
+
+  generate () {
+
+  }
+}
+
+
 class CoralUserGenerator {
   constructor (conn, number) {
     this.conn = conn;
