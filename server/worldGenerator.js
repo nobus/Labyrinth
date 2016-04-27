@@ -5,6 +5,40 @@ const program = require('commander');
 const log = require('./log');
 
 
+class CoralUserGenerator {
+  constructor (conn, number) {
+    this.conn = conn;
+    this.name = 'coral';
+    this.number = number;
+
+    this.user = {x: 0, y: 0, direction: 'up', login: undefined};
+  }
+
+  generate () {
+    rethinkDB
+      .tableCreate('userPosition')
+      .run(this.conn, (err) => {
+        if (err) throw err;
+
+        let login;
+
+        for (let i = 0; i < this.number; i++) {
+          this.user.login = `${this.name}${i}`;
+
+          log.info(`Create test user ${this.user.login}`);
+
+          rethinkDB
+            .table('userPosition')
+            .insert(this.user)
+            .run(this.conn, (err) => {
+              if (err) throw err;
+            });
+        }
+      });
+  }
+}
+
+
 if (require.main === module) {
   program
   .version('0.0.1')
@@ -18,7 +52,7 @@ if (require.main === module) {
 
     rethinkDB
       .dbCreate(program.dbname)
-      .run(conn, (err, res) => {
+      .run(conn, (err) => {
         if (err) {
           log.error(`The world is exist. `
             + `If you really want create a new world, `
@@ -26,6 +60,11 @@ if (require.main === module) {
 
           throw  err;
         }
+
+        conn.use(program.dbname);
+
+        let userGenerator = new CoralUserGenerator(conn, program.test);
+        userGenerator.generate();
       });
   });
 }
