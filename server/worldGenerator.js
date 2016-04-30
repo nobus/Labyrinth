@@ -8,22 +8,78 @@ const log = require('./log');
 
 
 class Location {
-  constructor (conn, locationSize) {
+  constructor(conn, locationSize, locationId) {
     this.conn = conn;
     this.locationSize = locationSize;
+    this.locationId = locationId;
+
+    this.locationMap = [];
   }
 
-  generate () {
+  createTable() {
+    rethinkDB
+      .tableCreate(this.locationId)
+      .run(this.conn, (err) => {
+        if (err) throw err;
 
+        log.info(`Table for ${this.locationId} created`);
+        this.writeNewLocationMap();
+      });
+  }
+
+  writeNewLocationMap() {
+    let buffer = [];
+
+    for (let y = 0; y < this.locationMap.length; y++) {
+      let mapRow = this.locationMap[y];
+
+      for (let x = 0; x < mapRow.length; x++) {
+        let elem = {};
+        elem['x'] = x;
+        elem['y'] = y;
+        elem['type'] = mapRow[x];
+        buffer.push(elem);
+      }
+    }
+
+    rethinkDB
+      .table(this.locationId)
+      .insert(buffer)
+      .run(this.conn, (err, res) => {
+        if (err) throw err;
+
+        log.info(`Location map done. We inserted ${res['inserted']} elements to ${this.locationId}`);
+        log.info(`Let's create the index for ${this.locationId}!`);
+
+        rethinkDB
+          .table(this.locationId)
+          .indexCreate('coord', [rethinkDB.row('x'), rethinkDB.row('y')])
+          .run(this.conn, (err) => {
+            if (err) throw err;
+
+            rethinkDB
+              .table(this.locationId)
+              .indexWait('coord')
+              .run(this.conn, (err) => {
+                if (err) throw err;
+
+                log.info(`Index for ${this.locationId} created!`);
+              });
+          });
+      });
   }
 }
 
 class ForestLocation extends Location {
-
+  generate () {
+    this.createTable();
+  }
 }
 
 class MeadowLocation extends Location {
-
+  generate () {
+    this.createTable();
+  }
 }
 
 class WorldGenerator {
@@ -38,17 +94,19 @@ class WorldGenerator {
     this.locationTypes = [ForestLocation, MeadowLocation];
   }
 
-  getLocation () {
+  getLocation (locationId) {
     const location = this.locationTypes[common.getRandomInt(0, 1)];
-    return new location(this.conn, this.locationSize);
+    return new location(this.conn, this.locationSize, locationId);
   }
 
   generate () {
     for (let i = 0; i < this.world.length; i++) {
       for (let ii =0; ii < this.worldSize; ii++) {
-        const location = this.getLocation();
+        const locationId = `location_${i}_${ii}`;
+        const location = this.getLocation(locationId);
+
         location.generate();
-        this.world[i].push(`location_${i}_${ii}`);
+        this.world[i].push(locationId);
       }
     }
   }
