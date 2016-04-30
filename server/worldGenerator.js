@@ -9,12 +9,12 @@ const log = require('./log');
 /*
 The system of locations.
 0.* Impassable blocks
-  0.0 a wall (!!!should be renamed!!!)
-  0.1 a tree
+  0.0 a ground
+  0.1 a grass
 
 1.* Passable blocks
-  1.0 a ground
-  1.1 a grass
+  1.0 a wall (!!!should be renamed!!!)
+  1.1 a tree
 
  */
 
@@ -85,12 +85,46 @@ class Location {
 
 class ForestLocation extends Location {
   generate () {
+    for (let i = 0; i < this.locationMap.length; i++) {
+      for (let ii = 0; ii < this.locationSize; ii++) {
+        let x = common.getRandomInt(0, 100);
+
+        if (x <= 40) {
+          // add grass
+          this.locationMap[i].push(0.1);
+        } else if (x >= 41 && x <= 90) {
+          // add tree
+          this.locationMap[i].push(1.1);
+        } else {
+          // add ground
+          this.locationMap[i].push(0.0)
+        }
+      }
+    }
+
     this.createTable();
   }
 }
 
 class MeadowLocation extends Location {
   generate () {
+    for (let i = 0; i < this.locationMap.length; i++) {
+      for (let ii = 0; ii < this.locationSize; ii++) {
+        let x = common.getRandomInt(0, 100);
+
+        if (x <= 80) {
+          // add grass
+          this.locationMap[i].push(0.1);
+        } else if (x >= 81 && x <= 90) {
+          // add tree
+          this.locationMap[i].push(1.1);
+        } else {
+          // add ground
+          this.locationMap[i].push(0.0)
+        }
+      }
+    }
+
     this.createTable();
   }
 }
