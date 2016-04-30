@@ -2,24 +2,14 @@
 
 const rethinkDB = require('rethinkdb');
 const program = require('commander');
+
+const common = require('./common');
 const log = require('./log');
 
 
-class LocationGenerator {
-  constructor (conn) {
+class Location {
+  constructor (conn, locationSize) {
     this.conn = conn;
-  }
-
-  generate () {
-
-  }
-}
-
-
-class WorldGenerator {
-  constructor (conn, worldSize, locationSize) {
-    this.conn = conn;
-    this.worldSize = worldSize;
     this.locationSize = locationSize;
   }
 
@@ -28,6 +18,41 @@ class WorldGenerator {
   }
 }
 
+class ForestLocation extends Location {
+
+}
+
+class MeadowLocation extends Location {
+
+}
+
+class WorldGenerator {
+  constructor (conn, worldSize, locationSize) {
+    this.conn = conn;
+    this.worldSize = worldSize;
+    this.locationSize = locationSize;
+
+    this.world = [];
+    for (let i = 0; i < this.worldSize; i++) this.world.push([]);
+
+    this.locationTypes = [ForestLocation, MeadowLocation];
+  }
+
+  getLocation () {
+    const location = this.locationTypes[common.getRandomInt(0, 1)];
+    return new location(this.conn, this.locationSize);
+  }
+
+  generate () {
+    for (let i = 0; i < this.world.length; i++) {
+      for (let ii =0; ii < this.worldSize; ii++) {
+        const location = this.getLocation();
+        location.generate();
+        this.world[i].push(`location_${i}_${ii}`);
+      }
+    }
+  }
+}
 
 class CoralUserGenerator {
   constructor (conn, number) {
@@ -89,6 +114,9 @@ if (require.main === module) {
 
         let userGenerator = new CoralUserGenerator(conn, program.test);
         userGenerator.generate();
+
+        let worldGenerator = new WorldGenerator(conn, 3, 100);
+        worldGenerator.generate();
       });
   });
 }
