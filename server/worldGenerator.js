@@ -6,6 +6,18 @@ const program = require('commander');
 const common = require('./common');
 const log = require('./log');
 
+/*
+The system of locations.
+0.* Impassable blocks
+  0.0 a wall (!!!should be renamed!!!)
+  0.1 a tree
+
+1.* Passable blocks
+  1.0 a ground
+  1.1 a grass
+
+ */
+
 
 class Location {
   constructor(conn, locationSize, locationId) {
@@ -14,6 +26,7 @@ class Location {
     this.locationId = locationId;
 
     this.locationMap = [];
+    for (let i = 0; i < locationSize; i++) this.locationMap.push([]);
   }
 
   createTable() {
