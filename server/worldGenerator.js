@@ -150,6 +150,53 @@ class WorldGenerator {
     return this.world[0][0];
   }
 
+  writeWorldMap () {
+    let buffer = [];
+
+    for (let i = 0; i < this.world.length; i++) {
+      for (let ii =0; ii < this.world[i].length; ii++) {
+        let locationElem = {};
+
+        locationElem.id = this.world[i][ii];
+
+        if (i > 0) {
+          locationElem.neighborUp = this.world[i - 1][ii];
+        }
+
+        if (i < this.worldSize - 1) {
+          locationElem.neighborDown = this.world[i + 1][ii];
+        }
+
+        if (ii > 0) {
+          locationElem.neighborLeft = this.world[i][ii - 1];
+        }
+
+        if (ii < this.worldSize - 1) {
+          locationElem.neighborRight = this.world[i][ii + 1];
+        }
+
+        buffer.push(locationElem);
+      }
+    }
+
+    rethinkDB
+      .tableCreate('worldMap')
+      .run(this.conn, (err) => {
+        if (err) throw err;
+
+        log.info(`Table for world map created`);
+
+        rethinkDB
+          .table('worldMap')
+          .insert(buffer)
+          .run(this.conn, (err) => {
+            if (err) throw err;
+
+            log.info(`World's map created and written to the disk.`)
+          });
+      });
+  }
+
   generate () {
     for (let i = 0; i < this.world.length; i++) {
       for (let ii =0; ii < this.worldSize; ii++) {
@@ -161,6 +208,7 @@ class WorldGenerator {
       }
     }
 
+    this.writeWorldMap();
     return this.getStartLocationId();
   }
 }
