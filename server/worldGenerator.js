@@ -146,6 +146,10 @@ class WorldGenerator {
     return new location(this.conn, this.locationSize, locationId);
   }
 
+  getStartLocationId () {
+    return this.world[0][0];
+  }
+
   generate () {
     for (let i = 0; i < this.world.length; i++) {
       for (let ii =0; ii < this.worldSize; ii++) {
@@ -156,16 +160,18 @@ class WorldGenerator {
         this.world[i].push(locationId);
       }
     }
+
+    return this.getStartLocationId();
   }
 }
 
 class CoralUserGenerator {
-  constructor (conn, number) {
+  constructor (conn, number, startLocationId) {
     this.conn = conn;
     this.name = 'coral';
     this.number = number;
 
-    this.user = {x: 0, y: 0, direction: 'up', login: undefined};
+    this.user = {x: 0, y: 0, direction: 'up', login: undefined, location: startLocationId};
   }
 
   generate () {
@@ -217,11 +223,14 @@ if (require.main === module) {
 
         conn.use(program.dbname);
 
-        let userGenerator = new CoralUserGenerator(conn, program.test);
-        userGenerator.generate();
+        const worldGenerator = new WorldGenerator(conn, 3, 100);
+        const startLocationId = worldGenerator.generate();
+        log.info(`start location id is ${startLocationId}`);
 
-        let worldGenerator = new WorldGenerator(conn, 3, 100);
-        worldGenerator.generate();
+        if (program.test) {
+          const userGenerator = new CoralUserGenerator(conn, program.test, startLocationId);
+          userGenerator.generate();
+        }
       });
   });
 }
