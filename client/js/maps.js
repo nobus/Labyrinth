@@ -2,6 +2,18 @@
 
 const globalMap = [];
 
+function createMapSprite (id) {
+  if (id === 0.1) {
+    return PIXI.Sprite.fromImage('img/wall.png');
+  } else if (id === 0.2) {
+    return PIXI.Sprite.fromImage('img/tree.png');
+  } else if (id === 1.1) {
+    return PIXI.Sprite.fromImage('img/ground.png');
+  } else if (id === 1.2) {
+    return PIXI.Sprite.fromImage('img/grass.png');
+  }
+}
+
 function drawMap(labMap, mapContainer, scale) {
   for (let i = 0; i < labMap.length; i++) {
     globalMap.push([]);
@@ -9,14 +21,7 @@ function drawMap(labMap, mapContainer, scale) {
     let mapRow = labMap[i];
 
     for (let ii = 0; ii < mapRow.length; ii++) {
-      var mapSprite;
-      var element = mapRow[ii];
-
-      if (element === 1) {
-        mapSprite = PIXI.Sprite.fromImage("img/wall.png");
-      } else if (element === 0) {
-        mapSprite = PIXI.Sprite.fromImage("img/ground.png");
-      }
+      var mapSprite = createMapSprite(mapRow[ii]);
 
       if (mapSprite) {
         mapSprite.scale.set(scale);
@@ -34,13 +39,7 @@ function drawMap(labMap, mapContainer, scale) {
 function changeMap(changeMap, mapContainer, scale) {
   changeMap.forEach(function (item) {
     for (let i = 0; i < item.length; i++) {
-      let mapSprite;
-
-      if (item.id === 1) {
-        mapSprite = PIXI.Sprite.fromImage("img/wall.png");
-      } else if (item.id === 0) {
-        mapSprite = PIXI.Sprite.fromImage("img/ground.png");
-      }
+      let mapSprite = createEmptySourceMap(item.id);
 
       mapSprite.scale.set(scale);
 
