@@ -2,9 +2,7 @@
 
 // https://github.com/websockets/ws/
 const WebSocketServer = require('ws').Server;
-
-const common = require('./common');
-
+const log = require('./log');
 
 export class WebAPI {
   constructor (cdb, port) {
@@ -32,15 +30,15 @@ export class WebAPI {
       });
 
       ws.on('close', () => {
-        common.log(`Client disconnected: ${thisId}`);
+        log.warn(`Client disconnected: ${thisId}`);
       });
 
       ws.on('error', (e) => {
-        common.log(`Client ${thisId} error: ${e.message}`);
+        log.error(`Client ${thisId} error: ${e.message}`);
       });
     });
 
-    common.log('Web API started');
+    log.info('Web API started');
   }
 
   static getChangePosition(login, x, y, direction) {
