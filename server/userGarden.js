@@ -1,11 +1,9 @@
 'use strict';
 
 const rethinkDB = require('rethinkdb');
-const UserDB = require('./UserDB');
-
 const program = require('commander');
 
-const common = require('./common');
+const UserDB = require('./UserDB');
 const metrics = require('./metrics');
 
 
@@ -13,6 +11,7 @@ program
   .version('0.0.1')
   .option('-p, --port <n>', 'Port for WebSocket', parseInt)
   .option('-d, --dump <n>', 'Period for dump of user positions, sec', parseInt)
+  .option('-d, --dbname [name]', 'Name of world database')
   .parse(process.argv);
 
 
@@ -23,14 +22,13 @@ if (require.main === module) {
   rethinkDB.connect( {host: 'localhost', port: 28015}, function(err, conn) {
     if (err) throw err;
 
-    const cdb = new UserDB.UserDB(
+    const userDB = new UserDB.UserDB(
       conn,
-      'labyrinth',
-      ['userPosition'],
+      program.dbname,
       program.dump,
       program.port
     );
 
-    cdb.initDB();
+    userDB.run();
   });
 }

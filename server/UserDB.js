@@ -1,15 +1,19 @@
 'use strict';
 
 const rethinkDB = require('rethinkdb');
-const protoDB = require('./protodb');
-const common = require('./common');
+const log = require('./log');
 
 const WebAPI = require('./WebAPI');
 
 
-export class UserDB extends protoDB.ProtoDB {
-  constructor (conn, dbName, tableList, dumpPeriod, port) {
-    super(conn, dbName, tableList);
+export class UserDB{
+  constructor (conn, dbName, dumpPeriod, port) {
+    this.conn = conn;
+    this.dbName = dbName;
+    this.port = port;
+    this.dumpPeriod = dumpPeriod;
+
+    this.conn.use(this.dbName);
 
     // dictionary for variant of offset
     this.offsets = {
@@ -19,45 +23,21 @@ export class UserDB extends protoDB.ProtoDB {
       'right': {'x': 1, 'y': 0}
     };
 
-    this.port = port;
-
-    this.locationMap = [];
-
-    this.dumpPeriod = dumpPeriod;
+    this.locationCache = {};
     this.userPositionCache = {};
   }
 
-  runDB () {
-    rethinkDB
-      .table('startLocation', {readMode: 'outdated'})
-      .run(this.conn, (err, cursor) => {
-        if (err) throw err;
-
-        cursor.toArray( (err, res) => {
-          if (err) throw err;
-
-          let i = 0;
-          for (; i < res.length; i++) {
-            let e = res[i];
-
-            if (this.locationMap[e.y] === undefined) this.locationMap[e.y] = [];
-            this.locationMap[e.y][e.x] = e.type;
-          }
-
-          common.log(`Map buffer is ready, ${i} elements.`);
-
-          if (this.dumpPeriod) {
-            this.startLocalMode();
-          } else {
-            this.startWebSocketServer();
-            this.readChanges('userPosition', this.processChangesFromUserPosition.bind(this));
-          }
-        });
-      });
+  run () {
+    if (this.dumpPeriod) {
+      this.startLocalMode();
+    } else {
+      this.startWebSocketServer();
+      this.readChanges('userPosition', this.processChangesFromUserPosition.bind(this));
+    }
   }
 
   startLocalMode() {
-    common.log(`Start local mode, period of dump is ${this.dumpPeriod} sec`);
+    log.info(`Start local mode, period of dump is ${this.dumpPeriod} sec`);
 
     rethinkDB
       .table('userPosition', {readMode: 'outdated'})
@@ -72,7 +52,7 @@ export class UserDB extends protoDB.ProtoDB {
             this.userPositionCache[e.login] = e;
           }
 
-          common.log(`User position buffer is ready.`);
+          log.info(`User position buffer is ready.`);
 
           this.startPeriodicalDumper();
           this.startWebSocketServer();
@@ -82,7 +62,7 @@ export class UserDB extends protoDB.ProtoDB {
 
   startPeriodicalDumper() {
     setInterval( () => {
-      common.log(`Let's start the dump`);
+      log.info(`Let's start the dump`);
 
       for (let login in this.userPositionCache) {
         let id = this.userPositionCache[login].id;
@@ -133,14 +113,17 @@ export class UserDB extends protoDB.ProtoDB {
     const newY = curPosition.y + offset.y;
     const newX = curPosition.x + offset.x;
 
-    if (newX >= 0 && newX < this.locationMap.length && newY >= 0 && newY < this.locationMap.length) {
-      if (this.locationMap[newY][newX] === 0) {
-        return {
-        'y': newY,
-        'x': newX,
-        'direction': direction};
+    if (newX >= 0
+      && newX < this.locationCache[curPosition.location].length
+      && newY >= 0
+      && newY < this.locationCache[curPosition.location].length) {
+        if (this.locationCache[curPosition.location][newY][newX] >= 1) {
+          return {
+          'y': newY,
+          'x': newX,
+          'direction': direction};
+        }
       }
-    }
   }
 
   processUserActivity(message, ws) {
@@ -153,32 +136,73 @@ export class UserDB extends protoDB.ProtoDB {
 
   processUserActivityWithCache(message, ws) {
     const login = message.login;
-    const userElem = this.userPositionCache[login];
-
-    let position = {x: userElem.x, y: userElem.y};
+    const position = this.userPositionCache[login];
 
     if (message.direction) {
-      position = this.getNewPosition(position, message.direction);
+      let newPosition = this.getNewPosition(position, message.direction);
 
-      if (position) {
-        this.userPositionCache[login]['x'] = position.x;
-        this.userPositionCache[login]['y'] = position.y;
-        this.userPositionCache[login]['direction'] = position.direction;
+      if (newPosition) {
+        this.userPositionCache[login]['x'] = newPosition.x;
+        this.userPositionCache[login]['y'] = newPosition.y;
+        this.userPositionCache[login]['direction'] = newPosition.direction;
 
         this.webAPI.sendChangePositionBroadcast(
           login,
-          position.direction,
-          position.x,
-          position.y);
+          newPosition.direction,
+          newPosition.x,
+          newPosition.y);
       }
+    } else {
+      this.checkLocationCache(ws, login, position);
+    }
+  }
+
+  checkLocationCache (ws, login, position) {
+    if (this.locationCache[position.location] === undefined) {
+      this.loadLocation(ws, login, position);
     } else {
       WebAPI.WebAPI.sendInitialResponse(
         ws,
-        message.login,
-        this.locationMap,
+        login,
+        this.locationCache[position.location],
         position.x,
         position.y);
     }
+
+  }
+
+  loadLocation (ws, login, position) {
+    rethinkDB
+      .table(position.location, {readMode: 'outdated'})
+      .run(this.conn, (err, cursor) => {
+        if (err) throw err;
+
+        this.locationCache[position.location] = [];
+        cursor.toArray( (err, res) => {
+          if (err) throw err;
+
+          let i = 0;
+          for (; i < res.length; i++) {
+            let e = res[i];
+
+            if (this.locationCache[position.location][e.y] === undefined) {
+              this.locationCache[position.location][e.y] = [];
+            }
+
+            this.locationCache[position.location][e.y][e.x] = e.type;
+          }
+
+          log.info(`Location cache for ${position.location} is ready, ${i} elements.`);
+
+          WebAPI.WebAPI.sendInitialResponse(
+            ws,
+            login,
+            this.locationCache[position.location],
+            position.x,
+            position.y);
+        });
+      });
+
   }
 
   processUserActivityWithoutCache (message, ws) {
