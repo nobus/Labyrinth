@@ -89,10 +89,10 @@ class ForestLocation extends Location {
       for (let ii = 0; ii < this.locationSize; ii++) {
         let x = common.getRandomInt(0, 100);
 
-        if (x <= 50) {
+        if (x <= 75) {
           // add grass
           this.locationMap[i].push(1.2);
-        } else if (x >= 51 && x <= 97) {
+        } else if (x > 75 && x < 98) {
           // add tree
           this.locationMap[i].push(0.2);
         } else {
@@ -112,10 +112,10 @@ class MeadowLocation extends Location {
       for (let ii = 0; ii < this.locationSize; ii++) {
         let x = common.getRandomInt(0, 100);
 
-        if (x <= 90) {
+        if (x <= 95) {
           // add grass
           this.locationMap[i].push(1.2);
-        } else if (x >= 91 && x <= 97) {
+        } else if (x > 95 && x < 98) {
           // add tree
           this.locationMap[i].push(0.2);
         } else {
@@ -157,22 +157,22 @@ class WorldGenerator {
       for (let ii =0; ii < this.world[i].length; ii++) {
         let locationElem = {};
 
-        locationElem.id = this.world[i][ii];
+        locationElem.location_id = this.world[i][ii];
 
         if (i > 0) {
-          locationElem.neighborUp = this.world[i - 1][ii];
+          locationElem.up = this.world[i - 1][ii];
         }
 
         if (i < this.worldSize - 1) {
-          locationElem.neighborDown = this.world[i + 1][ii];
+          locationElem.down = this.world[i + 1][ii];
         }
 
         if (ii > 0) {
-          locationElem.neighborLeft = this.world[i][ii - 1];
+          locationElem.left = this.world[i][ii - 1];
         }
 
         if (ii < this.worldSize - 1) {
-          locationElem.neighborRight = this.world[i][ii + 1];
+          locationElem.right = this.world[i][ii + 1];
         }
 
         buffer.push(locationElem);
