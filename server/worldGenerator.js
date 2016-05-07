@@ -130,10 +130,11 @@ class MeadowLocation extends Location {
 }
 
 class WorldGenerator {
-  constructor (conn, worldSize, locationSize) {
+  constructor (conn, worldSize, locationSize, dungeons) {
     this.conn = conn;
     this.worldSize = worldSize;
     this.locationSize = locationSize;
+    this.dungeons = dungeons;
 
     this.world = [];
     for (let i = 0; i < this.worldSize; i++) this.world.push([]);
@@ -253,6 +254,7 @@ if (require.main === module) {
   .option('-d, --dbname [name]', 'Name of world database')
   .option('-p, --port <n>', 'Port for RethinkDB, default is 28015', parseInt, {isDefault: 28015})
   .option('-t, --test <n>', 'Create n Corals', parseInt)
+  .option('-g, --dungeons <n>', 'Create n Dungeons', parseInt)
   .parse(process.argv);
 
   rethinkDB.connect( {host: 'localhost', port: program.port}, function(err, conn) {
@@ -271,7 +273,7 @@ if (require.main === module) {
 
         conn.use(program.dbname);
 
-        const worldGenerator = new WorldGenerator(conn, 3, 100);
+        const worldGenerator = new WorldGenerator(conn, 3, 100, program.dungeons);
         const startLocationId = worldGenerator.generate();
         log.info(`start location id is ${startLocationId}`);
 
