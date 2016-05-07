@@ -14,6 +14,9 @@ program
   .option('-d, --dbname [name]', 'Name of world database')
   .parse(process.argv);
 
+if (program.dump === undefined) {
+  program.dump = 60;
+}
 
 if (require.main === module) {
   const m = new metrics.Metrics(5000);
