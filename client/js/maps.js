@@ -1,6 +1,6 @@
 'use strict';
 
-const globalMap = [];
+var globalMap = [];
 
 function createMapSprite (id) {
   if (id === 0.1) {
@@ -15,6 +15,8 @@ function createMapSprite (id) {
 }
 
 function drawMap(labMap, mapContainer, scale) {
+  globalMap = [];
+
   for (let i = 0; i < labMap.length; i++) {
     globalMap.push([]);
 

@@ -23,8 +23,17 @@ export class UserDB{
       'right': {'x': 1, 'y': 0}
     };
 
+    this.locationSize = 100;  // !!!! must be in params !!!!
+    this.coordTransMutator = {
+      'up': {'y': this.locationSize - 1},
+      'down': {'y': 0},
+      'left': {'x': this.locationSize - 1},
+      'right': {'x': 0}
+    };
+
     this.locationCache = {};
     this.userPositionCache = {};
+    this.worldMapCache = {};
   }
 
   run () {
@@ -52,10 +61,28 @@ export class UserDB{
             this.userPositionCache[e.login] = e;
           }
 
-          log.info(`User position buffer is ready.`);
+          log.info(`User position cache is ready.`);
 
-          this.startPeriodicalDumper();
-          this.startWebSocketServer();
+          // 1. We will be get worldMap table too.
+          rethinkDB
+            .table('worldMap', {readMode: 'outdated'})
+            .run(this.conn, (err, cursor) => {
+              if (err) throw err;
+
+              cursor.toArray( (err, res) => {
+                if (err) throw err;
+
+                for (let i = 0; i < res.length; i++) {
+                  let e = res[i];
+                  this.worldMapCache[e.location_id] = e;
+                }
+
+                log.info(`World map cache is ready.`);
+
+                this.startPeriodicalDumper();
+                this.startWebSocketServer();
+              });
+            });
         });
       });
   }
@@ -65,16 +92,19 @@ export class UserDB{
       log.info(`Let's start the dump`);
 
       for (let login in this.userPositionCache) {
-        let id = this.userPositionCache[login].id;
-        let x = this.userPositionCache[login].x;
-        let y = this.userPositionCache[login].y;
-        let direction = this.userPositionCache[login].direction;
+        let pos = {
+          login: login,
+          x: this.userPositionCache[login].x,
+          y: this.userPositionCache[login].y,
+          direction: this.userPositionCache[login].direction,
+          location: this.userPositionCache[login].location
+        };
 
         rethinkDB
           .table('userPosition', {readMode: 'outdated'})
-          .get(id)
-          .update({login: login, x: x, y: y, direction: direction})
-          .run(this.conn, function (err, res) {
+          .get(this.userPositionCache[login].id)
+          .update(pos)
+          .run(this.conn, function (err) {
             if (err) throw  err;
           });
       }
@@ -99,6 +129,10 @@ export class UserDB{
     this.webAPI = new WebAPI.WebAPI(this, this.port);
   }
 
+  getNeighborLocation (location, direction) {
+    return this.worldMapCache[location][direction];
+  }
+
   /**
   *
   * @param curPosition {y, x} current user position
@@ -110,20 +144,50 @@ export class UserDB{
   getNewPosition(curPosition, direction) {
     const offset = this.offsets[direction];
 
-    const newY = curPosition.y + offset.y;
-    const newX = curPosition.x + offset.x;
+    let newY = curPosition.y + offset.y;
+    let newX = curPosition.x + offset.x;
 
-    if (newX >= 0
-      && newX < this.locationCache[curPosition.location].length
+    const curLocation = this.locationCache[curPosition.location];
+
+    if (curLocation
+      && newX >= 0
+      && newX < this.locationSize
       && newY >= 0
-      && newY < this.locationCache[curPosition.location].length) {
-        if (this.locationCache[curPosition.location][newY][newX] >= 1) {
+      && newY < this.locationSize) {
+        if (curLocation[newY]
+          && curLocation[newX]
+          && curLocation[newY][newX] >= 1) {
           return {
-          'y': newY,
-          'x': newX,
-          'direction': direction};
+            'y': newY,
+            'x': newX,
+            'direction': direction};
         }
-      }
+      } else {
+        // We will be check neighbors of location in worldMap buffer.
+        const neighbor = this.getNeighborLocation(curPosition.location, direction);
+
+        if (neighbor) {
+          const transMutator = this.coordTransMutator[direction];
+
+          if (transMutator.x === undefined) {
+            newX = curPosition.x;
+          } else {
+            newX = transMutator.x;
+          }
+
+          if (transMutator.y === undefined) {
+            newY = curPosition.y;
+          } else {
+            newY = transMutator.y;
+          }
+
+          return {
+            'location': neighbor,
+            'y': newY,
+            'x': newX,
+            'direction': direction};
+          }
+        }
   }
 
   processUserActivity(message, ws) {
@@ -141,16 +205,22 @@ export class UserDB{
     if (message.direction) {
       let newPosition = this.getNewPosition(position, message.direction);
 
+      // If new Location - checkLocationCache()
       if (newPosition) {
         this.userPositionCache[login]['x'] = newPosition.x;
         this.userPositionCache[login]['y'] = newPosition.y;
         this.userPositionCache[login]['direction'] = newPosition.direction;
 
-        this.webAPI.sendChangePositionBroadcast(
-          login,
-          newPosition.direction,
-          newPosition.x,
-          newPosition.y);
+        if (newPosition.location) {
+          this.userPositionCache[login]['location'] = newPosition.location;
+          this.checkLocationCache(ws, login, newPosition);
+        } else {
+          this.webAPI.sendChangePositionBroadcast(
+            login,
+            newPosition.direction,
+            newPosition.x,
+            newPosition.y);
+        }
       }
     } else {
       this.checkLocationCache(ws, login, position);

@@ -1,7 +1,9 @@
 'use strict';
 
 $(document).ready(function() {
-  const stage = new PIXI.Container();
+  $('.chat-block').draggable();
+  $('.backpack-block').draggable();
+  $('.canvas-block').draggable();
 
   const canvasWidth = $(window).width() * 0.6;
   const canvasHeight = $(window).height() * 0.95;
@@ -9,20 +11,11 @@ $(document).ready(function() {
   const sideLength = Math.floor((canvasWidth < canvasHeight) ? canvasWidth: canvasHeight);
   const scale = sideLength / 640;
 
-  const renderer = PIXI.autoDetectRenderer(sideLength, sideLength);
+  const ret = initNewStage(sideLength);
 
-  const mapContainer = new PIXI.Container();
-
-  mapContainer.x = 0;
-  mapContainer.y = 0;
-
-  stage.addChild(mapContainer);
-
-  $('.canvas-block').append(renderer.view);
-
-  $('.chat-block').draggable();
-  $('.backpack-block').draggable();
-  $('.canvas-block').draggable();
+  var stage = ret.stage;
+  var renderer = ret.renderer;
+  var mapContainer = ret.mapContainer;
 
   animate();
 
@@ -31,6 +24,22 @@ $(document).ready(function() {
   const host = window.document.location.host.replace(/:.*/, '');
 
   const socket = new WebSocket('ws://' + host + ':' + port + '/');
+
+  function initNewStage (sideLength) {
+    const stage = new PIXI.Container();
+    const renderer = PIXI.autoDetectRenderer(sideLength, sideLength);
+    const mapContainer = new PIXI.Container();
+
+    mapContainer.x = 0;
+    mapContainer.y = 0;
+
+    stage.addChild(mapContainer);
+
+    $('.canvas-block').empty();
+    $('.canvas-block').append(renderer.view);
+
+    return {stage: stage, renderer: renderer, mapContainer: mapContainer};
+  }
 
   function animate() {
     requestAnimationFrame(animate);
@@ -106,6 +115,12 @@ $(document).ready(function() {
     const message = JSON.parse(rawMessage);
 
     if (message.allMap) {
+      const ret = initNewStage(sideLength);
+
+      stage = ret.stage;
+      renderer = ret.renderer;
+      mapContainer = ret.mapContainer;
+
       drawMap(message.allMap, mapContainer, scale);
     }
 
@@ -118,7 +133,7 @@ $(document).ready(function() {
       let y = message.changePosition.y;
       let x = message.changePosition.x;
 
-      if (playerSprites[login] === undefined) {
+      if (playerSprites[login] === undefined || message.allMap) {
         createPlayerSprite(login, myLogin, y, x, stage, mapContainer, scale);
       }
 
