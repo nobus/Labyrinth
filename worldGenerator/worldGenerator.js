@@ -3,19 +3,22 @@
 const rethinkDB = require('rethinkdb');
 const program = require('commander');
 
-const common = require('./common');
-const log = require('./log');
+const common = require('./../server/common');
+const log = require('./../server/log');
 
 /*
 The system of locations.
-0.* Passable blocks
-  1.1 a ground
-  1.2 a grass
-
-1.* Impassable blocks
+0.* Impassable blocks
   0.1 a wall (!!!should be renamed!!!)
   0.2 a tree
 
+1.* Passable blocks
+  1.1 a ground
+  1.2 a grass
+
+2.* Gates and entrances
+  2.1 Entrance to dungeon
+  2.2 Exit from dungeon
  */
 
 
