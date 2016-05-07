@@ -26,7 +26,8 @@ if (require.main === module) {
       conn,
       program.dbname,
       program.dump,
-      program.port
+      program.port,
+      100           // location size
     );
 
     userDB.run();

@@ -7,7 +7,7 @@ const WebAPI = require('./WebAPI');
 
 
 export class UserDB{
-  constructor (conn, dbName, dumpPeriod, port) {
+  constructor (conn, dbName, dumpPeriod, port, locationSize) {
     this.conn = conn;
     this.dbName = dbName;
     this.port = port;
@@ -23,7 +23,7 @@ export class UserDB{
       'right': {'x': 1, 'y': 0}
     };
 
-    this.locationSize = 100;  // !!!! must be in params !!!!
+    this.locationSize = locationSize;
     this.coordTransMutator = {
       'up': {'y': this.locationSize - 1},
       'down': {'y': 0},
