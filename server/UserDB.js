@@ -37,12 +37,7 @@ export class UserDB{
   }
 
   run () {
-    if (this.dumpPeriod) {
-      this.startLocalMode();
-    } else {
-      this.startWebSocketServer();
-      this.readChanges('userPosition', this.processChangesFromUserPosition.bind(this));
-    }
+    this.startLocalMode();
   }
 
   startLocalMode() {
@@ -109,20 +104,6 @@ export class UserDB{
           });
       }
     }, this.dumpPeriod * 1000);
-  }
-
-  processChangesFromUserPosition (err, cursor) {
-    if (err) throw err;
-
-    cursor.each( (err, res) => {
-      if (err) throw err;
-
-      this.webAPI.sendChangePositionBroadcast(
-        res.new_val.login,
-        res.new_val.direction,
-        res.new_val.x,
-        res.new_val.y);
-    });
   }
 
   startWebSocketServer () {
@@ -270,43 +251,6 @@ export class UserDB{
             this.locationCache[position.location],
             position.x,
             position.y);
-        });
-      });
-
-  }
-
-  processUserActivityWithoutCache (message, ws) {
-    rethinkDB
-      .table('userPosition', {readMode: 'outdated'})
-      .filter({login: message.login})
-      .run(this.conn,  (err, cursor) => {
-        if (err) throw err;
-
-        cursor.next( (err, row) => {
-            if (err) throw err;
-
-            let position = {x: row.x, y: row.y};
-
-            if (message.direction) {
-              position = this.getNewPosition(position, message.direction);
-
-              if (position) {
-                rethinkDB
-                  .table('userPosition', {readMode: 'outdated'})
-                  .get(row.id)
-                  .update({login: message.login, x: position.x, y: position.y, direction: message.direction})
-                  .run(this.conn, function (err, res) {
-                    if (err) throw  err;
-                  });
-              }
-            } else {
-              WebAPI.WebAPI.sendInitialResponse(
-                ws,
-                message.login,
-                this.locationMap,
-                position.x,
-                position.y);
-            }
         });
       });
   }
