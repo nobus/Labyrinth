@@ -172,14 +172,6 @@ export class UserDB{
   }
 
   processUserActivity(message, ws) {
-    if (this.dumpPeriod) {
-      this.processUserActivityWithCache(message, ws);
-    } else {
-      this.processUserActivityWithoutCache(message, ws);
-    }
-  }
-
-  processUserActivityWithCache(message, ws) {
     const login = message.login;
     const position = this.userPositionCache[login];
 
