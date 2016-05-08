@@ -171,22 +171,22 @@ export class UserDB{
         }
   }
 
-  processUserActivity(message, ws) {
+  processUserActivity(message, client) {
     const login = message.login;
     const position = this.userPositionCache[login];
 
     if (message.direction) {
       let newPosition = this.getNewPosition(position, message.direction);
 
-      // If new Location - checkLocationCache()
       if (newPosition) {
         this.userPositionCache[login]['x'] = newPosition.x;
         this.userPositionCache[login]['y'] = newPosition.y;
         this.userPositionCache[login]['direction'] = newPosition.direction;
 
+        // If new Location - checkLocationCache()
         if (newPosition.location) {
           this.userPositionCache[login]['location'] = newPosition.location;
-          this.checkLocationCache(ws, login, newPosition);
+          this.checkLocationCache(client, login, newPosition);
         } else {
           this.webAPI.sendChangePositionBroadcast(
             login,
@@ -196,16 +196,16 @@ export class UserDB{
         }
       }
     } else {
-      this.checkLocationCache(ws, login, position);
+      this.checkLocationCache(client, login, position);
     }
   }
 
-  checkLocationCache (ws, login, position) {
+  checkLocationCache (client, login, position) {
     if (this.locationCache[position.location] === undefined) {
-      this.loadLocation(ws, login, position);
+      this.loadLocation(client, login, position);
     } else {
       WebAPI.WebAPI.sendInitialResponse(
-        ws,
+        client,
         login,
         this.locationCache[position.location],
         position.x,
@@ -214,7 +214,7 @@ export class UserDB{
 
   }
 
-  loadLocation (ws, login, position) {
+  loadLocation (client, login, position) {
     rethinkDB
       .table(position.location, {readMode: 'outdated'})
       .run(this.conn, (err, cursor) => {
@@ -238,7 +238,7 @@ export class UserDB{
           log.info(`Location cache for ${position.location} is ready, ${i} elements.`);
 
           WebAPI.WebAPI.sendInitialResponse(
-            ws,
+            client,
             login,
             this.locationCache[position.location],
             position.x,

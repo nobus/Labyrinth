@@ -20,20 +20,20 @@ export class WebAPI {
       });
     };
 
-    this.wss.on('connection', (ws) => {
+    this.wss.on('connection', (client) => {
       // increment id counter
       const thisId = ++this.clientId;
 
       // we accepted message from user!
-      ws.on('message', (rawMessage) => {
-        this.cdb.processUserActivity(JSON.parse(rawMessage), ws);
+      client.on('message', (rawMessage) => {
+        this.cdb.processUserActivity(JSON.parse(rawMessage), client);
       });
 
-      ws.on('close', () => {
+      client.on('close', () => {
         log.warn(`Client disconnected: ${thisId}`);
       });
 
-      ws.on('error', (e) => {
+      client.on('error', (e) => {
         log.error(`Client ${thisId} error: ${e.message}`);
       });
     });
@@ -55,11 +55,11 @@ export class WebAPI {
     return ret;
   }
 
-  static sendInitialResponse(ws, login, locationMap, x, y) {
+  static sendInitialResponse(client, login, locationMap, x, y) {
     let resp = {'changePosition': WebAPI.getChangePosition(login, x, y)};
     resp.allMap = locationMap;
 
-    ws.send(JSON.stringify(resp));
+    client.send(JSON.stringify(resp));
   }
 
   sendChangePositionBroadcast(login, direction, x, y) {
