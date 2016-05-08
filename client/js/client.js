@@ -115,6 +115,7 @@ $(document).ready(function() {
     const message = JSON.parse(rawMessage);
 
     if (message.allMap) {
+      playerSprites = {};
       const ret = initNewStage(sideLength);
 
       stage = ret.stage;
