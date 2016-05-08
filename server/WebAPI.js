@@ -10,12 +10,12 @@ export class WebAPI {
     this.clientId = 0;
     this.wss = new WebSocketServer({ port: port });
 
-    this.wss.broadcast = (data) => {
-      if (this.wss.clients.length) {
-        data = JSON.stringify(data);
+    this.wss.broadcast = (data, clientList) => {
+      if (clientList === undefined) {
+        clientList = this.wss.clients;
       }
 
-      this.wss.clients.forEach(function each(client) {
+      clientList.forEach(function each(client) {
         client.send(data);
       });
     };
@@ -62,9 +62,9 @@ export class WebAPI {
     client.send(JSON.stringify(resp));
   }
 
-  sendChangePositionBroadcast(login, direction, x, y) {
+  sendChangePositionBroadcast(clientList, login, direction, x, y) {
     let resp = {'changePosition': WebAPI.getChangePosition(login, x, y, direction)};
 
-    this.wss.broadcast(resp);
+    this.wss.broadcast(JSON.stringify(resp), clientList);
   }
 }

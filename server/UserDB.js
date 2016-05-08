@@ -1,5 +1,6 @@
 'use strict';
 
+const util = require('util');
 const rethinkDB = require('rethinkdb');
 const log = require('./log');
 
@@ -34,6 +35,10 @@ export class UserDB{
     this.locationCache = {};
     this.userPositionCache = {};
     this.worldMapCache = {};
+
+    // for broadcast response on location
+    // {'location': position.location, 'client': client};
+    this.clients = {};
   }
 
   run () {
@@ -172,6 +177,8 @@ export class UserDB{
   }
 
   processUserActivity(message, client) {
+    //console.log(util.inspect(client.send, true, 2, true));
+
     const login = message.login;
     const position = this.userPositionCache[login];
 
@@ -185,10 +192,25 @@ export class UserDB{
 
         // If new Location - checkLocationCache()
         if (newPosition.location) {
+          this.clients[login] = {'location': newPosition.location, 'client': client};
+
           this.userPositionCache[login]['location'] = newPosition.location;
           this.checkLocationCache(client, login, newPosition);
         } else {
+          let clientList = [];
+
+          for (let log in this.clients) {
+            let loc = this.clients[log].location;
+
+            if (loc === this.userPositionCache[login].location) {
+              let clnt = this.clients[log].client;
+              clientList.push(clnt);
+              //console.log(util.inspect(clnt.send, true, 2, true));
+            }
+          }
+
           this.webAPI.sendChangePositionBroadcast(
+            clientList,
             login,
             newPosition.direction,
             newPosition.x,
@@ -196,6 +218,8 @@ export class UserDB{
         }
       }
     } else {
+      this.clients[login] = {'location': position.location, 'client': client};
+
       this.checkLocationCache(client, login, position);
     }
   }
