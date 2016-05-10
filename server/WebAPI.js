@@ -56,14 +56,20 @@ export class WebAPI {
   }
 
   static sendInitialResponse(client, login, locationMap, x, y) {
-    let resp = {'changePosition': WebAPI.getChangePosition(login, x, y)};
+    const resp = {'changePosition': WebAPI.getChangePosition(login, x, y)};
     resp.allMap = locationMap;
 
     client.send(JSON.stringify(resp));
   }
 
+  sendRemoveUserBroadcast(clientList, login) {
+    const resp = {'removeFromLocation': login};
+
+    this.wss.broadcast(JSON.stringify(resp), clientList);
+  }
+
   sendChangePositionBroadcast(clientList, login, direction, x, y) {
-    let resp = {'changePosition': WebAPI.getChangePosition(login, x, y, direction)};
+    const resp = {'changePosition': WebAPI.getChangePosition(login, x, y, direction)};
 
     this.wss.broadcast(JSON.stringify(resp), clientList);
   }
