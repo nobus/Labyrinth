@@ -12,5 +12,8 @@
     "y": 1,
     "x": 0,
     "direction": "up"
+  },
+  "removeFromLocation": {
+    "login": "nobus"
   }
 }
