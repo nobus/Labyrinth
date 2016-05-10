@@ -176,6 +176,21 @@ export class UserDB{
         }
   }
 
+  getClientsForLocation(location) {
+    let clientList = [];
+
+    for (let log in this.clients) {
+      let loc = this.clients[log].location;
+
+      if (loc === location) {
+        let clnt = this.clients[log].client;
+        clientList.push(clnt);
+      }
+    }
+
+    return clientList;
+  }
+
   processUserActivity(message, client) {
     //console.log(util.inspect(client.send, true, 2, true));
 
@@ -186,28 +201,21 @@ export class UserDB{
       let newPosition = this.getNewPosition(position, message.direction);
 
       if (newPosition) {
+        // change position
         this.userPositionCache[login]['x'] = newPosition.x;
         this.userPositionCache[login]['y'] = newPosition.y;
         this.userPositionCache[login]['direction'] = newPosition.direction;
 
-        // If new Location - checkLocationCache()
         if (newPosition.location) {
+          // If new Location - checkLocationCache()
           this.clients[login] = {'location': newPosition.location, 'client': client};
 
+          const oldLocation = this.userPositionCache[login]['location'];
           this.userPositionCache[login]['location'] = newPosition.location;
-          this.checkLocationCache(client, login, newPosition);
+          this.checkLocationCache(client, login, oldLocation, newPosition);
         } else {
-          let clientList = [];
-
-          for (let log in this.clients) {
-            let loc = this.clients[log].location;
-
-            if (loc === this.userPositionCache[login].location) {
-              let clnt = this.clients[log].client;
-              clientList.push(clnt);
-              //console.log(util.inspect(clnt.send, true, 2, true));
-            }
-          }
+          // same location
+          let clientList = this.getClientsForLocation(this.userPositionCache[login].location);
 
           this.webAPI.sendChangePositionBroadcast(
             clientList,
@@ -218,15 +226,16 @@ export class UserDB{
         }
       }
     } else {
+      // we have a new user connection
       this.clients[login] = {'location': position.location, 'client': client};
 
-      this.checkLocationCache(client, login, position);
+      this.checkLocationCache(client, login, undefined, position);
     }
   }
 
-  checkLocationCache (client, login, position) {
+  checkLocationCache (client, login, oldLocation, position) {
     if (this.locationCache[position.location] === undefined) {
-      this.loadLocation(client, login, position);
+      this.loadLocation(client, login, oldLocation, position);
     } else {
       WebAPI.WebAPI.sendInitialResponse(
         client,
@@ -238,7 +247,7 @@ export class UserDB{
 
   }
 
-  loadLocation (client, login, position) {
+  loadLocation (client, login, oldLocation, position) {
     rethinkDB
       .table(position.location, {readMode: 'outdated'})
       .run(this.conn, (err, cursor) => {
