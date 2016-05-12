@@ -140,6 +140,10 @@ $(document).ready(function() {
 
       changePosition(login, message.changePosition.direction, y, x);
     }
+
+    if (message.removeFromLocation) {
+      removePlayerSprite(message.removeFromLocation, mapContainer);
+    }
   };
 
   socket.onerror = function (error) {

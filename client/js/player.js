@@ -19,6 +19,15 @@ function createPlayerSprite(login, myLogin, y, x, stage, mapContainer, scale) {
   }
 }
 
+function removePlayerSprite(login, mapContainer) {
+  const playerSprite = playerSprites[login];
+
+  if (playerSprite) {
+    mapContainer.removeChild(playerSprite);
+    delete playerSprite[login];
+  }
+}
+
 function movePlayer(login, y, x, scale) {
   playerSprites[login].y = y * 32 * scale;
   playerSprites[login].x = x * 32 * scale;

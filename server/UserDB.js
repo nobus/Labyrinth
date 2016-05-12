@@ -237,6 +237,10 @@ export class UserDB{
     if (this.locationCache[position.location] === undefined) {
       this.loadLocation(client, login, oldLocation, position);
     } else {
+      if (oldLocation) {
+        this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(oldLocation), login);
+      }
+
       WebAPI.WebAPI.sendInitialResponse(
         client,
         login,
@@ -269,6 +273,10 @@ export class UserDB{
           }
 
           log.info(`Location cache for ${position.location} is ready, ${i} elements.`);
+
+          if (oldLocation) {
+            this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(oldLocation), login);
+          }
 
           WebAPI.WebAPI.sendInitialResponse(
             client,
