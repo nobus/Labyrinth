@@ -1,22 +1,13 @@
 
 const now = require('performance-now');
+const log = require('./log');
 
 
 module.exports = {
-  log: log,
   timeLogger: timeLogger,
   getRandom: getRandom,
   getRandomInt: getRandomInt
 };
-
-
-/**
- *
- * @param message
- */
-function log(message) {
-  console.log(`${Date.now() / 1000}: ${message}`);
-}
 
 
 function timeLogger(f) {
@@ -26,7 +17,7 @@ function timeLogger(f) {
     const result = f.apply(this, arguments); // (*)
 
     const end = now() - start;
-    log(`function ${f.name} performed ${end} ms`);
+    log.info(`function ${f.name} performed ${end} ms`);
 
     return result;
   }

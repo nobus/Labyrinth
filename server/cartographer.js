@@ -4,6 +4,7 @@ const rethinkDB = require('rethinkdb');
 
 const protoDB = require('./protodb');
 const common = require('./common');
+const log = require('./log');
 
 
 class CartographerDB extends protoDB.ProtoDB {
@@ -91,9 +92,9 @@ class CartographerDB extends protoDB.ProtoDB {
         if (err) throw err;
 
         if (tableName === 'startLocation') {
-          common.log('Map generator started.');
+          log.info('Map generator started.');
           this.writeNewLocationMap(tableName, CartographerDB.generateLocationMap(100, 100));
-          common.log('Map generator ended.');
+          log.info('Map generator ended.');
         }
       });
   }
@@ -119,8 +120,8 @@ class CartographerDB extends protoDB.ProtoDB {
       .run(this.conn, (err, res) => {
         if (err) throw err;
 
-        common.log(`Location map done. We inserted ${res['inserted']} elements to ${tableName} for you!`);
-        common.log('Let\'s create the index!');
+        log.info(`Location map done. We inserted ${res['inserted']} elements to ${tableName} for you!`);
+        log.info('Let\'s create the index!');
 
         rethinkDB
           .table(tableName)
@@ -134,7 +135,7 @@ class CartographerDB extends protoDB.ProtoDB {
               .run(this.conn, (err, res) => {
                 if (err) throw err;
 
-                common.log(`Index for ${tableName} created!`);
+                log.info(`Index for ${tableName} created!`);
                 this.runDB();
               });
           });
@@ -144,7 +145,7 @@ class CartographerDB extends protoDB.ProtoDB {
 
   runDB () {
     setInterval( () => {
-      common.log('Change the Map!');
+      log.info('Change the Map!');
 
       const params = CartographerDB.getLineParams(100, 100, 20);
       const elementId = common.getRandomInt(0, 1);
@@ -156,7 +157,7 @@ class CartographerDB extends protoDB.ProtoDB {
           params.startY += 1;
         }
 
-        common.log(`${JSON.stringify(params)}, ${elementId}`);
+        log.info(`${JSON.stringify(params)}, ${elementId}`);
 
         rethinkDB
           .table('startLocation')
@@ -164,7 +165,7 @@ class CartographerDB extends protoDB.ProtoDB {
           .update({type: elementId})
           .run(this.conn, (err, result) => {
             if (err) throw err;
-            common.log(JSON.stringify(result));
+            log.info(JSON.stringify(result));
           });
       }
     }, 5000);

@@ -9,15 +9,18 @@ module.exports = {
   error: error
 };
 
+function getTimestamp () {
+  return Date.now() / 1000;
+}
 
 function info (message) {
-  common.log(colors.green(message));
+  console.log(`${getTimestamp()}: ${colors.green(message)}`);
 }
 
 function warn (message) {
-  common.log(colors.yellow(message));
+  console.warn(`${getTimestamp()}: ${colors.yellow(message)}`);
 }
 
 function error (message) {
-  common.log(colors.red(message));
+  console.error(`${getTimestamp()}: ${colors.red(message)}`);
 }
