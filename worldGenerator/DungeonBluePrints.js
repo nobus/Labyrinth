@@ -14,10 +14,12 @@ export class DungeonBluePrints {
 
   generate () {
     for (let i = 0; i < this.worldSize; i++) {
+      let dungeonId = `dungeon_${i}`;
+
       let lx = common.getRandomInt(0, this.worldSize - 1);
       let ly = common.getRandomInt(0, this.worldSize - 1);
 
-      let locId = `location_${ly}_${lx}`;
+      let locationId = `location_${ly}_${lx}`;
 
       let levels = common.getRandomInt(1, this.worldSize);
 
@@ -29,7 +31,8 @@ export class DungeonBluePrints {
         entrances.push([x, y]);
       }
 
-      this.blueprints[locId] = {
+      this.blueprints[dungeonId] = {
+        'locationId': locationId,
         'levels': levels,
         'entrances': entrances
       };
