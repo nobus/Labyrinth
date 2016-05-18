@@ -13,13 +13,20 @@ export class DungeonBluePrints {
 
 
   generate () {
-    for (let i = 0; i < this.worldSize; i++) {
-      let dungeonId = `dungeon_${i}`;
+    const idList = [];
 
+    while (this.number) {
       let lx = common.getRandomInt(0, this.worldSize - 1);
       let ly = common.getRandomInt(0, this.worldSize - 1);
 
       let locationId = `location_${ly}_${lx}`;
+
+      if (locationId in idList) continue;
+
+      idList.push(locationId);
+      this.number--;
+
+      let dungeonId = `dungeon_${this.number}`;
 
       let levels = common.getRandomInt(1, this.worldSize);
 
