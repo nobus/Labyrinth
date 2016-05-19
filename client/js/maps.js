@@ -11,6 +11,8 @@ function createMapSprite (id) {
     return PIXI.Sprite.fromImage('img/ground.png');
   } else if (id === 1.2) {
     return PIXI.Sprite.fromImage('img/grass.png');
+  } else if (id === 2.1) {
+    return PIXI.Sprite.fromImage('img/entrance.png');
   }
 }
 
