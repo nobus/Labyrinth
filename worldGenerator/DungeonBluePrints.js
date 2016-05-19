@@ -21,7 +21,7 @@ export class DungeonBluePrints {
 
       let locationId = `location_${ly}_${lx}`;
 
-      if (idList.indexOf(locationId) > -1) continue;
+      if (locationId in this.blueprints) continue;
 
       idList.push(locationId);
       this.number--;
@@ -38,8 +38,8 @@ export class DungeonBluePrints {
         entrances.push([x, y]);
       }
 
-      this.blueprints[dungeonId] = {
-        'locationId': locationId,
+      this.blueprints[locationId] = {
+        'dungeonId': dungeonId,
         'levels': levels,
         'entrances': entrances
       };
