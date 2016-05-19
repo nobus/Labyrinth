@@ -21,7 +21,7 @@ export class DungeonBluePrints {
 
       let locationId = `location_${ly}_${lx}`;
 
-      if (locationId in idList) continue;
+      if (idList.indexOf(locationId) > -1) continue;
 
       idList.push(locationId);
       this.number--;
