@@ -22,6 +22,13 @@ export class ForestLocation extends location.Location {
       }
     }
 
+    if (this.dungeonBP) {
+      const x = this.dungeonBP.entrances[0][0];
+      const y = this.dungeonBP.entrances[0][1];
+
+      this.locationMap[y][x] = 2.1;
+    }
+
     this.createTable();
   }
 }
@@ -43,6 +50,13 @@ export class MeadowLocation extends location.Location {
           this.locationMap[i].push(1.1)
         }
       }
+    }
+
+    if (this.dungeonBP) {
+      const x = this.dungeonBP.entrances[0][0];
+      const y = this.dungeonBP.entrances[0][1];
+
+      this.locationMap[y][x] = 2.1;
     }
 
     this.createTable();

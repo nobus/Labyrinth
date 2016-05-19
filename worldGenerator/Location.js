@@ -5,10 +5,11 @@ const rethinkDB = require('rethinkdb');
 const log = require('./../server/log');
 
 export class Location {
-  constructor(conn, locationSize, locationId) {
+  constructor(conn, locationSize, locationId, dungeonBP) {
     this.conn = conn;
     this.locationSize = locationSize;
     this.locationId = locationId;
+    this.dungeonBP = dungeonBP;
 
     this.locationMap = [];
     for (let i = 0; i < locationSize; i++) this.locationMap.push([]);

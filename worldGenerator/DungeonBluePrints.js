@@ -45,4 +45,8 @@ export class DungeonBluePrints {
       };
     }
   }
+
+  getBluePrints (locationId) {
+    return this.blueprints[locationId];
+  }
 }

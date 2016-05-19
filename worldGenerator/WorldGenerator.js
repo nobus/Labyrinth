@@ -5,6 +5,7 @@ const rethinkDB = require('rethinkdb');
 const common = require('./../server/common');
 const log = require('./../server/log');
 
+const dbp = require('./DungeonBluePrints');
 const customLocations = require('./customLocations');
 
 export class WorldGenerator {
@@ -20,9 +21,9 @@ export class WorldGenerator {
     this.locationTypes = [customLocations.ForestLocation, customLocations.MeadowLocation];
   }
 
-  getLocation (locationId) {
+  getLocation (locationId, dungeonBP) {
     const location = this.locationTypes[common.getRandomInt(0, 1)];
-    return new location(this.conn, this.locationSize, locationId);
+    return new location(this.conn, this.locationSize, locationId, dungeonBP);
   }
 
   getStartLocationId () {
@@ -77,10 +78,15 @@ export class WorldGenerator {
   }
 
   generate () {
+    const dungeonBluePrints = new dbp.DungeonBluePrints(this.dungeons, this.worldSize, this.locationSize);
+    dungeonBluePrints.generate();
+
     for (let i = 0; i < this.world.length; i++) {
       for (let ii =0; ii < this.worldSize; ii++) {
         const locationId = `location_${i}_${ii}`;
-        const location = this.getLocation(locationId);
+        const dungeonBP = dungeonBluePrints.getBluePrints(locationId);
+
+        const location = this.getLocation(locationId, dungeonBP);
 
         location.generate();
         this.world[i].push(locationId);
