@@ -9,20 +9,30 @@ const dbp = require('./DungeonBluePrints');
 const customLocations = require('./customLocations');
 
 export class WorldGenerator {
-  constructor (conn, worldSize, locationSize, dungeons) {
+  constructor (conn, worldSize, locationSize, numDungeon) {
     this.conn = conn;
     this.worldSize = worldSize;
     this.locationSize = locationSize;
-    this.dungeons = dungeons;
+    this.numDungeon = numDungeon;
 
     this.world = [];
     for (let i = 0; i < this.worldSize; i++) this.world.push([]);
 
+    this.dungeons = {};
+    this.dungeonBluePrints = new dbp.DungeonBluePrints(this.numDungeon, this.worldSize, this.locationSize);
+    this.dungeonBluePrints.generate();
+
     this.locationTypes = [customLocations.ForestLocation, customLocations.MeadowLocation];
+    this.dungeonLocationTypes = [customLocations.Cave, customLocations.Labyrinth];
   }
 
   getLocation (locationId, dungeonBP) {
     const location = this.locationTypes[common.getRandomInt(0, 1)];
+    return new location(this.conn, this.locationSize, locationId, dungeonBP);
+  }
+
+  getDungeonLocation (locationId, dungeonBP) {
+    const location = this.dungeonLocationTypes[common.getRandomInt(0, 1)];
     return new location(this.conn, this.locationSize, locationId, dungeonBP);
   }
 
@@ -77,14 +87,24 @@ export class WorldGenerator {
       });
   }
 
-  generate () {
-    const dungeonBluePrints = new dbp.DungeonBluePrints(this.dungeons, this.worldSize, this.locationSize);
-    dungeonBluePrints.generate();
+  createDungeons () {
+    for (let locationId in this.dungeonBluePrints.blueprints) {
+      const dungeonBP = this.dungeonBluePrints.blueprints[locationId];
 
+      for (let i = 0; i < dungeonBP.levels; i++) {
+        const dungLocationId = `${dungeonBP.dungeonId}_${i}`;
+
+        this.dungeons[locationId] = this.getDungeonLocation(dungLocationId, dungeonBP);
+        this.dungeons[locationId].generate(i);
+      }
+    }
+  }
+
+  createSurface () {
     for (let i = 0; i < this.world.length; i++) {
       for (let ii =0; ii < this.worldSize; ii++) {
         const locationId = `location_${i}_${ii}`;
-        const dungeonBP = dungeonBluePrints.getBluePrints(locationId);
+        const dungeonBP = this.dungeonBluePrints.getBluePrints(locationId);
 
         const location = this.getLocation(locationId, dungeonBP);
 
@@ -93,7 +113,14 @@ export class WorldGenerator {
       }
     }
 
-    this.writeWorldMap();
     return this.getStartLocationId();
+  }
+
+  generate () {
+    this.createDungeons();
+    const startLocationId = this.createSurface();
+    this.writeWorldMap();
+
+    return startLocationId;
   }
 }
