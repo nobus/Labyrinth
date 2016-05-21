@@ -19,7 +19,10 @@ export class Location {
     rethinkDB
       .tableCreate(this.locationId)
       .run(this.conn, (err) => {
-        if (err) throw err;
+        if (err) {
+          log.error(`Table for ${this.locationId} not created`);
+          throw err;
+        }
 
         log.info(`Table for ${this.locationId} created`);
         this.writeNewLocationMap();
@@ -45,7 +48,10 @@ export class Location {
       .table(this.locationId)
       .insert(buffer)
       .run(this.conn, (err, res) => {
-        if (err) throw err;
+        if (err) {
+          log.error(`Data for ${this.locationId} not inserted`);
+          throw err;
+        }
 
         log.info(`Location map done. We inserted ${res['inserted']} elements to ${this.locationId}`);
         log.info(`Let's create the index for ${this.locationId}!`);
@@ -54,7 +60,10 @@ export class Location {
           .table(this.locationId)
           .indexCreate('coord', [rethinkDB.row('x'), rethinkDB.row('y')])
           .run(this.conn, (err) => {
-            if (err) throw err;
+            if (err) {
+              log.error(`Index for ${this.locationId} not created`);
+              throw err;
+            }
 
             rethinkDB
               .table(this.locationId)
