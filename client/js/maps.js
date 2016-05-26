@@ -13,6 +13,8 @@ function createMapSprite (id) {
     return PIXI.Sprite.fromImage('img/grass.png');
   } else if (id === 2.1) {
     return PIXI.Sprite.fromImage('img/entrance.png');
+  } else if (id === 2.2) {
+    return PIXI.Sprite.fromImage('img/exit1.png');
   }
 }
 
