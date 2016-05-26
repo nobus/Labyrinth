@@ -22,12 +22,7 @@ export class ForestLocation extends location.Location {
       }
     }
 
-    if (this.dungeonBP) {
-      const x = this.dungeonBP.entrances[0][0];
-      const y = this.dungeonBP.entrances[0][1];
-
-      this.locationMap[y][x] = 2.1;
-    }
+    this.createDungeonEntrance(-1);
 
     this.createTable();
   }
@@ -52,12 +47,7 @@ export class MeadowLocation extends location.Location {
       }
     }
 
-    if (this.dungeonBP) {
-      const x = this.dungeonBP.entrances[0][0];
-      const y = this.dungeonBP.entrances[0][1];
-
-      this.locationMap[y][x] = 2.1;
-    }
+    this.createDungeonEntrance(-1);
 
     this.createTable();
   }
@@ -78,6 +68,12 @@ export class Cave extends location.Location {
         }
       }
     }
+
+    // add exit from current dungeon level to top level
+    this.createDungeonExit(level);
+
+    // add entrance from current dungeon level to bottom level
+    this.createDungeonEntrance(level + 1);
 
     this.createTable();
   }
@@ -141,6 +137,12 @@ export class Labyrinth extends location.Location {
         this.createVerticalLine(10);
       }
     }
+
+    // add exit from current dungeon level to top level
+    this.createDungeonExit(level);
+
+    // add entrance from current dungeon level to bottom level
+    this.createDungeonEntrance(level + 1);
 
     this.createTable();
   }
