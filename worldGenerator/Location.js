@@ -29,6 +29,31 @@ export class Location {
       });
   }
 
+  createDungeonTunnel (type, level) {
+    if (this.dungeonBP) {
+      if (level === -1) {
+        // add entrance from surface to dungeon
+        const x = this.dungeonBP.entrances[0][0];
+        const y = this.dungeonBP.entrances[0][1];
+        this.locationMap[y][x] = 2.1;
+      } else {
+        if (this.dungeonBP.entrances.length > level) {
+          const x = this.dungeonBP.entrances[level][0];
+          const y = this.dungeonBP.entrances[level][1];
+          this.locationMap[y][x] = type;
+        }
+      }
+    }
+  }
+
+  createDungeonEntrance (level) {
+    this.createDungeonTunnel(2.1, level);
+  }
+
+  createDungeonExit (level) {
+    this.createDungeonTunnel(2.2, level);
+  }
+
   writeNewLocationMap() {
     let buffer = [];
 
