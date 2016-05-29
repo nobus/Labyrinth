@@ -140,13 +140,34 @@ export class UserDB{
       && newX < this.locationSize
       && newY >= 0
       && newY < this.locationSize) {
-        if (curLocation[newY]
-          && curLocation[newX]
-          && curLocation[newY][newX] >= 1) {
-          return {
-            'y': newY,
-            'x': newX,
-            'direction': direction};
+        if (curLocation[newY] && curLocation[newX] && curLocation[newY][newX] >= 1) {
+          const locationElem = curLocation[newY][newX];
+
+          if (locationElem >= 1 && locationElem < 2) {
+            return {
+              'y': newY,
+              'x': newX,
+              'direction': direction
+            };
+          } else if (locationElem >= 2) {
+            if (locationElem === 2.1) {
+              // entrance to the dungeon's level
+              direction = 'under';
+            } else if (locationElem === 2.2) {
+              // exit from dungeon's level
+              direction = 'over';
+            }
+
+            const neighbor = this.getNeighborLocation(curPosition.location, direction);
+            if (neighbor) {
+              return {
+                'location': neighbor,
+                'y': curPosition.y,
+                'x': curPosition.x,
+                'direction': direction
+              };
+            }
+          }
         }
       } else {
         // We will be check neighbors of location in worldMap buffer.
