@@ -25,7 +25,10 @@ export class Location {
         }
 
         log.info(`Table for ${this.locationId} created`);
-        this.writeNewLocationMap();
+
+        // setTimeout is the hack for ReqlOpFailedError:
+        // Cannot perform write: primary replica for shard ["", +inf) not available
+        setTimeout(this.writeNewLocationMap.bind(this), 20000);
       });
   }
 
