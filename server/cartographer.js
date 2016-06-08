@@ -1,183 +1,38 @@
 'use strict';
 
 const rethinkDB = require('rethinkdb');
+const program = require('commander');
 
-const protoDB = require('./protodb');
 const common = require('./common');
 const log = require('./log');
 
 
-class CartographerDB extends protoDB.ProtoDB {
-  /**
-   *
-   * @param height - height of the game Map
-   * @param width - width of the game Map
-   * @param max - maximum line's length
-   * @returns {Object} where startY and startX - start point of the line
-   */
-  static getLineParams(height, width, max) {
-    const ret = {};
-
-    ret.startY = common.getRandomInt(0, height - max);
-    ret.startX = common.getRandomInt(0, width - max);
-    ret.length = common.getRandomInt(3, max);
-
-    return ret;
+class CartographerDB {
+  constructor (conn, dbname, interval) {
+    this.dbname = dbname;
+    this.interval = interval;
   }
 
-
-  /**
-   * draw horizontal line on the Map
-   * @param locationMap - array for location's map
-   * @param height - height of the game Map
-   * @param width - width of the game Map
-   * @param max - maximum line's length
-   */
-  static createHorizontalLine(locationMap, height, width, max) {
-    const params = CartographerDB.getLineParams(height, width, max);
-
-    for (let i = 0; i < params.length; i++) {
-      locationMap[params.startY][params.startX + i] = 1;
-    }
-  }
-
-
-  /**
-   * draw vertical line on the Map
-   * @param locationMap - array for location's map
-   * @param height - height of the game Map
-   * @param width - width of the game Map
-   * @param max - maximum line's length
-   */
-  static createVerticalLine(locationMap, height, width, max) {
-    const params = CartographerDB.getLineParams(height, width, max);
-
-    for (let i = 0; i < params.length; i++) {
-      locationMap[params.startY + i][params.startX] = 1;
-    }
-  }
-
-
-  /**
-   *
-   * @param height Y
-   * @param width X
-   * @returns {Array} new map of the Labyrinth's location
-   */
-  static generateLocationMap(height, width) {
-    let locationMap = [];
-
-    for (let i = 0; i < height; i++) {
-      locationMap.push(Array.apply(null, Array(width)).map(function (_, i) {
-        return 0;
-      }));
-    }
-
-    for (let i = 0; i < 300; i++) {
-      if (i % 2 === 0) {
-        CartographerDB.createHorizontalLine(locationMap, height, width, 10);
-      }
-      if (i % 2 === 1) {
-        CartographerDB.createVerticalLine(locationMap, height, width, 10);
-      }
-    }
-
-    return locationMap;
-  }
-
-  createTable (tableName) {
-    rethinkDB
-      .tableCreate(tableName)
-      .run(this.conn, (err, res) => {
-        if (err) throw err;
-
-        if (tableName === 'startLocation') {
-          log.info('Map generator started.');
-          this.writeNewLocationMap(tableName, CartographerDB.generateLocationMap(100, 100));
-          log.info('Map generator ended.');
-        }
-      });
-  }
-
-  writeNewLocationMap(tableName, worldMapArray) {
-    let buffer = [];
-
-    for (let y = 0; y < worldMapArray.length; y++) {
-      let mapRow = worldMapArray[y];
-
-      for (let x = 0; x < mapRow.length; x++) {
-        let elem = {};
-        elem['x'] = x;
-        elem['y'] = y;
-        elem['type'] = mapRow[x];
-        buffer.push(elem);
-      }
-    }
-
-    rethinkDB
-      .table(tableName)
-      .insert(buffer)
-      .run(this.conn, (err, res) => {
-        if (err) throw err;
-
-        log.info(`Location map done. We inserted ${res['inserted']} elements to ${tableName} for you!`);
-        log.info('Let\'s create the index!');
-
-        rethinkDB
-          .table(tableName)
-          .indexCreate('coord', [rethinkDB.row('x'), rethinkDB.row('y')])
-          .run(this.conn, (err, res) => {
-            if (err) throw err;
-
-            rethinkDB
-              .table(tableName)
-              .indexWait('coord')
-              .run(this.conn, (err, res) => {
-                if (err) throw err;
-
-                log.info(`Index for ${tableName} created!`);
-                this.runDB();
-              });
-          });
-      });
-  }
-
-
-  runDB () {
+  run () {
     setInterval( () => {
       log.info('Change the Map!');
-
-      const params = CartographerDB.getLineParams(100, 100, 20);
-      const elementId = common.getRandomInt(0, 1);
-
-      for (let i = 0; i < params.length; i++) {
-        if (elementId === 0) {
-          params.startX += 1;
-        } else {
-          params.startY += 1;
-        }
-
-        log.info(`${JSON.stringify(params)}, ${elementId}`);
-
-        rethinkDB
-          .table('startLocation')
-          .getAll([params.startX, params.startY], {index: 'coord'})
-          .update({type: elementId})
-          .run(this.conn, (err, result) => {
-            if (err) throw err;
-            log.info(JSON.stringify(result));
-          });
-      }
-    }, 5000);
+    }, this.interval);
   }
 
 }
 
 if (require.main === module) {
-  rethinkDB.connect( {host: 'localhost', port: 28015}, function(err, conn) {
+  program
+  .version('0.0.1')
+  .option('-d, --dbname [name]', 'Name of world database')
+  .option('-p, --port <n>', 'Port for RethinkDB, default is 28015', parseInt, {isDefault: 28015})
+  .option('-i, --interval <n>', 'Interval of time of changes', parseInt)
+  .parse(process.argv);
+
+  rethinkDB.connect( {host: 'localhost', port: program.port}, function(err, conn) {
     if (err) throw err;
 
-    const cdb = new CartographerDB(conn, 'labyrinth', ['userPosition', 'startLocation']);
-    cdb.initDB();
+    const cdb = new CartographerDB(conn, program.dbname, program.interval);
+    cdb.run();
   });
 }
