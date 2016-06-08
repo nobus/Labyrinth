@@ -9,6 +9,7 @@ const log = require('./log');
 
 class CartographerDB {
   constructor (conn, dbname, interval) {
+    this.conn = conn;
     this.dbname = dbname;
     this.interval = interval;
   }
