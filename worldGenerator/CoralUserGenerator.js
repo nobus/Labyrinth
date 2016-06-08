@@ -11,7 +11,13 @@ export class CoralUserGenerator {
     this.name = 'coral';
     this.number = number;
 
-    this.user = {x: 0, y: 0, direction: 'up', login: undefined, location: startLocationId};
+    this.user = {
+      x: 0,
+      y: 0,
+      direction: 'up',
+      login: undefined,
+      location: startLocationId,
+      online: false};
   }
 
   generate () {
