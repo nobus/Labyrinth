@@ -6,7 +6,8 @@ const log = require('./log');
 module.exports = {
   timeLogger: timeLogger,
   getRandom: getRandom,
-  getRandomInt: getRandomInt
+  getRandomInt: getRandomInt,
+  isEmpty: isEmpty
 };
 
 
@@ -42,4 +43,8 @@ function getRandom(min, max) {
  */
 function getRandomInt(min, max) {
   return Math.floor(getRandom(min, max));
+}
+
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
 }
