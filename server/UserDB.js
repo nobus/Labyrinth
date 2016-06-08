@@ -74,7 +74,7 @@ export class UserDB{
 
                 for (let i = 0; i < res.length; i++) {
                   let e = res[i];
-                  this.worldMapCache[e.location_id] = e;
+                  this.worldMapCache[e.location] = e;
                 }
 
                 log.info(`World map cache is ready.`);

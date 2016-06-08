@@ -49,7 +49,7 @@ export class WorldGenerator {
 
     for (let locationId in this.surfaceBluePrints.blueprints) {
       const locationElem = this.surfaceBluePrints.getBluePrints(locationId);
-      locationElem.location_id = locationId;
+      locationElem.location = locationId;
 
       buffer.push(locationElem);
     }
@@ -59,7 +59,7 @@ export class WorldGenerator {
 
       for (let dungLocationId in bp.neighbors) {
         const locationElem = bp.neighbors[dungLocationId];
-        locationElem.location_id = dungLocationId;
+        locationElem.location = dungLocationId;
         buffer.push(locationElem);
       }
     }
