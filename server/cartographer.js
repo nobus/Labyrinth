@@ -74,10 +74,30 @@ class CartographerDB {
 
           const e = row.new_val;
           this.userPositionCache[e.login] = e;
-
-          log.info(JSON.stringify(this.userPositionCache));
         });
       });
+  }
+
+  getLocationForChange () {
+    const allLocations = Object.keys(this.worldMapCache);
+    const onlineLocations = [];
+
+    for (let login in this.userPositionCache) {
+      if (this.userPositionCache[login].online === true) {
+        let location = this.userPositionCache[login].location;
+
+        if (onlineLocations.indexOf(location) === -1) {
+          onlineLocations.push(location);
+        }
+      }
+    }
+
+    console.log(onlineLocations);
+    const res = allLocations.filter((e) => {if (onlineLocations.indexOf(e) === -1) return e});
+
+    if (res) {
+      return res[common.getRandomInt(0, res.length - 1)];
+    }
   }
 
   run () {
@@ -85,7 +105,11 @@ class CartographerDB {
       if (common.isEmpty(this.worldMapCache) || common.isEmpty(this.userPositionCache)) {
         log.warn('Not ready caches yet');
       } else {
-        log.info('Change the Map!');
+        const location = this.getLocationForChange();
+
+        if (location) {
+          log.info(`Change the Location ${location}!`);
+        }
       }
     }, this.interval);
   }
