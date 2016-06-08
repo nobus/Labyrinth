@@ -82,14 +82,13 @@ class CartographerDB {
 
   run () {
     setInterval( () => {
-      if (common.isEmpty(this.worldMapCache) ||  common.isEmpty(this.userPositionCache)) {
+      if (common.isEmpty(this.worldMapCache) || common.isEmpty(this.userPositionCache)) {
         log.warn('Not ready caches yet');
       } else {
         log.info('Change the Map!');
       }
     }, this.interval);
   }
-
 }
 
 if (require.main === module) {
