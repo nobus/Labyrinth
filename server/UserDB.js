@@ -39,6 +39,7 @@ export class UserDB{
     // for broadcast response on location
     // {'location': position.location, 'client': client};
     this.clients = {};
+    this.clientId = {};
   }
 
   run () {
@@ -212,9 +213,7 @@ export class UserDB{
     return clientList;
   }
 
-  processUserActivity(message, client) {
-    //console.log(util.inspect(client.send, true, 2, true));
-
+  processUserActivity(message, client, clientId) {
     const login = message.login;
     const position = this.userPositionCache[login];
 
@@ -229,7 +228,10 @@ export class UserDB{
 
         if (newPosition.location) {
           // If new Location - checkLocationCache()
-          this.clients[login] = {'location': newPosition.location, 'client': client};
+          this.clients[login] = {
+            'location': newPosition.location,
+            'client': client
+          };
 
           const oldLocation = this.userPositionCache[login]['location'];
           this.userPositionCache[login]['location'] = newPosition.location;
@@ -248,7 +250,12 @@ export class UserDB{
       }
     } else {
       // we have a new user connection
-      this.clients[login] = {'location': position.location, 'client': client};
+      this.clients[login] = {
+        'location': position.location,
+        'client': client
+      };
+
+      this.switchOnline(login, clientId);
 
       this.checkLocationCache(client, login, undefined, position);
     }
@@ -306,6 +313,32 @@ export class UserDB{
             position.x,
             position.y);
         });
+      });
+  }
+
+  switchOnline (login, clientId) {
+    rethinkDB
+      .table('userPosition', {readMode: 'outdated'})
+      .get(this.userPositionCache[login].id)
+      .update({'online': true})
+      .run(this.conn, (err) => {
+        if (err) throw  err;
+
+        this.clientId[clientId] = login;
+      });
+  }
+
+  switchOffline (clientId) {
+    const login = this.clientId[clientId];
+
+    rethinkDB
+      .table('userPosition', {readMode: 'outdated'})
+      .get(this.userPositionCache[login].id)
+      .update({'online': false})
+      .run(this.conn, (err) => {
+        if (err) throw  err;
+
+        delete this.clientId[clientId];
       });
   }
 }

@@ -26,15 +26,17 @@ export class WebAPI {
 
       // we accepted message from user!
       client.on('message', (rawMessage) => {
-        this.cdb.processUserActivity(JSON.parse(rawMessage), client);
+        this.cdb.processUserActivity(JSON.parse(rawMessage), client, thisId);
       });
 
       client.on('close', () => {
         log.warn(`Client disconnected: ${thisId}`);
+        this.cdb.switchOffline(thisId);
       });
 
       client.on('error', (e) => {
         log.error(`Client ${thisId} error: ${e.message}`);
+        this.cdb.switchOffline(thisId);
       });
     });
 
