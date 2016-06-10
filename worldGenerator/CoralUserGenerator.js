@@ -37,7 +37,11 @@ export class CoralUserGenerator {
             .table('userPosition')
             .insert(this.user)
             .run(this.conn, (err) => {
-              if (err) throw err;
+              if (err) {
+                // maybe need a hack for ReqlOpFailedError
+                log.error(`Data for ${login} isn't inserted.`);
+                throw err;
+              }
             });
         }
       });
