@@ -1,5 +1,9 @@
 'use strict';
 
+const common = require('./../server/common');
+const customLocations = require('./customLocations');
+
+
 export class SurfaceBluePrints {
   constructor(worldSize, dungeonBluePrints) {
     this.worldSize = worldSize;
@@ -7,6 +11,8 @@ export class SurfaceBluePrints {
 
     this.blueprints = {};
     this.startLocationId = undefined;
+
+    this.locationTypes = [customLocations.ForestLocation, customLocations.MeadowLocation];
   }
 
   setStartLocationId () {
@@ -18,12 +24,18 @@ export class SurfaceBluePrints {
     return this.startLocationId;
   }
 
+  getLocationType () {
+    const location = this.locationTypes[common.getRandomInt(0, this.locationTypes.length - 1)];
+    return location.name;
+  }
+
   generate () {
     for (let i = 0; i < this.worldSize; i++) {
       for (let ii =0; ii < this.worldSize; ii++) {
         const locationId = `location_${i}_${ii}`;
 
         this.blueprints[locationId] = {};
+        this.blueprints[locationId].locationType = this.getLocationType();
 
         if (i > 0) {
           this.blueprints[locationId].up = `location_${i - 1}_${ii}`;

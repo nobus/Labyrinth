@@ -1,6 +1,8 @@
 'use strict';
 
 const common = require('./../server/common');
+const customLocations = require('./customLocations');
+
 
 export class DungeonBluePrints {
   constructor (number, worldSize, locationSize) {
@@ -9,8 +11,14 @@ export class DungeonBluePrints {
     this.locationSize = locationSize;
 
     this.blueprints = {};
+
+    this.locationTypes = [customLocations.Cave, customLocations.Labyrinth];
   }
 
+  getLocationType () {
+    const location = this.locationTypes[common.getRandomInt(0, this.locationTypes.length - 1)];
+    return location.name;
+  }
 
   generate () {
     while (this.number) {
@@ -39,11 +47,14 @@ export class DungeonBluePrints {
 
         let dungLocationId = DungeonBluePrints.getDungeonLocationId(dungeonId, l);
         neighbors[dungLocationId] = {};
+        neighbors[dungLocationId].locationType = this.getLocationType();
 
         if (l === 0) {
           // first level
           neighbors[dungLocationId].over = locationId;
-          neighbors[dungLocationId].under = DungeonBluePrints.getDungeonLocationId(dungeonId, l + 1);
+
+          if (levels > 1)
+            neighbors[dungLocationId].under = DungeonBluePrints.getDungeonLocationId(dungeonId, l + 1);
 
           firstLevelId = dungLocationId;
         } else if (l === (levels - 1)) {

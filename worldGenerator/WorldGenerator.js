@@ -30,13 +30,17 @@ export class WorldGenerator {
     this.dungeonLocationTypes = [customLocations.Cave, customLocations.Labyrinth];
   }
 
-  getLocation (locationId, dungeonBP) {
-    const location = this.locationTypes[common.getRandomInt(0, 1)];
+  getLocation (locationId, surfaceBP, dungeonBP) {
+    const locationType = surfaceBP.locationType;
+    const location = customLocations[locationType];
+
     return new location(this.conn, this.locationSize, locationId, dungeonBP);
   }
 
   getDungeonLocation (locationId, dungeonBP) {
-    const location = this.dungeonLocationTypes[common.getRandomInt(0, 1)];
+    const locationType = dungeonBP.neighbors[locationId].locationType;
+
+    const location = customLocations[locationType];
     return new location(this.conn, this.locationSize, locationId, dungeonBP);
   }
 
@@ -99,7 +103,9 @@ export class WorldGenerator {
   createSurface () {
     for (let locationId in this.surfaceBluePrints.blueprints) {
       const dungeonBP = this.dungeonBluePrints.getBluePrints(locationId);
-      const location = this.getLocation(locationId, dungeonBP);
+      const location = this.getLocation(locationId,
+                            this.surfaceBluePrints.getBluePrints(locationId),
+                            dungeonBP);
       location.generate();
     }
   }
