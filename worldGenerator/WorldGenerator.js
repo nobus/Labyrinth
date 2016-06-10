@@ -25,27 +25,11 @@ export class WorldGenerator {
 
     this.surfaceBluePrints = new sbp.SurfaceBluePrints(this.worldSize, this.dungeonBluePrints);
     this.surfaceBluePrints.generate();
-
-    this.locationTypes = [customLocations.ForestLocation, customLocations.MeadowLocation];
-    this.dungeonLocationTypes = [customLocations.Cave, customLocations.Labyrinth];
   }
 
-  getLocation (locationId, surfaceBP, dungeonBP) {
-    const locationType = surfaceBP.locationType;
-    const location = customLocations[locationType];
-
-    return new location(this.conn, this.locationSize, locationId, dungeonBP);
-  }
-
-  getDungeonLocation (locationId, dungeonBP) {
-    const locationType = dungeonBP.neighbors[locationId].locationType;
-
+  getLocation (locationId, locationType, dungeonBP) {
     const location = customLocations[locationType];
     return new location(this.conn, this.locationSize, locationId, dungeonBP);
-  }
-
-  getStartLocationId () {
-    return this.world[0][0];
   }
 
   writeWorldMap () {
@@ -93,8 +77,9 @@ export class WorldGenerator {
 
       for (let i = 0; i < dungeonBP.levels; i++) {
         const dungLocationId = dbp.DungeonBluePrints.getDungeonLocationId(dungeonId, i);
+        const locationType = dungeonBP.neighbors[dungLocationId].locationType;
 
-        this.dungeons[locationId] = this.getDungeonLocation(dungLocationId, dungeonBP);
+        this.dungeons[locationId] = this.getLocation(dungLocationId, locationType, dungeonBP);
         this.dungeons[locationId].generate(i);
       }
     }
@@ -103,9 +88,9 @@ export class WorldGenerator {
   createSurface () {
     for (let locationId in this.surfaceBluePrints.blueprints) {
       const dungeonBP = this.dungeonBluePrints.getBluePrints(locationId);
-      const location = this.getLocation(locationId,
-                            this.surfaceBluePrints.getBluePrints(locationId),
-                            dungeonBP);
+      const surfaceBP = this.surfaceBluePrints.getBluePrints(locationId);
+
+      const location = this.getLocation(locationId, surfaceBP.locationType, dungeonBP);
       location.generate();
     }
   }
