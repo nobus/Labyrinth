@@ -302,6 +302,21 @@ export class UserDB{
 
           log.info(`Location cache for ${position.location} is ready, ${i} elements.`);
 
+          rethinkDB
+            .table(position.location, {readMode: 'outdated'})
+            .changes()
+            .run(this.conn, (err, cursor) => {
+              if (err) throw  err;
+
+              cursor.each((err, row) => {
+                if (err) throw err;
+
+                log.info(`Location cache for ${position.location} has changed.`);
+                const e = row.new_val;
+                this.locationCache[position.location][e.y][e.x] = e.type;
+              });
+            });
+
           if (oldLocation) {
             this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(oldLocation), login);
           }
