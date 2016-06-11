@@ -36,6 +36,6 @@
     "test": "node_modules/mocha/bin/mocha test",
     "create-world": "node_modules/.bin/babel-node worldGenerator/generator.js --port 28015 --dbname qwerty --test 10 --dungeons 3",
     "start-garden": "node_modules/.bin/babel-node server/userGarden.js --port 8081 --dbname qwerty",
-    "start-cartographer": "node_modules/.bin/babel-node server/cartographer.js --port 28015 --dbname qwerty --interval 5000"
+    "start-cartographer": "node_modules/.bin/babel-node server/cartographer.js --port 28015 --dbname qwerty --interval 10000"
   }
 }
