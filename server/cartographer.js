@@ -6,6 +6,8 @@ const program = require('commander');
 const common = require('./common');
 const log = require('./log');
 
+const customLocations = require('../worldGenerator/customLocations');
+
 
 class CartographerDB {
   constructor (conn, dbName, interval) {
@@ -92,7 +94,6 @@ class CartographerDB {
       }
     }
 
-    console.log(onlineLocations);
     const res = allLocations.filter((e) => {if (onlineLocations.indexOf(e) === -1) return e});
 
     if (res) {
@@ -100,15 +101,23 @@ class CartographerDB {
     }
   }
 
+  getLocationType (locationId) {
+    return this.worldMapCache[locationId].locationType;
+  }
+
   run () {
     setInterval( () => {
       if (common.isEmpty(this.worldMapCache) || common.isEmpty(this.userPositionCache)) {
         log.warn('Not ready caches yet');
       } else {
-        const location = this.getLocationForChange();
+        const locationId = this.getLocationForChange();
 
-        if (location) {
-          log.info(`Change the Location ${location}!`);
+        if (locationId) {
+          log.info(`Change the Location ${locationId}!`);
+          const locationType = this.getLocationType(locationId);
+
+          const location = new customLocations[locationType](this.conn, 100, locationId);
+          location.mutate();
         }
       }
     }, this.interval);
