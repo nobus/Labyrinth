@@ -128,23 +128,20 @@ export class Location {
           const buffer = [];
 
           for (let i = 0; i < data.length; i++) {
-            if (dungX.indexOf(data[i].x) === -1 && dungY.indexOf(data[i].y) === -1) {
-              buffer.push(data[i]);
+            const e = data[i];
+            if (dungX.indexOf(e.x) === -1 && dungY.indexOf(e.y) === -1) {
+              rethinkDB
+                .table(this.locationId)
+                .getAll([e.x, e.y], {index: 'coord'})
+                .update(e.type)
+                .run(this.conn, (err) => {
+                  if (err) {
+                    log.error(`Data for ${this.locationId} not inserted`);
+                    throw err;
+                  }
+                });
             }
           }
-
-          if (buffer.length > 0)
-          rethinkDB
-            .table(this.locationId)
-            .insert(buffer)
-            .run(this.conn, (err, res) => {
-              if (err) {
-                log.error(`Data for ${this.locationId} not inserted`);
-                throw err;
-              }
-
-              log.info(`Location map done. We inserted ${res['inserted']} elements to ${this.locationId}`);
-            });
         });
       });
   }
