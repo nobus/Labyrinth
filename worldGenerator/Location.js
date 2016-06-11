@@ -104,4 +104,48 @@ export class Location {
           });
       });
   }
+
+  mutate () {
+    rethinkDB
+      .table(this.locationId)
+      // check dungeon's entrance
+      .filter(rethinkDB.row('type').gt(2))
+      .run(this.conn, (err, res) => {
+        if (err) throw err;
+
+        res.toArray ((err, results) => {
+          if (err) throw err;
+
+          const dungX = [];
+          const dungY = [];
+
+          for (let i = 0; i < results.length; i++) {
+            dungX.push(results[i].x);
+            dungY.push(results[i].y);
+          }
+
+          const data = this.mutator();
+          const buffer = [];
+
+          for (let i = 0; i < data.length; i++) {
+            if (dungX.indexOf(data[i].x) === -1 && dungY.indexOf(data[i].y) === -1) {
+              buffer.push(data[i]);
+            }
+          }
+
+          if (buffer.length > 0)
+          rethinkDB
+            .table(this.locationId)
+            .insert(buffer)
+            .run(this.conn, (err, res) => {
+              if (err) {
+                log.error(`Data for ${this.locationId} not inserted`);
+                throw err;
+              }
+
+              log.info(`Location map done. We inserted ${res['inserted']} elements to ${this.locationId}`);
+            });
+        });
+      });
+  }
 }
