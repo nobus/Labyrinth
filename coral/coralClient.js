@@ -4,6 +4,7 @@ const WebSocket = require('ws');
 const program = require('commander');
 
 const common = require('../server/common');
+const log = require('../server/log');
 
 // node coral/coralClient.js --host localhost --port 8081 --name coral --number 10
 
@@ -46,20 +47,20 @@ if (require.main === module) {
 
     socket.onmessage = function (event) {
       const rawMessage = event.data;
-      common.log(`Data received ${coralLogin}: ${rawMessage.length}`);
+      log.info(`Data received ${coralLogin}: ${rawMessage.length}`);
     };
 
     socket.onclose = function (event) {
       if (event.wasClean) {
-        console.log('Connection closed.');
+        log.warn('Connection closed.');
       } else {
-        console.log('Connection broken.'); // for example, server died
+        log.error('Connection broken.'); // for example, server died
       }
-      console.log(`Code: ${event.code} reason: ${event.reason}`);
+      log.warn(`Code: ${event.code} reason: ${event.reason}`);
     };
 
     socket.onerror = function (error) {
-      console.log(`Error ${error.message}`);
+      log.error(`Error ${error.message}`);
     };
 
   }
