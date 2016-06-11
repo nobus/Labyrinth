@@ -26,6 +26,31 @@ export class ForestLocation extends location.Location {
 
     this.createTable();
   }
+
+  mutator () {
+    const buffer = [];
+
+    for (let i = 0; i < common.getRandomInt(1, 20); i++) {
+      const x = common.getRandomInt(0, this.locationSize - 1);
+      const y = common.getRandomInt(0, this.locationSize - 1);
+
+      const t = common.getRandomInt(0, 100);
+
+      let eType;
+      if (t <= 75) {
+        // add grass
+        eType = 1.2;
+      } else if (t > 75 && t < 98) {
+        // add tree
+        eType = 0.2;
+      } else {
+        // add ground
+        eType = 1.2;
+      }
+      buffer.push({x: x, y: y, type: eType});
+    }
+    return buffer;
+  }
 }
 
 export class MeadowLocation extends location.Location {
@@ -50,6 +75,34 @@ export class MeadowLocation extends location.Location {
     this.createDungeonEntrance(-1);
 
     this.createTable();
+  }
+
+
+  mutator () {
+    const buffer = [];
+
+    for (let i = 0; i < common.getRandomInt(1, 20); i++) {
+      const x = common.getRandomInt(0, this.locationSize - 1);
+      const y = common.getRandomInt(0, this.locationSize - 1);
+
+      const t = common.getRandomInt(0, 100);
+
+      let eType;
+      if (t <= 95) {
+        // add grass
+        eType = 1.2;
+      } else if (t > 95 && t < 98) {
+        // add tree
+        eType = 0.2;
+      } else {
+        // add ground
+        eType = 1.2;
+      }
+
+      buffer.push({x: x, y: y, type: eType});
+    }
+
+    return buffer;
   }
 }
 
@@ -76,6 +129,30 @@ export class Cave extends location.Location {
     this.createDungeonEntrance(level + 1);
 
     this.createTable();
+  }
+
+  mutator () {
+    const buffer = [];
+
+    for (let i = 0; i < common.getRandomInt(1, 20); i++) {
+      const x = common.getRandomInt(0, this.locationSize - 1);
+      const y = common.getRandomInt(0, this.locationSize - 1);
+
+      const t = common.getRandomInt(0, 100);
+
+      let eType;
+      if (t <= 90) {
+        // add ground
+        eType = 1.1;
+      } else {
+        // add wall
+        eType = 0.1;
+      }
+
+      buffer.push({x: x, y: y, type: eType});
+    }
+
+    return buffer;
   }
 }
 
@@ -145,5 +222,26 @@ export class Labyrinth extends location.Location {
     this.createDungeonEntrance(level + 1);
 
     this.createTable();
+  }
+
+  mutator () {
+    const buffer = [];
+    const params = this.getLineParams(10);
+
+    // 0.1 === wall
+    // 1.1 === ground
+    let lineType = common.getRandom(0, 1);
+    lineType += 0.1;
+
+    const directionType = common.getRandomInt(0, 1);
+
+    for (let i = 0; i < params.length; i++) {
+      if (directionType === 0) // horizontal
+        buffer.push({x: params.startX + i, y: params.startY, type: lineType});
+      else  // vertical
+        buffer.push({x: params.startX, y: params.startY + i, type: lineType});
+    }
+
+    return buffer;
   }
 }
