@@ -345,6 +345,7 @@ export class UserDB{
 
   switchOffline (clientId) {
     const login = this.clientId[clientId];
+    delete this.clients[login];
 
     rethinkDB
       .table('userPosition', {readMode: 'outdated'})
