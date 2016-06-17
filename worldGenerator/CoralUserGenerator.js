@@ -6,9 +6,9 @@ const program = require('commander');
 const log = require('./../server/log');
 
 export class CoralUserGenerator {
-  constructor (conn, number, startLocationId) {
+  constructor (conn, number, prefix, startLocationId) {
     this.conn = conn;
-    this.name = 'coral';
+    this.prefix = prefix;
     this.number = number;
 
     this.user = {
@@ -29,7 +29,7 @@ export class CoralUserGenerator {
         let login;
 
         for (let i = 0; i < this.number; i++) {
-          this.user.login = `${this.name}${i}`;
+          this.user.login = `${this.prefix}${i}`;
 
           log.info(`Create test user ${this.user.login}`);
 
