@@ -28,34 +28,43 @@ The system of locations.
 if (require.main === module) {
   program
   .version('0.0.1')
-  .option('-d, --dbname [name]', 'Name of world database')
-  .option('-p, --port <n>', 'Port for RethinkDB, default is 28015', parseInt, {isDefault: 28015})
-  .option('-t, --test <n>', 'Create n Corals', parseInt)
-  .option('-g, --dungeons <n>', 'Create n Dungeons', parseInt)
+  .option('-c, --config [path]', 'Path to config')
   .parse(process.argv);
 
-  rethinkDB.connect( {host: 'localhost', port: program.port}, function(err, conn) {
+  const config = require(program.config);
+
+  rethinkDB.connect( {host: config.rethink.dbhost, port: config.rethink.dbport}, function(err, conn) {
     if (err) throw err;
 
     rethinkDB
-      .dbCreate(program.dbname)
+      .dbCreate(config.rethink.dbname)
       .run(conn, (err) => {
         if (err) {
           log.error(`The world is exist. `
             + `If you really want create a new world, `
-            + `delete the database "${program.dbname}".`);
+            + `delete the database "${config.rethink.dbname}".`);
 
           throw  err;
         }
 
-        conn.use(program.dbname);
+        conn.use(config.rethink.dbname);
 
-        const generator = new worldGenerator.WorldGenerator(conn, 3, 100, program.dungeons);
+        const generator = new worldGenerator.WorldGenerator(
+          conn,
+          config.world.worldSize,
+          config.world.locationSize,
+          config.world.dungeons);
+
         const startLocationId = generator.generate();
         log.info(`start location id is ${startLocationId}`);
 
-        if (program.test) {
-          const userGenerator = new coralGenerator.CoralUserGenerator(conn, program.test, startLocationId);
+        if (config.test.users > 0) {
+          const userGenerator = new coralGenerator.CoralUserGenerator(
+            conn,
+            config.test.users,
+            config.test.prefix,
+            startLocationId);
+
           userGenerator.generate();
         }
       });
