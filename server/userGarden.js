@@ -6,31 +6,26 @@ const program = require('commander');
 const UserDB = require('./UserDB');
 const metrics = require('./metrics');
 
-
-program
-  .version('0.0.1')
-  .option('-p, --port <n>', 'Port for WebSocket', parseInt)
-  .option('-d, --dump <n>', 'Period for dump of user positions, sec', parseInt)
-  .option('-d, --dbname [name]', 'Name of world database')
-  .parse(process.argv);
-
-if (program.dump === undefined) {
-  program.dump = 60;
-}
-
 if (require.main === module) {
-  const m = new metrics.Metrics(5000);
+  program
+    .version('0.0.1')
+    .option('-c, --config [path]', 'Path to config')
+    .parse(process.argv);
+
+  const config = require(program.config);
+
+  const m = new metrics.Metrics(config.statsd.period * 1000);
   m.runMeasures();
 
-  rethinkDB.connect( {host: 'localhost', port: 28015}, function(err, conn) {
+  rethinkDB.connect( {host: config.rethink.dbhost, port: config.rethink.dbport}, function(err, conn) {
     if (err) throw err;
 
     const userDB = new UserDB.UserDB(
       conn,
-      program.dbname,
-      program.dump,
-      program.port,
-      100           // location size
+      config.rethink.dbname,
+      config.rethink.dump,
+      config.garden.ports,
+      config.world.locationSize
     );
 
     userDB.run();
