@@ -9,7 +9,7 @@ module.exports = {
   },
   'world': {
     'dungeons': 3,
-    'wolrdSize': 3,
+    'worldSize': 3,
     'locationSize': 100
   },
   'garden': {
