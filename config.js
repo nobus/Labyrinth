@@ -15,6 +15,9 @@ module.exports = {
   'garden': {
     'ports': 8081     // in the future, [8081, 8082], because 'portS'
   },
+  'cartographer': {
+    'period': 10
+  },
   'statsd': {
     'period': 5,
     'host': 'localhost',
