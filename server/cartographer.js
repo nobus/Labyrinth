@@ -127,15 +127,15 @@ class CartographerDB {
 if (require.main === module) {
   program
   .version('0.0.1')
-  .option('-d, --dbname [name]', 'Name of world database')
-  .option('-p, --port <n>', 'Port for RethinkDB, default is 28015', parseInt, {isDefault: 28015})
-  .option('-i, --interval <n>', 'Interval of time of changes', parseInt)
+  .option('-c, --config [path]', 'Path to config')
   .parse(process.argv);
 
-  rethinkDB.connect( {host: 'localhost', port: program.port}, function(err, conn) {
+  const config = require(program.config);
+
+  rethinkDB.connect( {host: config.rethink.dbhost, port: config.rethink.dbport}, function(err, conn) {
     if (err) throw err;
 
-    const cdb = new CartographerDB(conn, program.dbname, program.interval);
+    const cdb = new CartographerDB(conn, config.rethink.dbname, config.cartographer.period * 1000);
     cdb.run();
   });
 }
