@@ -315,6 +315,7 @@ export class UserDB{
       WebAPI.WebAPI.sendInitialResponse(
         client,
         login,
+        position.location,
         this.locationCache[position.location],
         position.x,
         position.y);
@@ -352,6 +353,7 @@ export class UserDB{
           WebAPI.WebAPI.sendInitialResponse(
             client,
             login,
+            position.location,
             this.locationCache[position.location],
             position.x,
             position.y);

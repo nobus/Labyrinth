@@ -57,9 +57,10 @@ export class WebAPI {
     return ret;
   }
 
-  static sendInitialResponse(client, login, locationMap, x, y) {
+  static sendInitialResponse(client, login, locationId, locationMap, x, y) {
     const resp = {'changePosition': WebAPI.getChangePosition(login, x, y)};
     resp.allMap = locationMap;
+    resp.locationId = locationId;
 
     client.send(JSON.stringify(resp));
   }
