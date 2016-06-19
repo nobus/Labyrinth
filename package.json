@@ -38,6 +38,6 @@
     "test": "node_modules/mocha/bin/mocha test",
     "create-world": "node_modules/.bin/babel-node worldGenerator/generator.js --config ../config.js",
     "garden": "node_modules/.bin/babel-node server/userGarden.js --config ../config.js",
-    "client": "node_modules/.bin/webpack-dev-server --host 0.0.0.0 --port 8000 --content-base client/",
+    "client": "node_modules/.bin/webpack-dev-server --host 0.0.0.0 --port 8000 --content-base client/"
   }
 }
