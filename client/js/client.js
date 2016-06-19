@@ -81,14 +81,13 @@ $(document).ready(function() {
     $(document).keypress(function (event) {
       if (socket) {
         let direction;
-
-        if (event.charCode === 119) {          // w
+        if (event.charCode === 119 || event.charCode === 1094) {          // w
           direction = 'up';
-        } else if (event.charCode === 115) {   // s
+        } else if (event.charCode === 115 || event.charCode === 1099) {   // s
           direction = 'down';
-        } else if (event.charCode === 97) {    // a
+        } else if (event.charCode === 97 || event.charCode === 1092) {    // a
           direction = 'left';
-        } else if (event.charCode === 100) {   // d
+        } else if (event.charCode === 100 || event.charCode === 1074) {   // d
           direction = 'right';
         }
 
