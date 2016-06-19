@@ -25,7 +25,8 @@ if (require.main === module) {
       config.rethink.dbname,
       config.rethink.dump,
       config.garden.ports,
-      config.world.locationSize
+      config.world.locationSize,
+      config.cartographer.period
     );
 
     userDB.run();

@@ -105,44 +105,27 @@ export class Location {
       });
   }
 
-  mutate () {
-    rethinkDB
-      .table(this.locationId)
-      // check dungeon's entrance
-      .filter(rethinkDB.row('type').gt(2))
-      .run(this.conn, (err, res) => {
-        if (err) throw err;
+  mutate (location) {
+    const data = this.mutator();
 
-        res.toArray ((err, results) => {
-          if (err) throw err;
+    for (let i = 0; i < data.length; i++) {
+      const e = data[i];
 
-          const dungX = [];
-          const dungY = [];
+      // 2. === entrances or exits
+      if (location[e.y][e.x] < 2 || location[e.y][e.x] >= 3) {
+        location[e.y][e.x] = e.type;
 
-          for (let i = 0; i < results.length; i++) {
-            dungX.push(results[i].x);
-            dungY.push(results[i].y);
-          }
-
-          const data = this.mutator();
-          const buffer = [];
-
-          for (let i = 0; i < data.length; i++) {
-            const e = data[i];
-            if (dungX.indexOf(e.x) === -1 && dungY.indexOf(e.y) === -1) {
-              rethinkDB
-                .table(this.locationId)
-                .getAll([e.x, e.y], {index: 'coord'})
-                .update(e.type)
-                .run(this.conn, (err) => {
-                  if (err) {
-                    log.error(`Data for ${this.locationId} not inserted`);
-                    throw err;
-                  }
-                });
+        rethinkDB
+          .table(this.locationId)
+          .getAll([e.x, e.y], {index: 'coord'})
+          .update(e.type)
+          .run(this.conn, (err) => {
+            if (err) {
+              log.error(`Data for ${this.locationId} not inserted`);
+              throw err;
             }
-          }
-        });
-      });
+          });
+      }
+    }
   }
 }

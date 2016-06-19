@@ -3,16 +3,19 @@
 const util = require('util');
 const rethinkDB = require('rethinkdb');
 const log = require('./log');
+const common = require('./common');
 
 const WebAPI = require('./WebAPI');
+const customLocations = require('../worldGenerator/customLocations');
 
 
 export class UserDB{
-  constructor (conn, dbName, dumpPeriod, port, locationSize) {
+  constructor (conn, dbName, dumpPeriod, port, locationSize, cartographerPeriod) {
     this.conn = conn;
     this.dbName = dbName;
     this.port = port;
     this.dumpPeriod = dumpPeriod;
+    this.cartographerPeriod = cartographerPeriod * 1000;
 
     this.conn.use(this.dbName);
 
@@ -81,6 +84,7 @@ export class UserDB{
                 log.info(`World map cache is ready.`);
 
                 this.startPeriodicalDumper();
+                this.startCartographer();
                 this.startWebSocketServer();
               });
             });
@@ -110,6 +114,45 @@ export class UserDB{
           });
       }
     }, this.dumpPeriod * 1000);
+  }
+
+  getLocationType (locationId) {
+    return this.worldMapCache[locationId].locationType;
+  }
+
+  getLocationForChange () {
+    const allLocations = Object.keys(this.locationCache);
+    const onlineLocations = [];
+
+    for (let login in this.userPositionCache) {
+      if (this.userPositionCache[login].online === true) {
+        let location = this.userPositionCache[login].location;
+
+        if (onlineLocations.indexOf(location) === -1) {
+          onlineLocations.push(location);
+        }
+      }
+    }
+
+    const res = allLocations.filter((e) => {if (onlineLocations.indexOf(e) === -1) return e});
+
+    if (res) {
+      return res[common.getRandomInt(0, res.length - 1)];
+    }
+  }
+
+  startCartographer () {
+    setInterval( () => {
+      const locationId = this.getLocationForChange();
+
+      if (locationId) {
+        log.info(`Change the Location ${locationId}!`);
+        const locationType = this.getLocationType(locationId);
+
+        const location = new customLocations[locationType](this.conn, 100, locationId);
+        location.mutate(this.locationCache[locationId]);
+      }
+    }, this.cartographerPeriod);
   }
 
   startWebSocketServer () {
@@ -301,21 +344,6 @@ export class UserDB{
           }
 
           log.info(`Location cache for ${position.location} is ready, ${i} elements.`);
-
-          rethinkDB
-            .table(position.location, {readMode: 'outdated'})
-            .changes()
-            .run(this.conn, (err, cursor) => {
-              if (err) throw  err;
-
-              cursor.each((err, row) => {
-                if (err) throw err;
-
-                log.info(`Location cache for ${position.location} has changed.`);
-                const e = row.new_val;
-                this.locationCache[position.location][e.y][e.x] = e.type;
-              });
-            });
 
           if (oldLocation) {
             this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(oldLocation), login);
