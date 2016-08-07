@@ -1,26 +1,28 @@
 'use strict';
 
-const colors = require('colors');
-const common = require('./common');
+const log4js = require('log4js');
 
 module.exports = {
   info: info,
   warn: warn,
-  error: error
+  error: error,
+  debug: debug
 };
 
-function getTimestamp () {
-  return Date.now() / 1000;
-}
+const logger = log4js.getLogger();
 
 function info (message) {
-  console.log(`${getTimestamp()}: ${colors.green(message)}`);
+  logger.info(message);
 }
 
 function warn (message) {
-  console.warn(`${getTimestamp()}: ${colors.yellow(message)}`);
+  logger.warn(message);
 }
 
 function error (message) {
-  console.error(`${getTimestamp()}: ${colors.red(message)}`);
+  logger.error(message);
+}
+
+function debug (message) {
+  logger.debug(message);
 }
