@@ -4,26 +4,10 @@ const log = require('./log');
 
 
 module.exports = {
-  timeLogger: timeLogger,
   getRandom: getRandom,
   getRandomInt: getRandomInt,
   isEmpty: isEmpty
 };
-
-
-function timeLogger(f) {
-  return function() {
-    const start = now();
-
-    const result = f.apply(this, arguments); // (*)
-
-    const end = now() - start;
-    log.info(`function ${f.name} performed ${end} ms`);
-
-    return result;
-  }
-}
-
 
 /**
  *
