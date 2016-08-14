@@ -126,7 +126,7 @@ export class UserDB{
 
     for (let login in this.userPositionCache) {
       if (this.userPositionCache[login].online === true) {
-        let location = this.userPositionCache[login].location;
+        const location = this.userPositionCache[login].location;
 
         if (onlineLocations.indexOf(location) === -1) {
           onlineLocations.push(location);
