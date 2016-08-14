@@ -13,6 +13,8 @@ export class Location {
 
     this.locationMap = [];
     for (let i = 0; i < locationSize; i++) this.locationMap.push([]);
+
+    this.rowId;
   }
 
   createTable() {
@@ -58,23 +60,9 @@ export class Location {
   }
 
   writeNewLocationMap() {
-    let buffer = [];
-
-    for (let y = 0; y < this.locationMap.length; y++) {
-      let mapRow = this.locationMap[y];
-
-      for (let x = 0; x < mapRow.length; x++) {
-        let elem = {};
-        elem['x'] = x;
-        elem['y'] = y;
-        elem['type'] = mapRow[x];
-        buffer.push(elem);
-      }
-    }
-
     rethinkDB
       .table(this.locationId)
-      .insert(buffer)
+      .insert({'locationMap': JSON.stringify(this.locationMap)})
       .run(this.conn, (err, res) => {
         if (err) {
           log.error(`Data for ${this.locationId} not inserted`);
@@ -82,50 +70,54 @@ export class Location {
         }
 
         log.info(`Location map done. We inserted ${res['inserted']} elements to ${this.locationId}`);
-        log.info(`Let's create the index for ${this.locationId}!`);
-
-        rethinkDB
-          .table(this.locationId)
-          .indexCreate('coord', [rethinkDB.row('x'), rethinkDB.row('y')])
-          .run(this.conn, (err) => {
-            if (err) {
-              log.error(`Index for ${this.locationId} not created`);
-              throw err;
-            }
-
-            rethinkDB
-              .table(this.locationId)
-              .indexWait('coord')
-              .run(this.conn, (err) => {
-                if (err) throw err;
-
-                log.info(`Index for ${this.locationId} created!`);
-              });
-          });
       });
   }
 
-  mutate (location) {
+  mutate () {
     const data = this.mutator();
 
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
 
       // 2. === entrances or exits
-      if (location[e.y][e.x] < 2 || location[e.y][e.x] >= 3) {
-        location[e.y][e.x] = e.type;
-
-        rethinkDB
-          .table(this.locationId)
-          .getAll([e.x, e.y], {index: 'coord'})
-          .update(e.type)
-          .run(this.conn, (err) => {
-            if (err) {
-              log.error(`Data for ${this.locationId} not inserted`);
-              throw err;
-            }
-          });
+      if (this.locationMap[e.y][e.x] < 2 || this.locationMap[e.y][e.x] >= 3) {
+        this.locationMap[e.y][e.x] = e.type;
       }
     }
+
+    rethinkDB
+      .table(this.locationId)
+      .get(this.rowId)
+      .update({'locationMap': JSON.stringify(this.locationMap)})
+      .run(this.conn, (err) => {
+        if (err) {
+          log.error(`Data for ${this.locationId} not updated`);
+          throw err;
+        }
+      });
+  }
+
+  loadLocation (resolve) {
+    rethinkDB
+    .table(this.locationId, {readMode: 'outdated'})
+    .run(this.conn, (err, cursor) => {
+      if (err) throw err;
+
+      cursor.toArray( (err, res) => {
+        if (err) throw err;
+
+        if (res.length === 1) {
+          this.rowId = res[0].id;
+          this.locationMap = JSON.parse(res[0].locationMap);
+          resolve(`Location cache for ${this.locationId} is ready. Number of elements is ${this.locationMap.length}`);
+        } else {
+          reject(`res length is ${res.length}`);
+        }
+      });
+    });
+  }
+
+  getLocationMap () {
+    return this.locationMap;
   }
 }

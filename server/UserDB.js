@@ -147,10 +147,8 @@ export class UserDB{
 
       if (locationId) {
         log.info(`Change the Location ${locationId}!`);
-        const locationType = this.getLocationType(locationId);
 
-        const location = new customLocations[locationType](this.conn, 100, locationId);
-        location.mutate(this.locationCache[locationId]);
+        this.locationCache[locationId].mutate();
       }
     }, this.cartographerPeriod);
   }
@@ -177,7 +175,7 @@ export class UserDB{
     let newY = curPosition.y + offset.y;
     let newX = curPosition.x + offset.x;
 
-    const curLocation = this.locationCache[curPosition.location];
+    const curLocation = this.locationCache[curPosition.location].getLocationMap();
 
     if (curLocation
       && newX >= 0
@@ -316,49 +314,43 @@ export class UserDB{
         client,
         login,
         position.location,
-        this.locationCache[position.location],
+        this.locationCache[position.location].getLocationMap(),
         position.x,
         position.y);
     }
 
   }
 
-  loadLocation (client, login, oldLocation, position) {
-    rethinkDB
-      .table(position.location, {readMode: 'outdated'})
-      .run(this.conn, (err, cursor) => {
-        if (err) throw err;
+  loadLocation (client, login, oldLocation, position) {    
+		const locationType = this.getLocationType(position.location);
+		this.locationCache[position.location] = new customLocations[locationType](this.conn, 100, position.location);
 
-        this.locationCache[position.location] = [];
-        cursor.toArray( (err, res) => {
-          if (err) throw err;
+		let loadPromise = new Promise ((resolve, reject) => {
+		  this.locationCache[position.location].loadLocation(resolve, reject);
+		});
 
-          let i = 0;
-          for (; i < res.length; i++) {
-            let e = res[i];
+		loadPromise
+		  .then (
+		      result => {
+		        log.info(result);
 
-            if (this.locationCache[position.location][e.y] === undefined) {
-              this.locationCache[position.location][e.y] = [];
+            if (oldLocation) {
+              this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(oldLocation), login);
             }
 
-            this.locationCache[position.location][e.y][e.x] = e.type;
+            WebAPI.WebAPI.sendInitialResponse(
+              client,
+              login,
+              position.location,
+              this.locationCache[position.location].getLocationMap(),
+              position.x,
+              position.y);
+          })
+      .catch (
+          result => {
+            log.error(result);
           }
-
-          log.info(`Location cache for ${position.location} is ready, ${i} elements.`);
-
-          if (oldLocation) {
-            this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(oldLocation), login);
-          }
-
-          WebAPI.WebAPI.sendInitialResponse(
-            client,
-            login,
-            position.location,
-            this.locationCache[position.location],
-            position.x,
-            position.y);
-        });
-      });
+      );
   }
 
   switchOnline (login, clientId) {
