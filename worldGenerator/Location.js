@@ -17,23 +17,6 @@ export class Location {
     this.rowId;
   }
 
-  createTable() {
-    rethinkDB
-      .tableCreate(this.locationId)
-      .run(this.conn, (err) => {
-        if (err) {
-          log.error(`Table for ${this.locationId} not created`);
-          throw err;
-        }
-
-        log.info(`Table for ${this.locationId} created`);
-
-        // setTimeout is the hack for ReqlOpFailedError:
-        // Cannot perform write: primary replica for shard ["", +inf) not available
-        setTimeout(this.writeNewLocationMap.bind(this), 20000);
-      });
-  }
-
   createDungeonTunnel (type, level) {
     if (this.dungeonBP) {
       if (level === -1) {
@@ -61,8 +44,8 @@ export class Location {
 
   writeNewLocationMap() {
     rethinkDB
-      .table(this.locationId)
-      .insert({'locationMap': JSON.stringify(this.locationMap)})
+      .table('locations')
+      .insert({'locationId': this.locationId, 'locationMap': JSON.stringify(this.locationMap)})
       .run(this.conn, (err, res) => {
         if (err) {
           log.error(`Data for ${this.locationId} not inserted`);
@@ -86,7 +69,7 @@ export class Location {
     }
 
     rethinkDB
-      .table(this.locationId)
+      .table('locations')
       .get(this.rowId)
       .update({'locationMap': JSON.stringify(this.locationMap)})
       .run(this.conn, (err) => {
@@ -99,7 +82,8 @@ export class Location {
 
   loadLocation (resolve) {
     rethinkDB
-    .table(this.locationId, {readMode: 'outdated'})
+    .table('locations', {readMode: 'outdated'})
+    .filter({'locationId': this.locationId})
     .run(this.conn, (err, cursor) => {
       if (err) throw err;
 

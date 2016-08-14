@@ -96,9 +96,17 @@ export class WorldGenerator {
   }
 
   generate () {
-    this.createDungeons();
-    this.createSurface();
-    this.writeWorldMap();
+    rethinkDB
+    rethinkDB
+    .tableCreate('locations')
+    .run(this.conn, (err) => {
+      if (err) throw err;
+
+      this.createDungeons();
+      this.createSurface();
+
+      this.writeWorldMap();
+    });
 
     return this.surfaceBluePrints.getStartLocationId();
   }

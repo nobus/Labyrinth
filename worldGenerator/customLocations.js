@@ -24,7 +24,7 @@ export class ForestLocation extends location.Location {
 
     this.createDungeonEntrance(-1);
 
-    this.createTable();
+    this.writeNewLocationMap();
   }
 
   mutator () {
@@ -74,7 +74,7 @@ export class MeadowLocation extends location.Location {
 
     this.createDungeonEntrance(-1);
 
-    this.createTable();
+    this.writeNewLocationMap();
   }
 
 
@@ -128,7 +128,7 @@ export class Cave extends location.Location {
     // add entrance from current dungeon level to bottom level
     this.createDungeonEntrance(level + 1);
 
-    this.createTable();
+    this.writeNewLocationMap();
   }
 
   mutator () {
@@ -221,7 +221,7 @@ export class Labyrinth extends location.Location {
     // add entrance from current dungeon level to bottom level
     this.createDungeonEntrance(level + 1);
 
-    this.createTable();
+    this.writeNewLocationMap();
   }
 
   mutator () {
