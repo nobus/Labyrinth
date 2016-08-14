@@ -323,7 +323,9 @@ export class UserDB{
 
   loadLocation (client, login, oldLocation, position) {    
 		const locationType = this.getLocationType(position.location);
-		this.locationCache[position.location] = new customLocations[locationType](this.conn, 100, position.location);
+		this.locationCache[position.location] = new customLocations[locationType](this.conn,
+		                                                                          this.locationSize,
+		                                                                          position.location);
 
 		let loadPromise = new Promise ((resolve, reject) => {
 		  this.locationCache[position.location].loadLocation(resolve, reject);
