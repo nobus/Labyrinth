@@ -4,17 +4,17 @@ var globalMap = [];
 
 function createMapSprite (id) {
   if (id === 0.1) {
-    return PIXI.Sprite.fromImage('img/wall.png');
+    return new PIXI.Sprite(PIXI.loader.resources['img/wall.png'].texture);
   } else if (id === 0.2) {
-    return PIXI.Sprite.fromImage('img/tree.png');
+    return new PIXI.Sprite(PIXI.loader.resources['img/tree.png'].texture);
   } else if (id === 1.1) {
-    return PIXI.Sprite.fromImage('img/ground.png');
+    return new PIXI.Sprite(PIXI.loader.resources['img/ground.png'].texture);
   } else if (id === 1.2) {
-    return PIXI.Sprite.fromImage('img/grass.png');
+    return new PIXI.Sprite(PIXI.loader.resources['img/grass.png'].texture);
   } else if (id === 2.1) {
-    return PIXI.Sprite.fromImage('img/entrance.png');
+    return new PIXI.Sprite(PIXI.loader.resources['img/entrance.png'].texture);
   } else if (id === 2.2) {
-    return PIXI.Sprite.fromImage('img/exit1.png');
+    return new PIXI.Sprite(PIXI.loader.resources['img/exi1.png'].texture);
   }
 }
 
