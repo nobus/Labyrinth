@@ -8,11 +8,8 @@ function createPlayerSprite(login, myLogin, y, x, stage, mapContainer, scale) {
   playerSprites[login] = playerSprite;
 
   if (login === myLogin) {
-    const canvasHeight = $(document).height();
-    const canvasWidth = $(document).width();
-
-    playerSprite.y = (canvasHeight / 2);
-    playerSprite.x = (canvasWidth / 2);
+    playerSprite.y = $(document).height() / 2;
+    playerSprite.x = $(document).width() / 2;
 
     stage.addChild(playerSprite);
     setMapAroundPlayer(mapContainer, y, x, scale);
