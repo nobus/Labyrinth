@@ -23,8 +23,6 @@ $(document).ready(function() {
     const host = window.document.location.host.replace(/:.*/, '');
 
     const socket = new WebSocket('ws://' + host + ':' + port + '/');
-
-    var stage, renderer, mapContainer;
   
     // Initial game stage
     const ret = initNewStage();
