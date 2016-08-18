@@ -1,0 +1,23 @@
+{
+  "name": "Labyrinth client",
+  "homepage": "https://github.com/nobus/Labyrinth",
+  "description": "Client for Labyrinth MMO",
+  "main": "client.js",
+  "authors": [
+    "Max Klimin"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.0",
+    "jquery-ui-min": "^1.11.4",
+    "pixi.js": "pixi#^3.0.11"
+  }
+}
