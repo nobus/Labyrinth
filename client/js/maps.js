@@ -73,8 +73,11 @@ function changeMap(changeMap, mapContainer, scale) {
 }
 
 function setMapAroundPlayer(mapContainer, y, x, scale) {
-  mapContainer.y = 320 * scale;
-  mapContainer.x = 320 * scale;
+  const canvasHeight = $(document).height();
+  const canvasWidth = $(document).width();
+  
+  mapContainer.y = (canvasHeight / 2);
+  mapContainer.x = (canvasWidth / 2);
 }
 
 function moveMapAroundPlayer(mapContainer, direction, scale) {

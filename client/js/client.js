@@ -1,12 +1,8 @@
 'use strict';
 
 $(document).ready(function() {
-  $('.chat-block').draggable();
-  $('.backpack-block').draggable();
-  $('.canvas-block').draggable();
-
-  const canvasWidth = $(window).width() * 0.6;
-  const canvasHeight = $(window).height() * 0.95;
+  const canvasHeight = $(document).height() * 0.9;
+  const canvasWidth = $(document).width() * 0.9;
 
   const sideLength = Math.floor((canvasWidth < canvasHeight) ? canvasWidth: canvasHeight);
   const scale = sideLength / 640;
@@ -27,7 +23,7 @@ $(document).ready(function() {
 
   function initNewStage (sideLength) {
     const stage = new PIXI.Container();
-    const renderer = PIXI.autoDetectRenderer(sideLength, sideLength);
+    const renderer = PIXI.autoDetectRenderer($(window).width() * 0.99, $(window).height() * 0.99);
     const mapContainer = new PIXI.Container();
 
     mapContainer.x = 0;
@@ -35,8 +31,8 @@ $(document).ready(function() {
 
     stage.addChild(mapContainer);
 
-    $('.canvas-block').empty();
-    $('.canvas-block').append(renderer.view);
+    $(document.body).empty();
+    $(document.body).append(renderer.view);
 
     return {stage: stage, renderer: renderer, mapContainer: mapContainer};
   }
