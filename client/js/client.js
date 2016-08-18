@@ -23,7 +23,13 @@ $(document).ready(function() {
 
   function initNewStage (sideLength) {
     const stage = new PIXI.Container();
-    const renderer = PIXI.autoDetectRenderer($(window).width() * 0.99, $(window).height() * 0.99);
+
+    const renderer = PIXI.autoDetectRenderer(0, 0, {antialias: false, transparent: false, resolution: 1});
+    renderer.view.style.position = "absolute";
+    renderer.view.style.display = "block";
+    renderer.autoResize = true;
+    renderer.resize(window.innerWidth, window.innerHeight);
+
     const mapContainer = new PIXI.Container();
 
     mapContainer.x = 0;
