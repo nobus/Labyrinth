@@ -4,26 +4,15 @@ $(document).ready(function() {
   PIXI.loader
   .add([
         'img/player.png',
-        'img/wall.png',
-        'img/tree.png',
-        'img/ground.png',
-        'img/grass.png',
-        'img/entrance.png',
-        'img/exit1.png'
+        'img/terrain.json'
         ])
   .load(function () {
-    const canvasHeight = $(document).height() * 0.9;
-    const canvasWidth = $(document).width() * 0.9;
-
-    const sideLength = Math.floor((canvasWidth < canvasHeight) ? canvasWidth: canvasHeight);
-    var scale = sideLength / 640;
-
     const myLogin = getURLParameter('login');
     const port = getURLParameter('port');
     const host = window.document.location.host.replace(/:.*/, '');
 
     const socket = new WebSocket('ws://' + host + ':' + port + '/');
-  
+
     // Initial game stage
     const ret = initNewStage();
 
@@ -37,6 +26,7 @@ $(document).ready(function() {
       const stage = new PIXI.Container();
 
       const renderer = PIXI.autoDetectRenderer(0, 0, {antialias: false, transparent: false, resolution: 1});
+
       renderer.view.style.position = "absolute";
       renderer.view.style.display = "block";
       renderer.autoResize = true;
@@ -78,13 +68,13 @@ $(document).ready(function() {
       if (login === myLogin) {
         if (direction === undefined) {
           // it is first message after connect
-          mapContainer.y -= y * 32 * scale;
-          mapContainer.x -= x * 32 * scale;
+          mapContainer.y -= y * 32;
+          mapContainer.x -= x * 32;
         } else {
-          moveMapAroundPlayer(mapContainer, direction, scale);
+          moveMapAroundPlayer(mapContainer, direction);
         }
       } else {
-        movePlayer(login, y, x, scale);
+        movePlayer(login, y, x);
       }
     }
 
@@ -137,11 +127,11 @@ $(document).ready(function() {
         renderer = ret.renderer;
         mapContainer = ret.mapContainer;
 
-        drawMap(message.allMap, mapContainer, scale);
+        drawMap(message.allMap, mapContainer);
       }
 
       if (message.changeMap) {
-        changeMap(message.changeMap, mapContainer, scale);
+        changeMap(message.changeMap, mapContainer);
       }
 
       if (message.changePosition) {
@@ -150,7 +140,7 @@ $(document).ready(function() {
         let x = message.changePosition.x;
 
         if (playerSprites[login] === undefined || message.allMap) {
-          createPlayerSprite(login, myLogin, y, x, stage, mapContainer, scale);
+          createPlayerSprite(login, myLogin, y, x, stage, mapContainer);
         }
 
         changePosition(login, message.changePosition.direction, y, x);

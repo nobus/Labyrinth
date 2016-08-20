@@ -2,10 +2,10 @@
 
 var playerSprites = {};
 
-function createPlayerSprite(login, myLogin, y, x, stage, mapContainer, scale) {
+function createPlayerSprite(login, myLogin, y, x, stage, mapContainer) {
+  //const playerSprite = new PIXI.Sprite(PIXI.loader.resources['img/player.png'].texture);
   const playerSprite = new PIXI.Sprite(PIXI.loader.resources['img/player.png'].texture);
 
-  playerSprite.scale.set(scale);
   playerSprites[login] = playerSprite;
 
   if (login === myLogin) {
@@ -13,10 +13,10 @@ function createPlayerSprite(login, myLogin, y, x, stage, mapContainer, scale) {
     playerSprite.x = $(document).width() / 2;
 
     stage.addChild(playerSprite);
-    setMapAroundPlayer(mapContainer, y, x, scale);
+    setMapAroundPlayer(mapContainer, y, x);
   } else {
     mapContainer.addChild(playerSprite);
-    movePlayer(login, y, x, scale);
+    movePlayer(login, y, x);
   }
 }
 
@@ -29,7 +29,7 @@ function removePlayerSprite(login, mapContainer) {
   }
 }
 
-function movePlayer(login, y, x, scale) {
-  playerSprites[login].y = y * 32 * scale;
-  playerSprites[login].x = x * 32 * scale;
+function movePlayer(login, y, x) {
+  playerSprites[login].y = y * 32;
+  playerSprites[login].x = x * 32;
 }

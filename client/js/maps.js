@@ -4,21 +4,21 @@ var globalMap = [];
 
 function createMapSprite (id) {
   if (id === 0.1) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/wall.png'].texture);
+    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures['wall.png']);
   } else if (id === 0.2) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/tree.png'].texture);
+    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures['greentree.png']);
   } else if (id === 1.1) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/ground.png'].texture);
+    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures['ground.png']);
   } else if (id === 1.2) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/grass.png'].texture);
+    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures['grass.png']);
   } else if (id === 2.1) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/entrance.png'].texture);
+    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures['entrance.png']);
   } else if (id === 2.2) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/exi1.png'].texture);
+    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures['exit1.png']);
   }
 }
 
-function drawMap(labMap, mapContainer, scale) {
+function drawMap(labMap, mapContainer) {
   globalMap = [];
 
   for (let i = 0; i < labMap.length; i++) {
@@ -30,9 +30,8 @@ function drawMap(labMap, mapContainer, scale) {
       var mapSprite = createMapSprite(mapRow[ii]);
 
       if (mapSprite) {
-        mapSprite.scale.set(scale);
-        mapSprite.x = 32 * ii * scale;
-        mapSprite.y = 32 * i * scale;
+        mapSprite.x = 32 * ii;
+        mapSprite.y = 32 * i;
 
         mapContainer.addChild(mapSprite);
 
@@ -42,12 +41,10 @@ function drawMap(labMap, mapContainer, scale) {
   }
 }
 
-function changeMap(changeMap, mapContainer, scale) {
+function changeMap(changeMap, mapContainer) {
   changeMap.forEach(function (item) {
     for (let i = 0; i < item.length; i++) {
       let mapSprite = createEmptySourceMap(item.id);
-
-      mapSprite.scale.set(scale);
 
       let y = item.startY;
       let x = item.startX;
@@ -72,25 +69,25 @@ function changeMap(changeMap, mapContainer, scale) {
   });
 }
 
-function setMapAroundPlayer(mapContainer, y, x, scale) {
+function setMapAroundPlayer(mapContainer, y, x) {
   mapContainer.y = $(document).height() / 2;
   mapContainer.x = $(document).width() / 2;
 }
 
-function moveMapAroundPlayer(mapContainer, direction, scale) {
+function moveMapAroundPlayer(mapContainer, direction) {
   if (direction === 'up') {
-    mapContainer.y += 32 * scale;
+    mapContainer.y += 32;
   }
 
   if (direction === 'down') {
-    mapContainer.y -= 32 * scale;
+    mapContainer.y -= 32;
   }
 
   if (direction === 'left') {
-    mapContainer.x += 32 * scale;
+    mapContainer.x += 32;
   }
 
   if (direction === 'right') {
-    mapContainer.x -= 32 * scale;
+    mapContainer.x -= 32;
   }
 }
