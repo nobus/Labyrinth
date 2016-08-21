@@ -4,6 +4,7 @@ $(document).ready(function() {
   PIXI.loader
   .add([
         'img/player.png',
+        'img/green_terrain.json',
         'img/terrain.json'
         ])
   .load(function () {

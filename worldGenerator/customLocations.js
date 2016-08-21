@@ -7,14 +7,20 @@ export class ForestLocation extends location.Location {
   generate () {
     for (let i = 0; i < this.locationMap.length; i++) {
       for (let ii = 0; ii < this.locationSize; ii++) {
-        let x = common.getRandomInt(0, 100);
+        let x = common.getRandomInt(0, 1000);
 
-        if (x <= 75) {
+        if (x <= 750) {
           // add grass
           this.locationMap[i].push(1.2);
-        } else if (x > 75 && x < 98) {
+        } else if (x > 750 && x < 900) {
           // add tree
           this.locationMap[i].push(0.2);
+        } else if (x > 900 && x < 940) {
+          //add stump1
+          this.locationMap[i].push(0.3);
+        } else if (x > 940 && x < 980) {
+          //add stump2
+          this.locationMap[i].push(0.4);
         } else {
           // add ground
           this.locationMap[i].push(1.2)
@@ -34,15 +40,21 @@ export class ForestLocation extends location.Location {
       const x = common.getRandomInt(0, this.locationSize - 1);
       const y = common.getRandomInt(0, this.locationSize - 1);
 
-      const t = common.getRandomInt(0, 100);
+      const t = common.getRandomInt(0, 1000);
 
       let eType;
-      if (t <= 75) {
+      if (t <= 750) {
         // add grass
         eType = 1.2;
-      } else if (t > 75 && t < 98) {
+      } else if (t > 750 && t < 900) {
         // add tree
         eType = 0.2;
+      } else if (t > 900 && t < 940) {
+        // add stump1
+        eType = 0.3;
+      } else if (t > 940 && t < 980) {
+        // add stump2
+        eType = 0.4;
       } else {
         // add ground
         eType = 1.2;
@@ -62,9 +74,12 @@ export class MeadowLocation extends location.Location {
         if (x <= 95) {
           // add grass
           this.locationMap[i].push(1.2);
-        } else if (x > 95 && x < 98) {
+        } else if (x > 95 && x < 97) {
           // add tree
           this.locationMap[i].push(0.2);
+        } else if (x === 98) {
+          // add stump1
+          this.locationMap[i].push(0.3);
         } else {
           // add ground
           this.locationMap[i].push(1.1)
@@ -91,9 +106,12 @@ export class MeadowLocation extends location.Location {
       if (t <= 95) {
         // add grass
         eType = 1.2;
-      } else if (t > 95 && t < 98) {
+      } else if (t > 95 && t < 97) {
         // add tree
         eType = 0.2;
+      } else if (x === 98) {
+        // add stump1
+        this.locationMap[i].push(0.3);
       } else {
         // add ground
         eType = 1.2;

@@ -14,7 +14,8 @@ The system of locations.
 0.* Impassable blocks
   0.1 a wall (!!!should be renamed!!!)
   0.2 a tree
-
+  0.3 a stump1
+  0.4 a stump2
 1.* Passable blocks
   1.1 a ground
   1.2 a grass
