@@ -37,6 +37,24 @@ export class SurfaceBluePrints {
         this.blueprints[locationId] = {};
         this.blueprints[locationId].locationType = this.getLocationType();
 
+        // for the toroidal topology
+        if (y === 0) {
+          this.blueprints[locationId].up = `location_${this.worldSize - 1}_${x}`;
+        }
+
+        if (y === this.worldSize - 1) {
+          this.blueprints[locationId].down = `location_0_${x}`;
+        }
+
+        if (x === 0) {
+          this.blueprints[locationId].left = `location_${y}_${this.worldSize - 1}`;
+        }
+
+        if (x === this.worldSize - 1) {
+          this.blueprints[locationId].right = `location_${y}_0`;
+        }
+
+        // for the common neighbors
         if (y > 0) {
           this.blueprints[locationId].up = `location_${y - 1}_${x}`;
         }
