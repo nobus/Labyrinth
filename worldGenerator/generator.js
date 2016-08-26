@@ -54,6 +54,7 @@ if (require.main === module) {
 
         conn.use(config.rethink.dbname);
 
+        // 1 - for new worldGenerator.WorldGenerator.writeWorldMap
         const postProcessor = new PostProcessor.PostProcessor(1);
 
         const generator = new worldGenerator.WorldGenerator(
