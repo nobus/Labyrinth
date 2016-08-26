@@ -30,27 +30,27 @@ export class SurfaceBluePrints {
   }
 
   generate () {
-    for (let i = 0; i < this.worldSize; i++) {
-      for (let ii =0; ii < this.worldSize; ii++) {
-        const locationId = `location_${i}_${ii}`;
+    for (let y = 0; y < this.worldSize; y++) {
+      for (let x = 0; x < this.worldSize; x++) {
+        const locationId = `location_${y}_${x}`;
 
         this.blueprints[locationId] = {};
         this.blueprints[locationId].locationType = this.getLocationType();
 
-        if (i > 0) {
-          this.blueprints[locationId].up = `location_${i - 1}_${ii}`;
+        if (y > 0) {
+          this.blueprints[locationId].up = `location_${y - 1}_${x}`;
         }
 
-        if (i < this.worldSize - 1) {
-          this.blueprints[locationId].down = `location_${i + 1}_${ii}`;
+        if (y < this.worldSize - 1) {
+          this.blueprints[locationId].down = `location_${y + 1}_${x}`;
         }
 
-        if (ii > 0) {
-          this.blueprints[locationId].left = `location_${i}_${ii - 1}`;
+        if (x > 0) {
+          this.blueprints[locationId].left = `location_${y}_${x - 1}`;
         }
 
-        if (ii < this.worldSize - 1) {
-          this.blueprints[locationId].right = `location_${i}_${ii + 1}`;
+        if (x < this.worldSize - 1) {
+          this.blueprints[locationId].right = `location_${y}_${x + 1}`;
         }
 
         const dungeonBP = this.dungeonBluePrints.getBluePrints(locationId);
