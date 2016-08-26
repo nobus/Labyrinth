@@ -6,10 +6,13 @@ const program = require('commander');
 const log = require('./../server/log');
 
 export class CoralUserGenerator {
-  constructor (conn, number, prefix, startLocationId) {
+  constructor (conn, number, prefix, startLocationId, postProcessor) {
     this.conn = conn;
     this.prefix = prefix;
     this.number = number;
+
+    this.postProcessor = postProcessor;
+    this.postProcessor.increment(this.number);
 
     this.user = {
       x: 0,
@@ -42,9 +45,10 @@ export class CoralUserGenerator {
                 log.error(`Data for ${login} isn't inserted.`);
                 throw err;
               }
+
+              this.postProcessor.decrement(1);
             });
         }
       });
   }
 }
-

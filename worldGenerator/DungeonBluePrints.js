@@ -21,6 +21,8 @@ export class DungeonBluePrints {
   }
 
   generate () {
+    let levelCounter = 0;
+
     while (this.number) {
       let lx = common.getRandomInt(0, this.worldSize - 1);
       let ly = common.getRandomInt(0, this.worldSize - 1);
@@ -34,6 +36,7 @@ export class DungeonBluePrints {
       let dungeonId = `dungeon_${this.number}`;
 
       let levels = common.getRandomInt(1, this.worldSize);
+      levelCounter += levels;
 
       let entrances = [];
       let neighbors = {};
@@ -75,6 +78,8 @@ export class DungeonBluePrints {
         'firstLevelId': firstLevelId
       };
     }
+
+    return levelCounter;
   }
 
   getBluePrints (locationId) {

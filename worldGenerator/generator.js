@@ -9,6 +9,9 @@ const log = require('./../server/log');
 const worldGenerator = require('./WorldGenerator');
 const coralGenerator = require('./CoralUserGenerator');
 
+const PostProcessor = require('./PostProcessor');
+
+
 /*
 The system of locations.
 0.* Impassable blocks
@@ -42,19 +45,23 @@ if (require.main === module) {
       .run(conn, (err) => {
         if (err) {
           log.error(`The world is exist. `
-            + `If you really want create a new world, `
-            + `delete the database "${config.rethink.dbname}".`);
+            + `If you want to create a new world, `
+            + `you must delete the database "${config.rethink.dbname}". `
+            + `The old world will ruined.`);
 
           throw  err;
         }
 
         conn.use(config.rethink.dbname);
 
+        const postProcessor = new PostProcessor.PostProcessor(1);
+
         const generator = new worldGenerator.WorldGenerator(
           conn,
           config.world.worldSize,
           config.world.locationSize,
-          config.world.dungeons);
+          config.world.dungeons,
+          postProcessor);
 
         const startLocationId = generator.generate();
         log.info(`start location id is ${startLocationId}`);
@@ -64,7 +71,8 @@ if (require.main === module) {
             conn,
             config.test.users,
             config.test.prefix,
-            startLocationId);
+            startLocationId,
+            postProcessor);
 
           userGenerator.generate();
         }

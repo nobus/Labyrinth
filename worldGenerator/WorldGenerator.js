@@ -10,26 +10,27 @@ const sbp = require('./SurfaceBluePrints');
 const customLocations = require('./customLocations');
 
 export class WorldGenerator {
-  constructor (conn, worldSize, locationSize, numDungeon) {
+  constructor (conn, worldSize, locationSize, numDungeon, postProcessor) {
     this.conn = conn;
     this.worldSize = worldSize;
     this.locationSize = locationSize;
     this.numDungeon = numDungeon;
+    this.postProcessor = postProcessor;
 
     this.world = [];
     for (let i = 0; i < this.worldSize; i++) this.world.push([]);
 
     this.dungeons = {};
     this.dungeonBluePrints = new dbp.DungeonBluePrints(this.numDungeon, this.worldSize, this.locationSize);
-    this.dungeonBluePrints.generate();
+    this.postProcessor.increment(this.dungeonBluePrints.generate());
 
     this.surfaceBluePrints = new sbp.SurfaceBluePrints(this.worldSize, this.dungeonBluePrints);
-    this.surfaceBluePrints.generate();
+    this.postProcessor.increment(this.surfaceBluePrints.generate());
   }
 
   getLocation (locationId, locationType, dungeonBP) {
     const location = customLocations[locationType];
-    return new location(this.conn, this.locationSize, locationId, dungeonBP);
+    return new location(this.conn, this.locationSize, locationId, dungeonBP, this.postProcessor);
   }
 
   writeWorldMap () {
@@ -66,6 +67,7 @@ export class WorldGenerator {
             if (err) throw err;
 
             log.info(`World's map created and written to the disk.`)
+            this.postProcessor.decrement(1);
           });
       });
   }

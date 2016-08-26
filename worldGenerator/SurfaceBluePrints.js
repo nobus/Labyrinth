@@ -62,6 +62,8 @@ export class SurfaceBluePrints {
     }
 
     this.setStartLocationId();
+
+    return Math.pow(this.worldSize, 2);
   }
 
   getBluePrints (locationId) {
