@@ -16,7 +16,7 @@ export class WorldGenerator {
     this.worldSize = worldSize;
     this.locationSize = locationSize;
     this.numDungeon = numDungeon;
-    this.idMapper = new idMapper.IdMapper();;
+    this.idMapper = new idMapper.IdMapper();
     this.postProcessor = postProcessor;
 
     this.world = [];
