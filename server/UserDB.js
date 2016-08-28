@@ -4,6 +4,7 @@ const util = require('util');
 const rethinkDB = require('rethinkdb');
 const log = require('./log');
 const common = require('./common');
+const idMapper = require('./idMapper');
 
 const WebAPI = require('./WebAPI');
 const customLocations = require('./worldGenerator/customLocations');
@@ -16,6 +17,7 @@ export class UserDB{
     this.port = port;
     this.dumpPeriod = dumpPeriod;
     this.cartographerPeriod = cartographerPeriod * 1000;
+    this.idMapper = new idMapper.IdMapper();
 
     this.conn.use(this.dbName);
 
@@ -323,9 +325,14 @@ export class UserDB{
 
   loadLocation (client, login, oldLocation, position) {
 		const locationType = this.getLocationType(position.location);
-		this.locationCache[position.location] = new customLocations[locationType](this.conn,
-		                                                                          this.locationSize,
-		                                                                          position.location);
+    const location = new customLocations[locationType](
+            this.conn,
+            this.locationSize,
+            position.location,
+            undefined,
+            this.idMapper);
+
+    this.locationCache[position.location] = location;
 
 		let loadPromise = new Promise ((resolve, reject) => {
 		  this.locationCache[position.location].loadLocation(resolve, reject);
