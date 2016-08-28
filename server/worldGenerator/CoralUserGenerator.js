@@ -3,7 +3,7 @@
 const rethinkDB = require('rethinkdb');
 const program = require('commander');
 
-const log = require('./../server/log');
+const log = require('./../log');
 
 export class CoralUserGenerator {
   constructor (conn, number, prefix, startLocationId, postProcessor) {

@@ -1,6 +1,6 @@
 'use strict';
 
-const common = require('./../server/common');
+const common = require('./../common');
 const customLocations = require('./customLocations');
 
 

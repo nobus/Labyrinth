@@ -1,6 +1,6 @@
 'use strict';
 
-const log = require('./../server/log');
+const log = require('./../log');
 
 
 export class PostProcessor {

@@ -2,8 +2,8 @@
 
 const rethinkDB = require('rethinkdb');
 
-const common = require('./../server/common');
-const log = require('./../server/log');
+const common = require('./../common');
+const log = require('./../log');
 
 const dbp = require('./DungeonBluePrints');
 const sbp = require('./SurfaceBluePrints');

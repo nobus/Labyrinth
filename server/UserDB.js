@@ -6,7 +6,7 @@ const log = require('./log');
 const common = require('./common');
 
 const WebAPI = require('./WebAPI');
-const customLocations = require('../worldGenerator/customLocations');
+const customLocations = require('./worldGenerator/customLocations');
 
 
 export class UserDB{
@@ -321,7 +321,7 @@ export class UserDB{
 
   }
 
-  loadLocation (client, login, oldLocation, position) {    
+  loadLocation (client, login, oldLocation, position) {
 		const locationType = this.getLocationType(position.location);
 		this.locationCache[position.location] = new customLocations[locationType](this.conn,
 		                                                                          this.locationSize,

@@ -3,8 +3,8 @@
 const rethinkDB = require('rethinkdb');
 const program = require('commander');
 
-const common = require('./../server/common');
-const log = require('./../server/log');
+const common = require('./../common');
+const log = require('./../log');
 
 const worldGenerator = require('./WorldGenerator');
 const coralGenerator = require('./CoralUserGenerator');

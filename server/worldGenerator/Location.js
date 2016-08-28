@@ -2,7 +2,7 @@
 
 const rethinkDB = require('rethinkdb');
 
-const log = require('./../server/log');
+const log = require('./../log');
 
 export class Location {
   constructor(conn, locationSize, locationId, dungeonBP, postProcessor) {
