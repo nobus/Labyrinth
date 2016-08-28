@@ -5,11 +5,12 @@ const rethinkDB = require('rethinkdb');
 const log = require('./../log');
 
 export class Location {
-  constructor(conn, locationSize, locationId, dungeonBP, postProcessor) {
+  constructor(conn, locationSize, locationId, dungeonBP, mapper, postProcessor) {
     this.conn = conn;
     this.locationSize = locationSize;
     this.locationId = locationId;
     this.dungeonBP = dungeonBP;
+    this.idMapper = mapper;
     this.postProcessor = postProcessor;
 
     this.locationMap = [];
@@ -24,23 +25,23 @@ export class Location {
         // add entrance from surface to dungeon
         const x = this.dungeonBP.entrances[0][0];
         const y = this.dungeonBP.entrances[0][1];
-        this.locationMap[y][x] = 2.1;
+        this.locationMap[y][x] = this.idMapper.getId('dungeon_entrance1');
       } else {
         if (this.dungeonBP.entrances.length > level) {
           const x = this.dungeonBP.entrances[level][0];
           const y = this.dungeonBP.entrances[level][1];
-          this.locationMap[y][x] = type;
+          this.locationMap[y][x] = this.idMapper.getId(type);
         }
       }
     }
   }
 
   createDungeonEntrance (level) {
-    this.createDungeonTunnel(2.1, level);
+    this.createDungeonTunnel('dungeon_entrance0', level);
   }
 
   createDungeonExit (level) {
-    this.createDungeonTunnel(2.2, level);
+    this.createDungeonTunnel('dungeon_exit0', level);
   }
 
   writeNewLocationMap() {
@@ -65,7 +66,7 @@ export class Location {
       const e = data[i];
 
       // 2. === entrances or exits
-      if (this.locationMap[e.y][e.x] < 2 || this.locationMap[e.y][e.x] >= 3) {
+      if (this.idMapper.isEntrance(this.locationMap[e.y][e.x])) {
         this.locationMap[e.y][e.x] = e.type;
       }
     }

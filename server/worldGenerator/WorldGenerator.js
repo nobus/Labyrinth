@@ -4,6 +4,7 @@ const rethinkDB = require('rethinkdb');
 
 const common = require('./../common');
 const log = require('./../log');
+const idMapper = require('./../idMapper');
 
 const dbp = require('./DungeonBluePrints');
 const sbp = require('./SurfaceBluePrints');
@@ -15,6 +16,7 @@ export class WorldGenerator {
     this.worldSize = worldSize;
     this.locationSize = locationSize;
     this.numDungeon = numDungeon;
+    this.idMapper = new idMapper.IdMapper();;
     this.postProcessor = postProcessor;
 
     this.world = [];
@@ -30,7 +32,12 @@ export class WorldGenerator {
 
   getLocation (locationId, locationType, dungeonBP) {
     const location = customLocations[locationType];
-    return new location(this.conn, this.locationSize, locationId, dungeonBP, this.postProcessor);
+    return new location(this.conn,
+      this.locationSize,
+      locationId,
+      dungeonBP,
+      this.idMapper,
+      this.postProcessor);
   }
 
   writeWorldMap () {
