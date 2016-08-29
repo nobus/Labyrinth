@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.2.3</string>
         <key>fileName</key>
-        <string>/Users/nobus/develop/Labyrinth/spritesheets/green_terrain.tps</string>
+        <string>/Users/nobus/develop/Labyrinth/spritesheets/terrain.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -36,7 +36,7 @@
         <key>dataFormat</key>
         <string>pixijs</string>
         <key>textureFileName</key>
-        <filename></filename>
+        <filename>../client/img/terrain.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -70,7 +70,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>0</uint>
+        <uint>1</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -82,7 +82,7 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
-        <uint>0</uint>
+        <uint>1</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -141,7 +141,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../client/img/green_terrain.json</filename>
+                <filename>../client/img/terrain.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -188,11 +188,15 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">src/exit2.png</key>
-            <key type="filename">src/grass.png</key>
-            <key type="filename">src/greentree.png</key>
+            <key type="filename">src/dungeon_entrance0.png</key>
+            <key type="filename">src/dungeon_exit0.png</key>
+            <key type="filename">src/dungeon_exit1.png</key>
+            <key type="filename">src/grass0.png</key>
+            <key type="filename">src/ground0.png</key>
+            <key type="filename">src/rock0.png</key>
+            <key type="filename">src/stump0.png</key>
             <key type="filename">src/stump1.png</key>
-            <key type="filename">src/stump2.png</key>
+            <key type="filename">src/tree0.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -200,11 +204,15 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>src/exit2.png</filename>
-            <filename>src/grass.png</filename>
-            <filename>src/greentree.png</filename>
+            <filename>src/grass0.png</filename>
+            <filename>src/ground0.png</filename>
+            <filename>src/rock0.png</filename>
+            <filename>src/stump0.png</filename>
             <filename>src/stump1.png</filename>
-            <filename>src/stump2.png</filename>
+            <filename>src/tree0.png</filename>
+            <filename>src/dungeon_entrance0.png</filename>
+            <filename>src/dungeon_exit0.png</filename>
+            <filename>src/dungeon_exit1.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
