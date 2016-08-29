@@ -22,8 +22,10 @@ function createMapSprite (id) {
   }
 }
 
-function drawMap(labMap, mapContainer) {
+function drawMap(labMap, mapContainer, spriteConf) {
   globalMap = [];
+
+  const spriteFactory = new SpriteFactory(spriteConf);
 
   for (let i = 0; i < labMap.length; i++) {
     globalMap.push([]);
@@ -31,7 +33,7 @@ function drawMap(labMap, mapContainer) {
     let mapRow = labMap[i];
 
     for (let ii = 0; ii < mapRow.length; ii++) {
-      var mapSprite = createMapSprite(mapRow[ii]);
+      var mapSprite = spriteFactory.getSprite(mapRow[ii]);
 
       if (mapSprite) {
         mapSprite.x = 32 * ii;

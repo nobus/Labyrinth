@@ -4,7 +4,6 @@ $(document).ready(function() {
   PIXI.loader
   .add([
         'img/player.png',
-        'img/green_terrain.json',
         'img/terrain.json'
         ])
   .load(function () {
@@ -118,7 +117,7 @@ $(document).ready(function() {
       console.log('Data received: ' + rawMessage.length);
       const message = JSON.parse(rawMessage);
 
-      if (message.allMap) {
+      if (message.allMap && message.spriteConf) {
         document.title = `Test client, ${message.locationId}`;
 
         playerSprites = {};
@@ -128,7 +127,7 @@ $(document).ready(function() {
         renderer = ret.renderer;
         mapContainer = ret.mapContainer;
 
-        drawMap(message.allMap, mapContainer);
+        drawMap(message.allMap, mapContainer, message.spriteConf);
       }
 
       if (message.changeMap) {
