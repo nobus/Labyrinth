@@ -2,26 +2,6 @@
 
 var globalMap = [];
 
-function createMapSprite (id) {
-  if (id === 0.1) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures['wall.png']);
-  } else if (id === 0.2) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/green_terrain.json'].textures['greentree.png']);
-  } else if (id === 0.3) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/green_terrain.json'].textures['stump1.png']);
-  } else if (id === 0.4) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/green_terrain.json'].textures['stump2.png']);
-  } else if (id === 1.1) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures['ground.png']);
-  } else if (id === 1.2) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/green_terrain.json'].textures['grass.png']);
-  } else if (id === 2.1) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures['entrance.png']);
-  } else if (id === 2.2) {
-    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures['exit1.png']);
-  }
-}
-
 function drawMap(labMap, mapContainer, spriteConf) {
   globalMap = [];
 
