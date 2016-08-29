@@ -25,7 +25,7 @@ export class Location {
         // add entrance from surface to dungeon
         const x = this.dungeonBP.entrances[0][0];
         const y = this.dungeonBP.entrances[0][1];
-        this.locationMap[y][x] = this.idMapper.getId('dungeon_entrance1');
+        this.locationMap[y][x] = this.idMapper.getId('dungeon_entrance0');
       } else {
         if (this.dungeonBP.entrances.length > level) {
           const x = this.dungeonBP.entrances[level][0];
