@@ -41,7 +41,7 @@ export class Location {
   }
 
   createDungeonExit (level) {
-    this.createDungeonTunnel('dungeon_exit0', level);
+    this.createDungeonTunnel('dungeon_exit1', level);
   }
 
   writeNewLocationMap() {

@@ -184,20 +184,20 @@ export class UserDB{
       && newX < this.locationSize
       && newY >= 0
       && newY < this.locationSize) {
-        if (curLocation[newY] && curLocation[newX] && curLocation[newY][newX] >= 1) {
+        if (curLocation[newY] && curLocation[newY][newX]) {
           const locationElem = curLocation[newY][newX];
 
-          if (locationElem >= 1 && locationElem < 2) {
+          if (this.idMapper.isNoBlock(locationElem)) {
             return {
               'y': newY,
               'x': newX,
               'direction': direction
             };
-          } else if (locationElem >= 2) {
-            if (locationElem === 2.1) {
+          } else  if (this.idMapper.isEntrance(locationElem) || this.idMapper.isExit(locationElem)) {
+            if (this.idMapper.isEntrance(locationElem)) {
               // entrance to the dungeon's level
               direction = 'under';
-            } else if (locationElem === 2.2) {
+            } else if (this.idMapper.isExit(locationElem)) {
               // exit from dungeon's level
               direction = 'over';
             }
@@ -309,7 +309,9 @@ export class UserDB{
       this.loadLocation(client, login, oldLocation, position);
     } else {
       if (oldLocation) {
-        this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(oldLocation), login);
+        this.webAPI.sendRemoveUserBroadcast(
+          this.getClientsForLocation(oldLocation),
+          login);
       }
 
       WebAPI.WebAPI.sendInitialResponse(
@@ -318,7 +320,8 @@ export class UserDB{
         position.location,
         this.locationCache[position.location].getLocationMap(),
         position.x,
-        position.y);
+        position.y,
+        this.idMapper.getConf());
     }
 
   }
@@ -353,7 +356,8 @@ export class UserDB{
               position.location,
               this.locationCache[position.location].getLocationMap(),
               position.x,
-              position.y);
+              position.y,
+              this.idMapper.getConf());
           })
       .catch (
           result => {

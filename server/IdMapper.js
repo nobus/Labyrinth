@@ -14,6 +14,7 @@ export class IdMapper {
     this.initSet('dynamic', 'block');
     this.initSet('dynamic', 'halfBlock');
     this.initSet('dynamic', 'entrances');
+    this.initSet('dynamic', 'exits')
     this.initSet('dynamic', 'noBlock');
   }
 
@@ -28,10 +29,27 @@ export class IdMapper {
     return this.map[name];
   }
 
-  isEntrance(id) {
+  getConf () {
+    return conf;
+  }
+
+  isEntrance (id) {
     if (id >= conf.ranges.dynamic.entrances[0]
       && id <= conf.ranges.dynamic.entrances[1]) {
         return true;
       }
+  }
+
+  isExit (id) {
+    if (id >= conf.ranges.dynamic.exits[0]
+      && id <= conf.ranges.dynamic.exits[1]) {
+        return true;
+      }
+  }
+
+  isNoBlock (id) {
+    if (id >= conf.ranges.dynamic.noBlock[0]) {
+      return true;
+    }
   }
 }

@@ -10,7 +10,8 @@ module.exports = {
       "block": [1000, 1999],
       "halfBlock": [2000, 2999],
       "entrances": [3000, 3099],
-      "noBlock": [3100, NaN]
+      "exits": [3100, 3199],
+      "noBlock": [3200, NaN]
     }
   },
   "static": {
@@ -30,9 +31,11 @@ module.exports = {
       ,{"name": "stump0"}
       ,{"name": "stump1"}
     ],
-    "entrances":[
+    "entrances": [
       {"name": "dungeon_entrance0"}
-      ,{"name": "dungeon_exit0"}
+    ],
+    "exits": [
+      {"name": "dungeon_exit0"}
       ,{"name": "dungeon_exit1"}
     ],
     "noBlock": [
