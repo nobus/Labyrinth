@@ -1,7 +1,9 @@
 'use strict';
 
 class SpriteFactory {
-  constructor (spriteConf) {
+  constructor (background, spriteConf) {
+    this.background = background;
+
     const types = ['static', 'dynamic'];
     this.cache = {};
 
@@ -17,7 +19,9 @@ class SpriteFactory {
   }
 
   getSprite (id) {
-    const name = `${this.cache[id]}.png`;
-    return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures[name]);
+    if (this.cache[id] != this.background) {
+      const name = `${this.cache[id]}.png`;
+      return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures[name]);
+    }
   }
 }

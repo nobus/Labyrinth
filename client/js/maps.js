@@ -5,12 +5,15 @@ var globalMap = [];
 function drawMap(labMap, mapContainer, spriteConf) {
   globalMap = [];
 
-  const spriteFactory = new SpriteFactory(spriteConf);
+  const backgroundSprite = new PIXI.Sprite(PIXI.loader.resources[`img/${labMap.background}_background.png`].texture);
+  mapContainer.addChild(backgroundSprite);
 
-  for (let i = 0; i < labMap.length; i++) {
+  const spriteFactory = new SpriteFactory(labMap.background, spriteConf);
+
+  for (let i = 0; i < labMap.locationMap.length; i++) {
     globalMap.push([]);
 
-    let mapRow = labMap[i];
+    let mapRow = labMap.locationMap[i];
 
     for (let ii = 0; ii < mapRow.length; ii++) {
       var mapSprite = spriteFactory.getSprite(mapRow[ii]);
