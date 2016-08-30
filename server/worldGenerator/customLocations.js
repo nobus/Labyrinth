@@ -2,187 +2,46 @@
 
 const common = require('./../common');
 const location = require('./Location');
+const randomLocation = require('./RandomLocation');
 
-export class ForestLocation extends location.Location {
+
+export class ForestLocation extends randomLocation.RandomLocation {
   setUp () {
     this.background = 'grass0';
-  }
 
-  generate () {
-    for (let i = 0; i < this.locationMap.length; i++) {
-      for (let ii = 0; ii < this.locationSize; ii++) {
-        let x = common.getRandomInt(0, 1000);
+    this.elements.grass0 = 800;
+    this.elements.tree0 = 170;
+    this.elements.stump0 = 15;
+    this.elements.stump1 = 15;
 
-        if (x <= 750) {
-          // add grass
-          this.locationMap[i].push(undefined);
-        } else if (x > 750 && x < 900) {
-          // add tree
-          this.locationMap[i].push(this.idMapper.getId('tree0'));
-        } else if (x > 900 && x < 940) {
-          //add stump1
-          this.locationMap[i].push(this.idMapper.getId('stump0'));
-        } else if (x > 940 && x < 980) {
-          //add stump2
-          this.locationMap[i].push(this.idMapper.getId('stump1'));
-        } else {
-          // add ground
-          this.locationMap[i].push(this.idMapper.getId('ground0'));
-        }
-      }
-    }
-
-    this.createDungeonEntrance(-1);
-
-    this.writeNewLocationMap();
-  }
-
-  mutator () {
-    const buffer = [];
-
-    for (let i = 0; i < common.getRandomInt(1, 20); i++) {
-      const x = common.getRandomInt(0, this.locationSize - 1);
-      const y = common.getRandomInt(0, this.locationSize - 1);
-
-      const t = common.getRandomInt(0, 1000);
-
-      let eType;
-      if (t <= 750) {
-        // add grass
-        eType = undefined;
-      } else if (t > 750 && t < 900) {
-        // add tree
-        eType = this.idMapper.getId('tree0');
-      } else if (t > 900 && t < 940) {
-        // add stump1
-        eType = this.idMapper.getId('stump0');
-      } else if (t > 940 && t < 980) {
-        // add stump2
-        eType = this.idMapper.getId('stump1');
-      } else {
-        // add ground
-        eType = this.idMapper.getId('ground0');
-      }
-      buffer.push({x: x, y: y, type: eType});
-    }
-    return buffer;
+    this.minMutationRate = 1;
+    this.maxMutationRate = 20;
   }
 }
 
-export class MeadowLocation extends location.Location {
+export class MeadowLocation extends randomLocation.RandomLocation {
   setUp () {
     this.background = 'grass0';
-  }
 
-  generate () {
-    for (let i = 0; i < this.locationMap.length; i++) {
-      for (let ii = 0; ii < this.locationSize; ii++) {
-        let x = common.getRandomInt(0, 100);
+    this.elements.grass0 = 950;
+    this.elements.tree0 = 40;
+    this.elements.stump0 = 5;
+    this.elements.stump1 = 5;
 
-        if (x <= 95) {
-          // add grass
-          this.locationMap[i].push(undefined);
-        } else if (x > 95 && x < 97) {
-          // add tree
-          this.locationMap[i].push(this.idMapper.getId('tree0'));
-        } else if (x === 98) {
-          // add stump1
-          this.locationMap[i].push(this.idMapper.getId('stump0'));
-        } else {
-          // add ground
-          this.locationMap[i].push(this.idMapper.getId('ground0'));
-        }
-      }
-    }
-
-    this.createDungeonEntrance(-1);
-
-    this.writeNewLocationMap();
-  }
-
-
-  mutator () {
-    const buffer = [];
-
-    for (let i = 0; i < common.getRandomInt(1, 20); i++) {
-      const x = common.getRandomInt(0, this.locationSize - 1);
-      const y = common.getRandomInt(0, this.locationSize - 1);
-
-      const t = common.getRandomInt(0, 100);
-
-      let eType;
-      if (t <= 95) {
-        // add grass
-        eType = undefined;
-      } else if (t > 95 && t < 97) {
-        // add tree
-        eType = this.idMapper.getId('tree0');
-      } else if (x === 98) {
-        // add stump1
-        eType = this.idMapper.getId('stump0');
-      } else {
-        // add ground
-        eType = this.idMapper.getId('ground0');
-      }
-
-      buffer.push({x: x, y: y, type: eType});
-    }
-
-    return buffer;
+    this.minMutationRate = 1;
+    this.maxMutationRate = 20;
   }
 }
 
-export class Cave extends location.Location {
+export class Cave extends randomLocation.RandomLocation {
   setUp () {
     this.background = 'ground0';
-  }
 
-  generate (level) {
-    for (let i = 0; i < this.locationMap.length; i++) {
-      for (let ii = 0; ii < this.locationSize; ii++) {
-        let x = common.getRandomInt(0, 100);
+    this.elements.ground0 = 900;
+    this.elements.rock0 = 100;
 
-        if (x <= 90) {
-          // add ground
-          this.locationMap[i].push(undefined);
-        } else {
-          // add wall
-          this.locationMap[i].push(this.idMapper.getId('rock0'));
-        }
-      }
-    }
-
-    // add exit from current dungeon level to top level
-    this.createDungeonExit(level);
-
-    // add entrance from current dungeon level to bottom level
-    this.createDungeonEntrance(level + 1);
-
-    this.writeNewLocationMap();
-  }
-
-  mutator () {
-    const buffer = [];
-
-    for (let i = 0; i < common.getRandomInt(1, 20); i++) {
-      const x = common.getRandomInt(0, this.locationSize - 1);
-      const y = common.getRandomInt(0, this.locationSize - 1);
-
-      const t = common.getRandomInt(0, 100);
-
-      let eType;
-      if (t <= 90) {
-        // add ground
-        eType = undefined;
-      } else {
-        // add wall
-        eType = this.idMapper.getId('rock0');
-      }
-
-      buffer.push({x: x, y: y, type: eType});
-    }
-
-    return buffer;
+    this.minMutationRate = 1;
+    this.maxMutationRate = 20;
   }
 }
 

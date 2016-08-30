@@ -17,6 +17,7 @@ export class Location {
     for (let i = 0; i < locationSize; i++) this.locationMap.push([]);
 
     this.rowId;
+    this.elements = {};
 
     this.setUp();
   }
