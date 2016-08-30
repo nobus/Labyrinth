@@ -23,7 +23,8 @@ export class MeadowLocation extends randomLocation.RandomLocation {
   setUp () {
     this.background = 'grass0';
 
-    this.elements.grass0 = 950;
+    this.elements.grass0 = 850;
+    this.elements.flower0 = 100;
     this.elements.tree0 = 40;
     this.elements.stump0 = 5;
     this.elements.stump1 = 5;
