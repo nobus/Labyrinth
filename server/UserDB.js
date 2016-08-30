@@ -179,13 +179,13 @@ export class UserDB{
 
     const curLocation = this.locationCache[curPosition.location].getLocationMap();
 
-    if (curLocation
+    if (curLocation.locationMap
       && newX >= 0
       && newX < this.locationSize
       && newY >= 0
       && newY < this.locationSize) {
-        if (curLocation[newY] && curLocation[newY][newX]) {
-          const locationElem = curLocation[newY][newX];
+        if (curLocation.locationMap[newY] && curLocation.locationMap[newY][newX]) {
+          const locationElem = curLocation.locationMap[newY][newX];
 
           if (this.idMapper.isNoBlock(locationElem)) {
             return {

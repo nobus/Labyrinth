@@ -17,6 +17,12 @@ export class Location {
     for (let i = 0; i < locationSize; i++) this.locationMap.push([]);
 
     this.rowId;
+
+    this.setUp();
+  }
+
+  setUp () {
+    this.background;
   }
 
   createDungeonTunnel (type, level) {
@@ -65,8 +71,10 @@ export class Location {
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
 
-      // 2. === entrances or exits
-      if (this.idMapper.isEntrance(this.locationMap[e.y][e.x])) {
+      if (this.idMapper.isEntrance(this.locationMap[e.y][e.x])
+        || this.idMapper.isExit(this.locationMap[e.y][e.x])) {
+        // entrances or exits, do nothing
+      } else {
         this.locationMap[e.y][e.x] = e.type;
       }
     }
@@ -105,6 +113,6 @@ export class Location {
   }
 
   getLocationMap () {
-    return this.locationMap;
+    return {'background': this.background, 'locationMap': this.locationMap};
   }
 }

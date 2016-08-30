@@ -4,6 +4,10 @@ const common = require('./../common');
 const location = require('./Location');
 
 export class ForestLocation extends location.Location {
+  setUp () {
+    this.background = 'grass0';
+  }
+
   generate () {
     for (let i = 0; i < this.locationMap.length; i++) {
       for (let ii = 0; ii < this.locationSize; ii++) {
@@ -23,7 +27,7 @@ export class ForestLocation extends location.Location {
           this.locationMap[i].push(this.idMapper.getId('stump1'));
         } else {
           // add ground
-          this.locationMap[i].push(this.idMapper.getId('ground0'))
+          this.locationMap[i].push(this.idMapper.getId('ground0'));
         }
       }
     }
@@ -66,6 +70,10 @@ export class ForestLocation extends location.Location {
 }
 
 export class MeadowLocation extends location.Location {
+  setUp () {
+    this.background = 'grass0';
+  }
+
   generate () {
     for (let i = 0; i < this.locationMap.length; i++) {
       for (let ii = 0; ii < this.locationSize; ii++) {
@@ -82,7 +90,7 @@ export class MeadowLocation extends location.Location {
           this.locationMap[i].push(this.idMapper.getId('stump0'));
         } else {
           // add ground
-          this.locationMap[i].push(this.idMapper.getId('ground0'))
+          this.locationMap[i].push(this.idMapper.getId('ground0'));
         }
       }
     }
@@ -125,6 +133,10 @@ export class MeadowLocation extends location.Location {
 }
 
 export class Cave extends location.Location {
+  setUp () {
+    this.background = 'ground0';
+  }
+
   generate (level) {
     for (let i = 0; i < this.locationMap.length; i++) {
       for (let ii = 0; ii < this.locationSize; ii++) {
@@ -175,7 +187,11 @@ export class Cave extends location.Location {
 }
 
 export class Labyrinth extends location.Location {
-    /**
+  setUp () {
+    this.background = 'ground0';
+  }
+
+  /**
    *
    * @param max - maximum line's length
    * @returns {Object} where startY and startX - start point of the line
