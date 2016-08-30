@@ -15,7 +15,7 @@ export class ForestLocation extends location.Location {
 
         if (x <= 750) {
           // add grass
-          this.locationMap[i].push(this.idMapper.getId('grass0'));
+          this.locationMap[i].push(undefined);
         } else if (x > 750 && x < 900) {
           // add tree
           this.locationMap[i].push(this.idMapper.getId('tree0'));
@@ -49,7 +49,7 @@ export class ForestLocation extends location.Location {
       let eType;
       if (t <= 750) {
         // add grass
-        eType = this.idMapper.getId('grass0');
+        eType = undefined;
       } else if (t > 750 && t < 900) {
         // add tree
         eType = this.idMapper.getId('tree0');
@@ -81,7 +81,7 @@ export class MeadowLocation extends location.Location {
 
         if (x <= 95) {
           // add grass
-          this.locationMap[i].push(this.idMapper.getId('grass0'));
+          this.locationMap[i].push(undefined);
         } else if (x > 95 && x < 97) {
           // add tree
           this.locationMap[i].push(this.idMapper.getId('tree0'));
@@ -113,7 +113,7 @@ export class MeadowLocation extends location.Location {
       let eType;
       if (t <= 95) {
         // add grass
-        eType = this.idMapper.getId('grass0');
+        eType = undefined;
       } else if (t > 95 && t < 97) {
         // add tree
         eType = this.idMapper.getId('tree0');
@@ -144,7 +144,7 @@ export class Cave extends location.Location {
 
         if (x <= 90) {
           // add ground
-          this.locationMap[i].push(this.idMapper.getId('ground0'));
+          this.locationMap[i].push(undefined);
         } else {
           // add wall
           this.locationMap[i].push(this.idMapper.getId('rock0'));
@@ -173,7 +173,7 @@ export class Cave extends location.Location {
       let eType;
       if (t <= 90) {
         // add ground
-        eType = this.idMapper.getId('ground0');
+        eType = undefined;
       } else {
         // add wall
         eType = this.idMapper.getId('rock0');
@@ -236,7 +236,7 @@ export class Labyrinth extends location.Location {
     for (let i = 0; i < this.locationMap.length; i++) {
       for (let ii = 0; ii < this.locationSize; ii++) {
         // add a ground
-        this.locationMap[i].push(this.idMapper.getId('ground0'));
+        this.locationMap[i].push(undefined);
       }
     }
 
@@ -269,7 +269,7 @@ export class Labyrinth extends location.Location {
     if (lineType === 0) {
       lineType = this.idMapper.getId('rock0');
     } else if (lineType === 1) {
-      lineType = this.idMapper.getId('ground0');
+      lineType = undefined;
     }
 
     const directionType = common.getRandomInt(0, 1);

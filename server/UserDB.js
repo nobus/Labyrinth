@@ -184,7 +184,7 @@ export class UserDB{
       && newX < this.locationSize
       && newY >= 0
       && newY < this.locationSize) {
-        if (curLocation.locationMap[newY] && curLocation.locationMap[newY][newX]) {
+        if (curLocation.locationMap[newY]) {
           const locationElem = curLocation.locationMap[newY][newX];
 
           if (this.idMapper.isNoBlock(locationElem)) {

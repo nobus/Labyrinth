@@ -19,7 +19,7 @@ class SpriteFactory {
   }
 
   getSprite (id) {
-    if (this.cache[id] != this.background) {
+    if (this.cache[id]) {
       const name = `${this.cache[id]}.png`;
       return new PIXI.Sprite(PIXI.loader.resources['img/terrain.json'].textures[name]);
     }

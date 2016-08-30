@@ -48,7 +48,7 @@ export class IdMapper {
   }
 
   isNoBlock (id) {
-    if (id >= conf.ranges.dynamic.noBlock[0]) {
+    if (id === null || id >= conf.ranges.dynamic.noBlock[0]) {
       return true;
     }
   }
