@@ -291,6 +291,10 @@ export class UserDB{
             newPosition.y);
         }
       }
+    } else if (message.command) {
+      if (message.command === 'worldMap') {
+        this.webAPI.sendWorldMap(client, this.worldMapCache, this.userPositionCache[login]['location']);
+      }
     } else {
       // we have a new user connection
       this.clients[login] = {

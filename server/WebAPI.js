@@ -77,4 +77,9 @@ export class WebAPI {
 
     this.wss.broadcast(JSON.stringify(resp), clientList);
   }
+
+  sendWorldMap (client, worldMap, locationId) {
+    const resp = {'worldMap': worldMap, 'locationId': locationId};
+    client.send(JSON.stringify(resp));
+  }
 }
