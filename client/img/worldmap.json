@@ -1,6 +1,6 @@
 {"frames": {
 
-"map_forest.png":
+"gamer_position.png":
 {
 	"frame": {"x":0,"y":0,"w":32,"h":32},
 	"rotated": false,
@@ -8,9 +8,25 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"map_meadow.png":
+"map_dungeon_entrance.png":
 {
 	"frame": {"x":32,"y":0,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"map_forest.png":
+{
+	"frame": {"x":64,"y":0,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"map_meadow.png":
+{
+	"frame": {"x":96,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -21,8 +37,8 @@
 	"version": "1.0",
 	"image": "worldmap.png",
 	"format": "RGBA8888",
-	"size": {"w":64,"h":32},
+	"size": {"w":128,"h":32},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:f39c35b5adba46aa4e3eca7357a3905e:b6b3ef1b50dade12d1a847d515ed3184:65720d0b0221dd206469c56bfa8f56cd$"
+	"smartupdate": "$TexturePacker:SmartUpdate:ee4fa4e2748bde5fe35dbb95bd860563:2bac10d8705caff414bc71308d381208:65720d0b0221dd206469c56bfa8f56cd$"
 }
 }

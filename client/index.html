@@ -3,11 +3,15 @@
 <html lang='en'>
 
 <head>
+  <meta charset="utf-8">
   <style>* {padding: 0; margin: 0}</style>
+
+  <link href="css/style.css" rel="stylesheet"></link>
 
   <script src="bower_components/jquery/dist/jquery.min.js" type="application/javascript"></script>
   <script src="bower_components/pixi.js/bin/pixi.min.js" type="application/javascript"></script>
 
+  <script src="js/WorldMap.js"></script>
   <script src="js/SpriteFactory.js"></script>
   <script src="js/chat.js"></script>
   <script src="js/maps.js"></script>
@@ -15,6 +19,17 @@
   <script src="js/client.js"></script>
 </head>
 
-<body bgcolor="#000000"></body>
+<body bgcolor="#000000">
+  <div class="canvas"></div>
+  <div class="world-map"></div>
+
+  <div class="menu">
+    <button class="ibutton world-map-button">World Map</button></br>
+    <button class="ibutton">Equipment</button></br>
+    <button class="ibutton">Settings</button></br>
+    <button class="ibutton">Help</button></br>
+    <button class="ibutton">Logout</button>
+  </div>
+</body>
 
 </html>

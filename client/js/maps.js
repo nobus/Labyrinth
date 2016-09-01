@@ -19,8 +19,8 @@ function drawMap(labMap, mapContainer, spriteConf) {
       var mapSprite = spriteFactory.getSprite(mapRow[ii]);
 
       if (mapSprite) {
-        mapSprite.x = 32 * ii;
-        mapSprite.y = 32 * i;
+        mapSprite.x = SPRITE_SIZE * ii;
+        mapSprite.y = SPRITE_SIZE * i;
 
         mapContainer.addChild(mapSprite);
 
@@ -59,24 +59,24 @@ function changeMap(changeMap, mapContainer) {
 }
 
 function setMapAroundPlayer(mapContainer, y, x) {
-  mapContainer.y = $(document).height() / 2;
-  mapContainer.x = $(document).width() / 2;
+  mapContainer.y = SIZE / 2;
+  mapContainer.x = SIZE / 2;
 }
 
 function moveMapAroundPlayer(mapContainer, direction) {
   if (direction === 'up') {
-    mapContainer.y += 32;
+    mapContainer.y += SPRITE_SIZE;
   }
 
   if (direction === 'down') {
-    mapContainer.y -= 32;
+    mapContainer.y -= SPRITE_SIZE;
   }
 
   if (direction === 'left') {
-    mapContainer.x += 32;
+    mapContainer.x += SPRITE_SIZE;
   }
 
   if (direction === 'right') {
-    mapContainer.x -= 32;
+    mapContainer.x -= SPRITE_SIZE;
   }
 }

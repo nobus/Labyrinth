@@ -1,12 +1,16 @@
 'use strict';
 
+var SIZE = 640;
+var SPRITE_SIZE = 32;
+
 $(document).ready(function() {
   PIXI.loader
   .add([
         'img/player.png',
         'img/grass0_background.png',
         'img/ground0_background.png',
-        'img/terrain.json'
+        'img/terrain.json',
+        'img/worldmap.json'
         ])
   .load(function () {
     const myLogin = getURLParameter('login');
@@ -22,7 +26,9 @@ $(document).ready(function() {
     var renderer = ret.renderer;
     var mapContainer = ret.mapContainer;
 
-    animate();
+    var worldMap;
+
+    animateGameStage();
 
     function initNewStage () {
       const stage = new PIXI.Container();
@@ -32,7 +38,7 @@ $(document).ready(function() {
       renderer.view.style.position = "absolute";
       renderer.view.style.display = "block";
       renderer.autoResize = true;
-      renderer.resize(window.innerWidth, window.innerHeight);
+      renderer.resize(SIZE, SIZE);
 
       const mapContainer = new PIXI.Container();
 
@@ -41,14 +47,14 @@ $(document).ready(function() {
 
       stage.addChild(mapContainer);
 
-      $(document.body).empty();
-      $(document.body).append(renderer.view);
+      $('.canvas').empty();
+      $('.canvas').append(renderer.view);
 
       return {stage: stage, renderer: renderer, mapContainer: mapContainer};
     }
 
-    function animate() {
-      requestAnimationFrame(animate);
+    function animateGameStage() {
+      requestAnimationFrame(animateGameStage);
       renderer.render(stage);
     }
 
@@ -70,8 +76,8 @@ $(document).ready(function() {
       if (login === myLogin) {
         if (direction === undefined) {
           // it is first message after connect
-          mapContainer.y -= y * 32;
-          mapContainer.x -= x * 32;
+          mapContainer.y -= y * SPRITE_SIZE;
+          mapContainer.x -= x * SPRITE_SIZE;
         } else {
           moveMapAroundPlayer(mapContainer, direction);
         }
@@ -82,7 +88,10 @@ $(document).ready(function() {
 
     socket.onopen = function () {
       socket.send(JSON.stringify({'login': myLogin}));
+
       console.log('Connection done.');
+
+      socket.send(JSON.stringify({'login': myLogin, 'command': 'worldMap'}));
 
       $(document).keypress(function (event) {
         if (socket) {
@@ -130,6 +139,8 @@ $(document).ready(function() {
         mapContainer = ret.mapContainer;
 
         drawMap(message.allMap, mapContainer, message.spriteConf);
+
+        if (worldMap) worldMap.moveGamer(message.locationId);
       }
 
       if (message.changeMap) {
@@ -150,6 +161,12 @@ $(document).ready(function() {
 
       if (message.removeFromLocation) {
         removePlayerSprite(message.removeFromLocation, mapContainer);
+      }
+
+      if (message.worldMap) {
+        worldMap = new WorldMap(message.worldMap,
+                                      message.locationId,
+                                      '.world-map');
       }
     };
 
