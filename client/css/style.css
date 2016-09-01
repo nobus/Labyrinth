@@ -1,0 +1,25 @@
+.canvas {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 640px;
+  height: 640px;
+}
+
+.world-map {
+  position: absolute;
+  left: 641px;
+  top: 0px;
+  width: 640px;
+  height: 640px;
+}
+
+.menu {
+  position: absolute;
+  right: 10px;
+}
+
+.ibutton {
+  width: 100px;
+  height: 50px;
+}
