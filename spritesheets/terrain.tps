@@ -194,6 +194,7 @@
             <key type="filename">src/flower0.png</key>
             <key type="filename">src/grass0.png</key>
             <key type="filename">src/ground0.png</key>
+            <key type="filename">src/lava0.png</key>
             <key type="filename">src/rock0.png</key>
             <key type="filename">src/stump0.png</key>
             <key type="filename">src/stump1.png</key>
@@ -215,6 +216,7 @@
             <filename>src/dungeon_exit0.png</filename>
             <filename>src/dungeon_exit1.png</filename>
             <filename>src/flower0.png</filename>
+            <filename>src/lava0.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

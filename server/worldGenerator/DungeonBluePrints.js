@@ -12,7 +12,7 @@ export class DungeonBluePrints {
 
     this.blueprints = {};
 
-    this.locationTypes = [customLocations.Cave, customLocations.Labyrinth];
+    this.locationTypes = [customLocations.Cave, customLocations.FireCave, customLocations.Labyrinth];
   }
 
   getLocationType () {

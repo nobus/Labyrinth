@@ -48,7 +48,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"rock0.png":
+"lava0.png":
 {
 	"frame": {"x":199,"y":1,"w":32,"h":32},
 	"rotated": false,
@@ -56,7 +56,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"stump0.png":
+"rock0.png":
 {
 	"frame": {"x":232,"y":1,"w":32,"h":32},
 	"rotated": false,
@@ -64,7 +64,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"stump1.png":
+"stump0.png":
 {
 	"frame": {"x":265,"y":1,"w":32,"h":32},
 	"rotated": false,
@@ -72,9 +72,17 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"tree0.png":
+"stump1.png":
 {
 	"frame": {"x":298,"y":1,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"tree0.png":
+{
+	"frame": {"x":331,"y":1,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -85,8 +93,8 @@
 	"version": "1.0",
 	"image": "terrain.png",
 	"format": "RGBA8888",
-	"size": {"w":331,"h":34},
+	"size": {"w":364,"h":34},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:eb8c7de784f98224fb50d342b4bc7093:26ad9c90291216c526314ee48cd311cf:a52c91d73586a2a634ceb55ad22f4949$"
+	"smartupdate": "$TexturePacker:SmartUpdate:777a1d626c42e1c11ec9d23350f19074:db8f465b6150238bd4118e932896fad8:a52c91d73586a2a634ceb55ad22f4949$"
 }
 }

@@ -17,6 +17,7 @@ module.exports = {
   "static": {
     "halfBlock": [
       {"name": "water0"}
+      ,{"name": "lava0"}
     ],
     "block": [
       {"name": "rock0"}
