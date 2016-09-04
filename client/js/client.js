@@ -6,6 +6,7 @@ var SPRITE_SIZE = 32;
 $(document).ready(function() {
   PIXI.loader
   .add([
+        'img/player0.png',
         'img/player.png',
         'img/grass0_background.png',
         'img/ground0_background.png',
