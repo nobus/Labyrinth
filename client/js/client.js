@@ -48,15 +48,6 @@ $(document).ready(function() {
       });
     };
 
-    socket.onclose = function (event) {
-      if (event.wasClean) {
-        console.log('Connection closed.');
-      } else {
-        console.log('Connection broken.'); // for example, server died
-      }
-      console.log('Code: ' + event.code + ' reason: ' + event.reason);
-    };
-
     socket.onmessage = function (event) {
       const rawMessage = event.data;
       console.log('Data received: ' + rawMessage.length);
@@ -71,6 +62,15 @@ $(document).ready(function() {
 
     socket.onerror = function (error) {
       console.log('Error ' + error.message);
+    };
+
+    socket.onclose = function (event) {
+      if (event.wasClean) {
+        console.log('Connection closed.');
+      } else {
+        console.log('Connection broken.'); // for example, server died
+      }
+      console.log('Code: ' + event.code + ' reason: ' + event.reason);
     };
   });
 });
