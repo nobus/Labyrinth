@@ -68,7 +68,12 @@ class Game {
       this.playerSprites[login] = createPlayerSprite(login, this.myLogin, y, x, gameStage, this.mapContainer);
     }
 
-    changePosition(login, this.myLogin, this.mapContainer, message.changePosition.direction, y, x);
+    if (login === this.myLogin) {
+      changePosition(this.mapContainer, message.changePosition.direction, y, x);
+    } else {
+      this.playerSprites[login].y = y * SPRITE_SIZE;
+      this.playerSprites[login].x = x * SPRITE_SIZE;
+    }
   }
 
   removeFromLocation (message) {
