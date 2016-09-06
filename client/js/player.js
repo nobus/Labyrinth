@@ -18,6 +18,8 @@ function createPlayerSprite(login, myLogin, y, x, stage, mapContainer) {
     mapContainer.addChild(playerSprite);
     movePlayer(login, y, x);
   }
+
+  return playerSprite;
 }
 
 function removePlayerSprite(login, mapContainer) {

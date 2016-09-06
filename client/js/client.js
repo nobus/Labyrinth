@@ -14,49 +14,11 @@ $(document).ready(function() {
         ])
   .load(function () {
     const myLogin = getURLParameter('login');
+    const game = new Game(myLogin);
+
     const port = getURLParameter('port');
     const host = window.document.location.host.replace(/:.*/, '');
-
     const socket = new WebSocket('ws://' + host + ':' + port + '/');
-
-    // Initial game stage
-    const ret = initNewStage();
-
-    var stage = ret.stage;
-    var renderer = ret.renderer;
-    var mapContainer = ret.mapContainer;
-
-    var worldMap;
-
-    animateGameStage();
-
-    function initNewStage () {
-      const stage = new PIXI.Container();
-
-      const renderer = PIXI.autoDetectRenderer(0, 0, {antialias: false, transparent: false, resolution: 1});
-
-      renderer.view.style.position = "absolute";
-      renderer.view.style.display = "block";
-      renderer.autoResize = true;
-      renderer.resize(SIZE, SIZE);
-
-      const mapContainer = new PIXI.Container();
-
-      mapContainer.x = 0;
-      mapContainer.y = 0;
-
-      stage.addChild(mapContainer);
-
-      $('.canvas').empty();
-      $('.canvas').append(renderer.view);
-
-      return {stage: stage, renderer: renderer, mapContainer: mapContainer};
-    }
-
-    function animateGameStage() {
-      requestAnimationFrame(animateGameStage);
-      renderer.render(stage);
-    }
 
     socket.onopen = function () {
       socket.send(JSON.stringify({'login': myLogin}));
@@ -100,46 +62,11 @@ $(document).ready(function() {
       console.log('Data received: ' + rawMessage.length);
       const message = JSON.parse(rawMessage);
 
-      if (message.allMap && message.spriteConf) {
-        document.title = `Test client, ${message.locationId}`;
-
-        playerSprites = {};
-        const ret = initNewStage();
-
-        stage = ret.stage;
-        renderer = ret.renderer;
-        mapContainer = ret.mapContainer;
-
-        drawMap(message.allMap, mapContainer, message.spriteConf);
-
-        if (worldMap) worldMap.moveGamer(message.locationId);
-      }
-
-      if (message.changeMap) {
-        changeMap(message.changeMap, mapContainer);
-      }
-
-      if (message.changePosition) {
-        let login = message.changePosition.login;
-        let y = message.changePosition.y;
-        let x = message.changePosition.x;
-
-        if (playerSprites[login] === undefined || message.allMap) {
-          createPlayerSprite(login, myLogin, y, x, stage, mapContainer);
-        }
-
-        changePosition(login, myLogin, mapContainer, message.changePosition.direction, y, x);
-      }
-
-      if (message.removeFromLocation) {
-        removePlayerSprite(message.removeFromLocation, mapContainer);
-      }
-
-      if (message.worldMap) {
-        worldMap = new WorldMap(message.worldMap,
-                                      message.locationId,
-                                      '.world-map');
-      }
+      if (message.allMap && message.spriteConf) game.initScene(message);
+      if (message.changeMap) game.changeMap(message);
+      if (message.changePosition) game.changePosition(message);
+      if (message.removeFromLocation) this.removePlayerSprite(message);
+      if (message.worldMap) game.initWorldMap(message);
     };
 
     socket.onerror = function (error) {
