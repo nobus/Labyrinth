@@ -1,6 +1,6 @@
 'use strict';
 
-var stage, renderer;
+var gameStage, gameRenderer;
 
 class Game {
   constructor (myLogin) {
@@ -8,41 +8,41 @@ class Game {
     this.worldMap;
     this.playerSprites = {};
 
-    this.initNewStage();
+    this.initGameStage();
 
     animate();
 
     function animate () {
       requestAnimationFrame(animate);
-      renderer.render(stage);
+      gameRenderer.render(gameStage);
     }
   }
 
-  initNewStage () {
+  initGameStage () {
     // Initial game stage
-    stage = new PIXI.Container();
+    gameStage = new PIXI.Container();
 
-    renderer = PIXI.autoDetectRenderer(0, 0, {antialias: false, transparent: false, resolution: 1});
-    renderer.view.style.position = "absolute";
-    renderer.view.style.display = "block";
-    renderer.autoResize = true;
-    renderer.resize(SIZE, SIZE);
+    gameRenderer = PIXI.autoDetectRenderer(0, 0, {antialias: false, transparent: false, resolution: 1});
+    gameRenderer.view.style.position = "absolute";
+    gameRenderer.view.style.display = "block";
+    gameRenderer.autoResize = true;
+    gameRenderer.resize(SIZE, SIZE);
 
     this.mapContainer = new PIXI.Container();
     this.mapContainer.x = 0;
     this.mapContainer.y = 0;
 
-    stage.addChild(this.mapContainer);
+    gameStage.addChild(this.mapContainer);
 
     $('.canvas').empty();
-    $('.canvas').append(renderer.view);
+    $('.canvas').append(gameRenderer.view);
   }
 
   initScene (message) {
     document.title = `Test client, ${message.locationId}`;
 
     this.playerSprites = {};
-    this.initNewStage();
+    this.initGameStage();
 
     drawMap(message.allMap, this.mapContainer, message.spriteConf);
 
@@ -65,7 +65,7 @@ class Game {
     const x = message.changePosition.x;
 
     if (this.playerSprites[login] === undefined || message.allMap) {
-      this.playerSprites[login] = createPlayerSprite(login, this.myLogin, y, x, stage, this.mapContainer);
+      this.playerSprites[login] = createPlayerSprite(login, this.myLogin, y, x, gameStage, this.mapContainer);
     }
 
     changePosition(login, this.myLogin, this.mapContainer, message.changePosition.direction, y, x);
