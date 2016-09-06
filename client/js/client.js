@@ -7,7 +7,7 @@ $(document).ready(function() {
   PIXI.loader
   .add([
         'img/player0.png',
-        'img/player.png',
+        'img/player.json',
         'img/grass0_background.png',
         'img/ground0_background.png',
         'img/terrain.json',
