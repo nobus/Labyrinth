@@ -26,11 +26,13 @@ module.exports = {
   "dynamic": {
     "block": [
       {"name": "tree0"}
+      ,{"name": "tree1"}
     ],
     "halfBlock": [
       {"name": "stone0"}
       ,{"name": "stump0"}
       ,{"name": "stump1"}
+      ,{"name": "stump2"}
     ],
     "entrances": [
       {"name": "dungeon_entrance0"}
@@ -43,6 +45,7 @@ module.exports = {
       {"name": "flower0"}
       ,{"name": "grass0"}
       ,{"name": "ground0"}
+      ,{"name": "swamp0"}
     ]
   }
 };
