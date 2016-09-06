@@ -6,10 +6,9 @@ var SPRITE_SIZE = 32;
 $(document).ready(function() {
   PIXI.loader
   .add([
-        'img/player0.png',
-        'img/player.json',
         'img/grass0_background.png',
         'img/ground0_background.png',
+        'img/player.json',
         'img/terrain.json',
         'img/worldmap.json'
         ])
@@ -57,34 +56,6 @@ $(document).ready(function() {
     function animateGameStage() {
       requestAnimationFrame(animateGameStage);
       renderer.render(stage);
-    }
-
-    function getURLParameter(sParam) {
-      const sPageURL = decodeURIComponent(window.location.search.substring(1));
-      const sURLVariables = sPageURL.split('&');
-      let sParameterName;
-
-      for (let i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-          return sParameterName[1] === undefined ? true : sParameterName[1];
-        }
-      }
-    }
-
-    function changePosition(login, direction, y, x) {
-      if (login === myLogin) {
-        if (direction === undefined) {
-          // it is first message after connect
-          mapContainer.y -= y * SPRITE_SIZE;
-          mapContainer.x -= x * SPRITE_SIZE;
-        } else {
-          moveMapAroundPlayer(mapContainer, direction);
-        }
-      } else {
-        movePlayer(login, y, x);
-      }
     }
 
     socket.onopen = function () {
@@ -157,7 +128,7 @@ $(document).ready(function() {
           createPlayerSprite(login, myLogin, y, x, stage, mapContainer);
         }
 
-        changePosition(login, message.changePosition.direction, y, x);
+        changePosition(login, myLogin, mapContainer, message.changePosition.direction, y, x);
       }
 
       if (message.removeFromLocation) {

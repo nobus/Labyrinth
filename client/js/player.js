@@ -33,3 +33,17 @@ function movePlayer(login, y, x) {
   playerSprites[login].y = y * SPRITE_SIZE;
   playerSprites[login].x = x * SPRITE_SIZE;
 }
+
+function changePosition(login, myLogin, mapContainer, direction, y, x) {
+  if (login === myLogin) {
+    if (direction === undefined) {
+      // it is first message after connect
+      mapContainer.y -= y * SPRITE_SIZE;
+      mapContainer.x -= x * SPRITE_SIZE;
+    } else {
+      moveMapAroundPlayer(mapContainer, direction);
+    }
+  } else {
+    movePlayer(login, y, x);
+  }
+}
