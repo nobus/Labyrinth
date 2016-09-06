@@ -16,7 +16,8 @@ function createPlayerSprite(login, myLogin, y, x, stage, mapContainer) {
     setMapAroundPlayer(mapContainer, y, x);
   } else {
     mapContainer.addChild(playerSprite);
-    movePlayer(login, y, x);
+    playerSprite.y = y * SPRITE_SIZE;
+    playerSprite.x = x * SPRITE_SIZE;
   }
 
   return playerSprite;
