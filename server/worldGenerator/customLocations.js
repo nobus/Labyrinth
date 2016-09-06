@@ -59,6 +59,20 @@ export class FireCave extends randomLocation.RandomLocation {
   }
 }
 
+export class Swamp extends randomLocation.RandomLocation {
+  setUp () {
+    this.background = 'swamp0';
+
+    this.elements.swamp0 = 900;
+    this.elements.flower0 = 25;
+    this.elements.stump2 = 25;
+    this.elements.tree1 = 50;
+
+    this.minMutationRate = 1;
+    this.maxMutationRate = 20;
+  }
+}
+
 export class Labyrinth extends location.Location {
   setUp () {
     this.background = 'ground0';

@@ -12,7 +12,7 @@ export class SurfaceBluePrints {
     this.blueprints = {};
     this.startLocationId = undefined;
 
-    this.locationTypes = [customLocations.ForestLocation, customLocations.MeadowLocation];
+    this.locationTypes = [customLocations.ForestLocation, customLocations.MeadowLocation, customLocations.Swamp];
   }
 
   setStartLocationId () {

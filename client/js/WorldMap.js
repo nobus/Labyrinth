@@ -44,6 +44,8 @@ class WorldMap {
       return new PIXI.Sprite(PIXI.loader.resources['img/worldmap.json'].textures['map_forest.png']);
     } else if (spriteType === 'dungeon') {
       return new PIXI.Sprite(PIXI.loader.resources['img/worldmap.json'].textures['map_dungeon_entrance.png']);
+    } else if (spriteType === 'Swamp') {
+      return new PIXI.Sprite(PIXI.loader.resources['img/worldmap.json'].textures['map_swamp.png']);
     } else if (spriteType === 'gamer') {
       return new PIXI.Sprite(PIXI.loader.resources['img/worldmap.json'].textures['gamer_position.png']);
     }

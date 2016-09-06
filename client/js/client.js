@@ -8,6 +8,7 @@ $(document).ready(function() {
   .add([
         'img/grass0_background.png',
         'img/ground0_background.png',
+        'img/swamp0_background.png',
         'img/player.json',
         'img/terrain.json',
         'img/worldmap.json'
