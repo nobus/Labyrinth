@@ -31,14 +31,22 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
+},
+"map_swamp.png":
+{
+	"frame": {"x":128,"y":0,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
 	"image": "worldmap.png",
 	"format": "RGBA8888",
-	"size": {"w":128,"h":32},
+	"size": {"w":160,"h":32},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:ee4fa4e2748bde5fe35dbb95bd860563:2bac10d8705caff414bc71308d381208:65720d0b0221dd206469c56bfa8f56cd$"
+	"smartupdate": "$TexturePacker:SmartUpdate:0b5aa01428a172a479e7c3927e8bbb84:ab255a2d3a4d026061074605da42111b:65720d0b0221dd206469c56bfa8f56cd$"
 }
 }

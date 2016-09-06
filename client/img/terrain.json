@@ -58,7 +58,7 @@
 },
 "rock0.png":
 {
-	"frame": {"x":232,"y":1,"w":32,"h":32},
+	"frame": {"x":1,"y":34,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -66,7 +66,7 @@
 },
 "stump0.png":
 {
-	"frame": {"x":265,"y":1,"w":32,"h":32},
+	"frame": {"x":34,"y":34,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -74,7 +74,23 @@
 },
 "stump1.png":
 {
-	"frame": {"x":298,"y":1,"w":32,"h":32},
+	"frame": {"x":67,"y":34,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"stump2.png":
+{
+	"frame": {"x":100,"y":34,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"swamp0.png":
+{
+	"frame": {"x":133,"y":34,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -82,7 +98,15 @@
 },
 "tree0.png":
 {
-	"frame": {"x":331,"y":1,"w":32,"h":32},
+	"frame": {"x":166,"y":34,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"tree1.png":
+{
+	"frame": {"x":199,"y":34,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -93,8 +117,8 @@
 	"version": "1.0",
 	"image": "terrain.png",
 	"format": "RGBA8888",
-	"size": {"w":364,"h":34},
+	"size": {"w":232,"h":67},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:ccbf2f2c346a8369a339a9729b96b888:97ff9b28b7f3d989a9a8b0e96bd22897:a52c91d73586a2a634ceb55ad22f4949$"
+	"smartupdate": "$TexturePacker:SmartUpdate:3ec64e83a7a00f91911df5c4b906523a:e7704a9a745872d5ae6599028d5de4b9:a52c91d73586a2a634ceb55ad22f4949$"
 }
 }
