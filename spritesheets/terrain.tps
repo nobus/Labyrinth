@@ -198,7 +198,10 @@
             <key type="filename">src/rock0.png</key>
             <key type="filename">src/stump0.png</key>
             <key type="filename">src/stump1.png</key>
+            <key type="filename">src/stump2.png</key>
+            <key type="filename">src/swamp0.png</key>
             <key type="filename">src/tree0.png</key>
+            <key type="filename">src/tree1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -217,6 +220,9 @@
             <filename>src/dungeon_exit1.png</filename>
             <filename>src/flower0.png</filename>
             <filename>src/lava0.png</filename>
+            <filename>src/swamp0.png</filename>
+            <filename>src/stump2.png</filename>
+            <filename>src/tree1.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

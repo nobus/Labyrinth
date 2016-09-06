@@ -192,6 +192,7 @@
             <key type="filename">src/map_dungeon_entrance.png</key>
             <key type="filename">src/map_forest.png</key>
             <key type="filename">src/map_meadow.png</key>
+            <key type="filename">src/map_swamp.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -203,6 +204,7 @@
             <filename>src/map_meadow.png</filename>
             <filename>src/map_dungeon_entrance.png</filename>
             <filename>src/gamer_position.png</filename>
+            <filename>src/map_swamp.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
