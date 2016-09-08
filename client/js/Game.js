@@ -49,6 +49,29 @@ class Game {
     if (this.worldMap) this.worldMap.moveGamer(message.locationId);
   }
 
+  initLocationScene (message) {
+    document.title = `Test client, ${message.initLocationScene.locationId}`;
+
+    this.playerSprites = {};
+    this.initGameStage();
+
+    drawMap(message.initLocationScene.allMap,
+      this.mapContainer,
+      message.initLocationScene.spriteConf);
+
+    if (this.worldMap)
+      this.worldMap.moveGamer(message.initLocationScene.locationId);
+
+    const y = message.initLocationScene.y;
+    const x = message.initLocationScene.x;
+
+    this.playerSprites[this.myLogin] = createPlayerSprite(this.myLogin,
+                                                        this.myLogin, y, x,
+                                                        gameStage, this.mapContainer);
+    this.mapContainer.y -= y * SPRITE_SIZE;
+    this.mapContainer.x -= x * SPRITE_SIZE;
+  }
+
   initWorldMap (message) {
     this.worldMap = new WorldMap(message.worldMap,
                                   message.locationId,

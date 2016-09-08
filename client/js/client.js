@@ -54,6 +54,7 @@ $(document).ready(function() {
       console.log('Data received: ' + rawMessage.length);
       const message = JSON.parse(rawMessage);
 
+      if (message.initLocationScene) game.initLocationScene(message);
       if (message.allMap && message.spriteConf) game.initScene(message);
       if (message.changeMap) game.changeMap(message);
       if (message.changePosition) game.changePosition(message);

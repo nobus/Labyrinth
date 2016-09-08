@@ -318,7 +318,7 @@ export class UserDB{
           login);
       }
 
-      WebAPI.WebAPI.sendInitialResponse(
+      WebAPI.WebAPI.sendInitLocationResp(
         client,
         login,
         position.location,
@@ -354,7 +354,7 @@ export class UserDB{
               this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(oldLocation), login);
             }
 
-            WebAPI.WebAPI.sendInitialResponse(
+            WebAPI.WebAPI.sendInitLocationResp(
               client,
               login,
               position.location,

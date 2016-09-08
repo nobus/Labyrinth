@@ -66,6 +66,19 @@ export class WebAPI {
     client.send(JSON.stringify(resp));
   }
 
+  static sendInitLocationResp (client, login, locationId, locationMap, x, y, spriteConf) {
+    const resp = {'initLocationScene': {}};
+    resp.initLocationScene.locationId = locationId;
+    resp.initLocationScene.allMap = locationMap;
+    resp.initLocationScene.spriteConf = spriteConf;
+
+    resp.initLocationScene.login = login;
+    resp.initLocationScene.y = y;
+    resp.initLocationScene.x = x;
+
+    client.send(JSON.stringify(resp));
+  }
+
   sendRemoveUserBroadcast(clientList, login) {
     const resp = {'removeFromLocation': login};
 
