@@ -38,17 +38,6 @@ class Game {
     $('.canvas').append(gameRenderer.view);
   }
 
-  initScene (message) {
-    document.title = `Test client, ${message.locationId}`;
-
-    this.playerSprites = {};
-    this.initGameStage();
-
-    drawMap(message.allMap, this.mapContainer, message.spriteConf);
-
-    if (this.worldMap) this.worldMap.moveGamer(message.locationId);
-  }
-
   initLocationScene (message) {
     document.title = `Test client, ${message.initLocationScene.locationId}`;
 
