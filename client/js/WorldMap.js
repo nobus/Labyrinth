@@ -15,6 +15,7 @@ class WorldMap {
     this.renderer.view.style.position = "absolute";
     this.renderer.view.style.display = "block";
     this.renderer.autoResize = true;
+    this.renderer.resize(SIZE, SIZE);
 
     $(this.divClass).empty();
     $(this.divClass).append(this.renderer.view);
