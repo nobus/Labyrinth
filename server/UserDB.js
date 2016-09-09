@@ -373,6 +373,14 @@ export class UserDB{
         position.y,
         this.idMapper.getConf(),
         anotherUsers);
+
+      const userPosition = {};
+      userPosition.x = this.userPositionCache[login].x;
+      userPosition.y = this.userPositionCache[login].y;
+      userPosition.direction = this.userPositionCache[login].direction;
+
+      this.webAPI.sendAddUserBroadcast(this.getClientsForLocation(position.location),
+                                       login, userPosition);
     }
 
   }
@@ -416,6 +424,14 @@ export class UserDB{
               position.y,
               this.idMapper.getConf(),
               anotherUsers);
+
+            const userPosition = {};
+            userPosition.x = this.userPositionCache[login].x;
+            userPosition.y = this.userPositionCache[login].y;
+            userPosition.direction = this.userPositionCache[login].direction;
+
+            this.webAPI.sendAddUserBroadcast(this.getClientsForLocation(position.location),
+                                             login, userPosition);
           })
       .catch (
           result => {
