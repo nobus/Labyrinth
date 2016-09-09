@@ -4,14 +4,16 @@
   top: 0px;
   width: 640px;
   height: 640px;
+  border: 4px outset;
 }
 
 .world-map {
   position: absolute;
-  left: 641px;
+  left: 650px;
   top: 0px;
   width: 640px;
   height: 640px;
+  border: 4px outset;
 }
 
 .menu {
