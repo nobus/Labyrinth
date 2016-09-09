@@ -41,13 +41,13 @@ export class UserDB{
 
     /**
      * Description of keys of this.userPositionCache:
-     * id {string} inner ID of rethinkDB
-     * login {string}
-     * online {boolean} true if online, else false
-     * location {string} ID of current location
-     * x {number} vertical coord
-     * y {number} horizontal coord
-     * direction {string} may be left, right, up, down
+     * {string} id inner ID of rethinkDB
+     * {string} login
+     * {boolean} online this flag is true if online, else false
+     * {string } location ID of current location
+     * {number} x vertical coord
+     * {number} y horizontal coord
+     * {string} direction may be left, right, up, down
      */
     this.userPositionCache = {};
 
@@ -253,7 +253,12 @@ export class UserDB{
         }
   }
 
-  getClientsForLocation(location) {
+  /**
+   * Get list of WS clients which are in the location
+   *
+   * @location {string} location ID
+   */
+  getClientsForLocation (location) {
     let clientList = [];
 
     for (let log in this.clients) {
@@ -266,6 +271,29 @@ export class UserDB{
     }
 
     return clientList;
+  }
+
+  getLoginsForLocation (location) {
+    const clientList = [];
+
+    for (let login in this.clients) {
+      if (this.clients[login].location === location) {
+        clientList.push(login);
+      }
+    }
+
+    return clientList;
+  }
+
+  getUserPosition (login) {
+    const userPosition = this.userPositionCache[login];
+
+    return {
+      location: userPosition.location,
+      x: userPosition.x,
+      y: userPosition.y,
+      direction: userPosition.direction
+    };
   }
 
   processUserActivity(message, client, clientId) {
@@ -330,6 +358,12 @@ export class UserDB{
           login);
       }
 
+      const clientList = this.getLoginsForLocation(position.location);
+      const anotherUsers = clientList.map(e => {
+        // where e is login
+        return {'login': e, 'position': this.getUserPosition(e)};
+      });
+
       WebAPI.WebAPI.sendInitLocationResp(
         client,
         login,
@@ -337,7 +371,8 @@ export class UserDB{
         this.locationCache[position.location].getLocationMap(),
         position.x,
         position.y,
-        this.idMapper.getConf());
+        this.idMapper.getConf(),
+        anotherUsers);
     }
 
   }
@@ -366,6 +401,12 @@ export class UserDB{
               this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(oldLocation), login);
             }
 
+            const clientList = this.getLoginsForLocation(position.location);
+            const anotherUsers = clientList.map(e => {
+              // where e is login
+              return {'login': e, 'position': this.getUserPosition(e)};
+            });
+
             WebAPI.WebAPI.sendInitLocationResp(
               client,
               login,
@@ -373,7 +414,8 @@ export class UserDB{
               this.locationCache[position.location].getLocationMap(),
               position.x,
               position.y,
-              this.idMapper.getConf());
+              this.idMapper.getConf(),
+              anotherUsers);
           })
       .catch (
           result => {

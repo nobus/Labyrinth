@@ -38,6 +38,17 @@ class Game {
     $('.canvas').append(gameRenderer.view);
   }
 
+  /**
+   * First step is initialization game scene for location,
+   * where user is staying.
+   * @param {object} message this is an object with some fields:
+   *        initLocationScene.locationId
+   *        initLocationScene.allMap the map of current location
+   *        initLocationScene.spriteConf the sprite config for map drawing
+   *        initLocationScene.login this is login of current user
+   *        initLocationScene.y and initLocationScene.y this is coord of current user
+   *        initLocationScene.anotherUsers this is other users in the current location
+   */
   initLocationScene (message) {
     document.title = `Test client, ${message.initLocationScene.locationId}`;
 
@@ -54,11 +65,27 @@ class Game {
     const y = message.initLocationScene.y;
     const x = message.initLocationScene.x;
 
+    // add sprite for user
     this.playerSprites[this.myLogin] = createPlayerSprite(this.myLogin,
-                                                        this.myLogin, y, x,
-                                                        gameStage, this.mapContainer);
+                                                          this.myLogin,
+                                                          y, x,
+                                                          gameStage,
+                                                          this.mapContainer);
+
+    // move location's map
     this.mapContainer.y -= y * SPRITE_SIZE;
     this.mapContainer.x -= x * SPRITE_SIZE;
+
+    // add another users to the stage
+    message.initLocationScene.anotherUsers.forEach(user => {
+      if (user.login !== this.myLogin)
+          this.playerSprites[user.login] = createPlayerSprite(user.login,
+                                                              this.myLogin,
+                                                              user.position.y,
+                                                              user.position.x,
+                                                              gameStage,
+                                                              this.mapContainer);
+    });
   }
 
   initWorldMap (message) {
@@ -90,11 +117,11 @@ class Game {
 
   /**
    * Add user to the game stage
-   * @message {object} this is an object with some fields:
-   *          addUserToLocation.login
-   *          addUserToLocation.position.y
-   *          addUserToLocation.position.x
-   *          addUserToLocation.position.direction
+   * @param {object} message this is an object with some fields:
+   *        addUserToLocation.login
+   *        addUserToLocation.position.y
+   *        addUserToLocation.position.x
+   *        addUserToLocation.position.direction
    */
   addUserToLocation (message) {
     const login = message.addUserToLocation.login;
@@ -108,8 +135,8 @@ class Game {
 
   /**
    * Remove user from the game stage
-   * @message {object} this is an object with some fields:
-   *          removeUserToLocation.login
+   * @param {object} message this is an object with some fields:
+   *                 removeUserToLocation.login
    */
   removeUserFromLocation (message) {
     removePlayerSprite(message.removeUserFromLocation, this.mapContainer);

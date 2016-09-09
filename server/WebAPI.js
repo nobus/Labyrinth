@@ -57,7 +57,7 @@ export class WebAPI {
     return ret;
   }
 
-  static sendInitLocationResp (client, login, locationId, locationMap, x, y, spriteConf) {
+  static sendInitLocationResp (client, login, locationId, locationMap, x, y, spriteConf, anotherUsers) {
     const resp = {'initLocationScene': {}};
     resp.initLocationScene.locationId = locationId;
     resp.initLocationScene.allMap = locationMap;
@@ -67,14 +67,16 @@ export class WebAPI {
     resp.initLocationScene.y = y;
     resp.initLocationScene.x = x;
 
+    resp.initLocationScene.anotherUsers = anotherUsers;
+
     client.send(JSON.stringify(resp));
   }
 
   /**
    * Send broadcast for remove user from clients
    *
-   * clientList {array} some clients who get this broadcast
-   * login {string}
+   * @param {object[]} clientList some clients who get this broadcast
+   * @param {string} login
    */
   sendRemoveUserBroadcast(clientList, login) {
     const resp = {'removeUserFromLocation': login};
@@ -84,9 +86,9 @@ export class WebAPI {
   /**
    * Send broadcast for add user to clients
    *
-   * clientList {array} some clients who get this broadcast
-   * login {string}
-   * userPosition {object} include x, y and direction
+   * @param {object[]} clientList some clients who get this broadcast
+   * @param {string} login
+   * @param {object} userPosition include x, y and direction
    */
   sendAddUserBroadcast(clientList, login, userPosition) {
     const resp = {'addUserToLocation': {}};
