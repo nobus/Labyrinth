@@ -370,6 +370,14 @@ export class UserDB{
       );
   }
 
+  /**
+   * Switch to online the player's state.
+   * NEED Send broadcast other clients about this.
+   *
+   * @param {string} login
+   * @param {number} clientId number of client from WebAPI
+  */
+
   switchOnline (login, clientId) {
     rethinkDB
       .table('userPosition', {readMode: 'outdated'})
@@ -382,9 +390,19 @@ export class UserDB{
       });
   }
 
+  /**
+   * Switch to offline the player's state.
+   * Send broadcast other clients about this.
+   *
+   * @param {number} clientId number of client from WebAPI
+  */
   switchOffline (clientId) {
     const login = this.clientId[clientId];
     delete this.clients[login];
+
+    // remove player from other clients
+    const location = this.userPositionCache[login].location;
+    this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(location), login);
 
     rethinkDB
       .table('userPosition', {readMode: 'outdated'})
