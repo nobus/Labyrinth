@@ -352,35 +352,7 @@ export class UserDB{
     if (this.locationCache[position.location] === undefined) {
       this.loadLocation(client, login, oldLocation, position);
     } else {
-      if (oldLocation) {
-        this.webAPI.sendRemoveUserBroadcast(
-          this.getClientsForLocation(oldLocation),
-          login);
-      }
-
-      const clientList = this.getLoginsForLocation(position.location);
-      const anotherUsers = clientList.map(e => {
-        // where e is login
-        return {'login': e, 'position': this.getUserPosition(e)};
-      });
-
-      WebAPI.WebAPI.sendInitLocationResp(
-        client,
-        login,
-        position.location,
-        this.locationCache[position.location].getLocationMap(),
-        position.x,
-        position.y,
-        this.idMapper.getConf(),
-        anotherUsers);
-
-      const userPosition = {};
-      userPosition.x = this.userPositionCache[login].x;
-      userPosition.y = this.userPositionCache[login].y;
-      userPosition.direction = this.userPositionCache[login].direction;
-
-      this.webAPI.sendAddUserBroadcast(this.getClientsForLocation(position.location),
-                                       login, userPosition);
+      this.sendInitLocationResponse(client, login, oldLocation, position);
     }
 
   }
@@ -404,40 +376,55 @@ export class UserDB{
 		  .then (
 		      result => {
 		        log.info(result);
-
-            if (oldLocation) {
-              this.webAPI.sendRemoveUserBroadcast(this.getClientsForLocation(oldLocation), login);
-            }
-
-            const clientList = this.getLoginsForLocation(position.location);
-            const anotherUsers = clientList.map(e => {
-              // where e is login
-              return {'login': e, 'position': this.getUserPosition(e)};
-            });
-
-            WebAPI.WebAPI.sendInitLocationResp(
-              client,
-              login,
-              position.location,
-              this.locationCache[position.location].getLocationMap(),
-              position.x,
-              position.y,
-              this.idMapper.getConf(),
-              anotherUsers);
-
-            const userPosition = {};
-            userPosition.x = this.userPositionCache[login].x;
-            userPosition.y = this.userPositionCache[login].y;
-            userPosition.direction = this.userPositionCache[login].direction;
-
-            this.webAPI.sendAddUserBroadcast(this.getClientsForLocation(position.location),
-                                             login, userPosition);
+            this.sendInitLocationResponse(client, login, oldLocation, position);
           })
       .catch (
           result => {
             log.error(result);
           }
       );
+  }
+
+  /**
+   * Send the first initializing response
+   * and other broadcast if it need
+   *
+   * @param {object} client this is client obect of current user session
+   * @param {string} login this is login of current user
+   * @param {string} oldLocation this is ID of old location or undefined
+   * @param {object} position this is the object which contains information
+            of coordinates and direction
+   */
+  sendInitLocationResponse (client, login, oldLocation, position) {
+    if (oldLocation) {
+      this.webAPI.sendRemoveUserBroadcast(
+        this.getClientsForLocation(oldLocation),
+        login);
+    }
+
+    const clientList = this.getLoginsForLocation(position.location);
+    const anotherUsers = clientList.map(e => {
+      // where e is login
+      return {'login': e, 'position': this.getUserPosition(e)};
+    });
+
+    WebAPI.WebAPI.sendInitLocationResp(
+      client,
+      login,
+      position.location,
+      this.locationCache[position.location].getLocationMap(),
+      position.x,
+      position.y,
+      this.idMapper.getConf(),
+      anotherUsers);
+
+    const userPosition = {};
+    userPosition.x = this.userPositionCache[login].x;
+    userPosition.y = this.userPositionCache[login].y;
+    userPosition.direction = this.userPositionCache[login].direction;
+
+    this.webAPI.sendAddUserBroadcast(this.getClientsForLocation(position.location),
+                                     login, userPosition);
   }
 
   /**
