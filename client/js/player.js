@@ -28,7 +28,7 @@ function removePlayerSprite(login, mapContainer) {
 
   if (playerSprite) {
     mapContainer.removeChild(playerSprite);
-    delete playerSprite[login];
+    delete playerSprites[login];
   }
 }
 
