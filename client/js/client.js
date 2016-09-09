@@ -57,7 +57,7 @@ $(document).ready(function() {
       if (message.initLocationScene) game.initLocationScene(message);
       if (message.changeMap) game.changeMap(message);
       if (message.changePosition) game.changePosition(message);
-      if (message.removeFromLocation) this.removePlayerSprite(message);
+      if (message.removeFromLocation) game.removeFromLocation(message);
       if (message.worldMap) game.initWorldMap(message);
     };
 
