@@ -128,9 +128,10 @@ class Game {
     const y = message.addUserToLocation.position.y;
     const x = message.addUserToLocation.position.x;
 
-    this.playerSprites[login] = createPlayerSprite(login,
-                                                   this.myLogin, y, x,
-                                                   gameStage, this.mapContainer);
+    if (login !== this.myLogin)
+      this.playerSprites[login] = createPlayerSprite(login,
+                                                     this.myLogin, y, x,
+                                                     gameStage, this.mapContainer);
   }
 
   /**
