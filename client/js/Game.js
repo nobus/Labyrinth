@@ -88,8 +88,31 @@ class Game {
     }
   }
 
-  removeFromLocation (message) {
-    removePlayerSprite(message.removeFromLocation, this.mapContainer);
+  /**
+   * Add user to the game stage
+   * @message {object} this is an object with some fields:
+   *          addUserToLocation.login
+   *          addUserToLocation.position.y
+   *          addUserToLocation.position.x
+   *          addUserToLocation.position.direction
+   */
+  addUserToLocation (message) {
+    const login = message.addUserToLocation.login;
+    const y = message.addUserToLocation.position.y;
+    const x = message.addUserToLocation.position.x;
+
+    this.playerSprites[login] = createPlayerSprite(login,
+                                                   this.myLogin, y, x,
+                                                   gameStage, this.mapContainer);
+  }
+
+  /**
+   * Remove user from the game stage
+   * @message {object} this is an object with some fields:
+   *          removeUserToLocation.login
+   */
+  removeUserFromLocation (message) {
+    removePlayerSprite(message.removeUserFromLocation, this.mapContainer);
   }
 
 }

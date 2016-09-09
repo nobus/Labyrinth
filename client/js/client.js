@@ -54,10 +54,12 @@ $(document).ready(function() {
       console.log('Data received: ' + rawMessage.length);
       const message = JSON.parse(rawMessage);
 
+      // processing events in the game protocol
       if (message.initLocationScene) game.initLocationScene(message);
       if (message.changeMap) game.changeMap(message);
       if (message.changePosition) game.changePosition(message);
-      if (message.removeFromLocation) game.removeFromLocation(message);
+      if (message.addUserToLocation) game.addUserToLocation(message);
+      if (message.removeUserFromLocation) game.removeUserFromLocation(message);
       if (message.worldMap) game.initWorldMap(message);
     };
 

@@ -70,8 +70,28 @@ export class WebAPI {
     client.send(JSON.stringify(resp));
   }
 
+  /**
+   * Send broadcast for remove user from clients
+   *
+   * clientList {array} some clients who get this broadcast
+   * login {string}
+   */
   sendRemoveUserBroadcast(clientList, login) {
-    const resp = {'removeFromLocation': login};
+    const resp = {'removeUserFromLocation': login};
+    this.wss.broadcast(JSON.stringify(resp), clientList);
+  }
+
+  /**
+   * Send broadcast for add user to clients
+   *
+   * clientList {array} some clients who get this broadcast
+   * login {string}
+   * userPosition {object} include x, y and direction
+   */
+  sendAddUserBroadcast(clientList, login, userPosition) {
+    const resp = {'addUserToLocation': {}};
+    resp.addUserToLocation.login = login;
+    resp.addUserToLocation.position = userPosition;
 
     this.wss.broadcast(JSON.stringify(resp), clientList);
   }

@@ -384,12 +384,21 @@ export class UserDB{
 
   /**
    * Switch to online the player's state.
-   * NEED Send broadcast other clients about this.
+   * Send broadcast other clients about this.
    *
    * @param {string} login
    * @param {number} clientId number of client from WebAPI
    */
   switchOnline (login, clientId) {
+    // add player from other clients
+    const location = this.userPositionCache[login].location;
+    const userPosition = {};
+    userPosition.x = this.userPositionCache[login].x;
+    userPosition.y = this.userPositionCache[login].y;
+    userPosition.direction = this.userPositionCache[login].direction;
+
+    this.webAPI.sendAddUserBroadcast(this.getClientsForLocation(location), login, userPosition);
+
     rethinkDB
       .table('userPosition', {readMode: 'outdated'})
       .get(this.userPositionCache[login].id)
