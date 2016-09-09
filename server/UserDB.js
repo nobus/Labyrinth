@@ -38,7 +38,19 @@ export class UserDB{
     };
 
     this.locationCache = {};
+
+    /**
+     * Description of keys of this.userPositionCache:
+     * id {string} inner ID of rethinkDB
+     * login {string}
+     * online {boolean} true if online, else false
+     * location {string} ID of current location
+     * x {number} vertical coord
+     * y {number} horizontal coord
+     * direction {string} may be left, right, up, down
+     */
     this.userPositionCache = {};
+
     this.worldMapCache = {};
 
     // for broadcast response on location
@@ -376,8 +388,7 @@ export class UserDB{
    *
    * @param {string} login
    * @param {number} clientId number of client from WebAPI
-  */
-
+   */
   switchOnline (login, clientId) {
     rethinkDB
       .table('userPosition', {readMode: 'outdated'})
@@ -395,7 +406,7 @@ export class UserDB{
    * Send broadcast other clients about this.
    *
    * @param {number} clientId number of client from WebAPI
-  */
+   */
   switchOffline (clientId) {
     const login = this.clientId[clientId];
     delete this.clients[login];
