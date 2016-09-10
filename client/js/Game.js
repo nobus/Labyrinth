@@ -70,7 +70,8 @@ class Game {
                                                           this.myLogin,
                                                           y, x,
                                                           gameStage,
-                                                          this.mapContainer);
+                                                          this.mapContainer,
+                                                          message.initLocationScene.direction);
 
     // move location's map
     this.mapContainer.y -= y * SPRITE_SIZE;
@@ -84,7 +85,8 @@ class Game {
                                                               user.position.y,
                                                               user.position.x,
                                                               gameStage,
-                                                              this.mapContainer);
+                                                              this.mapContainer,
+                                                              user.position.direction);
     });
   }
 
@@ -131,7 +133,8 @@ class Game {
     if (login !== this.myLogin)
       this.playerSprites[login] = createPlayerSprite(login,
                                                      this.myLogin, y, x,
-                                                     gameStage, this.mapContainer);
+                                                     gameStage, this.mapContainer,
+                                                     message.addUserToLocation.position.direction);
   }
 
   /**
