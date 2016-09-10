@@ -57,7 +57,7 @@ export class WebAPI {
     return ret;
   }
 
-  static sendInitLocationResp (client, login, locationId, locationMap, x, y, spriteConf, anotherUsers) {
+  static sendInitLocationResp (client, login, locationId, locationMap, x, y, direction, spriteConf, anotherUsers) {
     const resp = {'initLocationScene': {}};
     resp.initLocationScene.locationId = locationId;
     resp.initLocationScene.allMap = locationMap;
@@ -66,6 +66,7 @@ export class WebAPI {
     resp.initLocationScene.login = login;
     resp.initLocationScene.y = y;
     resp.initLocationScene.x = x;
+    resp.initLocationScene.direction = direction;
 
     resp.initLocationScene.anotherUsers = anotherUsers;
 

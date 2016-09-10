@@ -415,6 +415,7 @@ export class UserDB{
       this.locationCache[position.location].getLocationMap(),
       position.x,
       position.y,
+      position.direction,
       this.idMapper.getConf(),
       anotherUsers);
 
