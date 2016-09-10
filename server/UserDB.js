@@ -423,7 +423,6 @@ export class UserDB{
     userPosition.y = this.userPositionCache[login].y;
     userPosition.direction = this.userPositionCache[login].direction;
 
-    console.log('sendAddUserBroadcast ' + login);
     this.webAPI.sendAddUserBroadcast(this.getClientsForLocation(position.location),
                                      login, userPosition);
   }
