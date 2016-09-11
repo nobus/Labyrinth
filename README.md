@@ -9,7 +9,7 @@ Quick start:
 - npm install
 - start rethinkdb
 - npm -s run create-world
-- npm -s run garden
+- npm start
 - cd client && bower install && cd ..
 - npm -s run client
 - in browser open client (for example http://localhost:8000/?login=coral1&port=8081 )
