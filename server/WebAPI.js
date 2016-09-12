@@ -23,6 +23,7 @@ export class WebAPI {
     this.wss.on('connection', (client) => {
       // increment id counter
       const thisId = ++this.clientId;
+      log.warn(`Client connected: ${thisId}`);
 
       // we accepted message from user!
       client.on('message', (rawMessage) => {
