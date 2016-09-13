@@ -9,12 +9,13 @@ export class ForestLocation extends randomLocation.RandomLocation {
   setUp () {
     this.background = 'grass0';
 
-    this.elements.grass0 = 785;
+    this.elements.grass0 = 780;
     this.elements.tree0 = 170;
     this.elements.stump0 = 15;
     this.elements.stump1 = 15;
     this.elements.berry0 = 14;
     this.elements.berry1 = 1;
+    this.elements.mushroom0 = 5;
 
     this.minMutationRate = 1;
     this.maxMutationRate = 20;

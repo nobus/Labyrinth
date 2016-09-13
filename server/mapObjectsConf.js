@@ -46,6 +46,7 @@ module.exports = {
       {"name": "flower0"}
       ,{"name": "berry0"}
       ,{"name": "berry1"}
+      ,{"name": "mushroom0"}
       ,{"name": "grass0"}
       ,{"name": "ground0"}
       ,{"name": "swamp0"}
