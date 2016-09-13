@@ -18,6 +18,7 @@ module.exports = {
     "halfBlock": [
       {"name": "water0"}
       ,{"name": "lava0"}
+      ,{"name": "morass0"}
     ],
     "block": [
       {"name": "rock0"}

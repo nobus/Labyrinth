@@ -66,7 +66,8 @@ export class Swamp extends randomLocation.RandomLocation {
   setUp () {
     this.background = 'swamp0';
 
-    this.elements.swamp0 = 900;
+    this.elements.swamp0 = 700;
+    this.elements.morass0 = 200
     this.elements.flower0 = 1;
     this.elements.berry1 = 24;
     this.elements.stump2 = 25;

@@ -197,6 +197,7 @@
             <key type="filename">src/grass0.png</key>
             <key type="filename">src/ground0.png</key>
             <key type="filename">src/lava0.png</key>
+            <key type="filename">src/morass0.png</key>
             <key type="filename">src/rock0.png</key>
             <key type="filename">src/stump0.png</key>
             <key type="filename">src/stump1.png</key>
@@ -227,6 +228,7 @@
             <filename>src/tree1.png</filename>
             <filename>src/berry0.png</filename>
             <filename>src/berry1.png</filename>
+            <filename>src/morass0.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
