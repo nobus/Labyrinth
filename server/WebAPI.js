@@ -106,6 +106,11 @@ export class WebAPI {
     this.wss.broadcast(JSON.stringify(resp), clientList);
   }
 
+  sendChangeDirectionBroadcast(clientList, login, direction, x, y) {
+    const resp = {'changeDirection': WebAPI.getChangePosition(login, x, y, direction)};
+    this.wss.broadcast(JSON.stringify(resp), clientList);
+  }
+
   sendWorldMap (client, worldMap, locationId) {
     const resp = {'worldMap': worldMap, 'locationId': locationId};
     client.send(JSON.stringify(resp));

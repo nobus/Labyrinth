@@ -301,35 +301,47 @@ export class Game{
     const position = this.userPositionCache[login];
 
     if (message.direction) {
-      let newPosition = this.getNewPosition(position, message.direction);
+      if (message.direction === position.direction) {
+        let newPosition = this.getNewPosition(position, message.direction);
 
-      if (newPosition) {
-        // change position
-        this.userPositionCache[login]['x'] = newPosition.x;
-        this.userPositionCache[login]['y'] = newPosition.y;
-        this.userPositionCache[login]['direction'] = newPosition.direction;
+        if (newPosition) {
+          // change position
+          this.userPositionCache[login]['x'] = newPosition.x;
+          this.userPositionCache[login]['y'] = newPosition.y;
+          this.userPositionCache[login]['direction'] = newPosition.direction;
 
-        if (newPosition.location) {
-          // If new Location - checkLocationCache()
-          this.clients[login] = {
-            'location': newPosition.location,
-            'client': client
-          };
+          if (newPosition.location) {
+            // If new Location - checkLocationCache()
+            this.clients[login] = {
+              'location': newPosition.location,
+              'client': client
+            };
 
-          const oldLocation = this.userPositionCache[login]['location'];
-          this.userPositionCache[login]['location'] = newPosition.location;
-          this.checkLocationCache(client, login, oldLocation, newPosition);
-        } else {
-          // same location
-          let clientList = this.getClientsForLocation(this.userPositionCache[login].location);
+            const oldLocation = this.userPositionCache[login]['location'];
+            this.userPositionCache[login]['location'] = newPosition.location;
+            this.checkLocationCache(client, login, oldLocation, newPosition);
+          } else {
+            // same location
+            const clientList = this.getClientsForLocation(this.userPositionCache[login].location);
 
-          this.webAPI.sendChangePositionBroadcast(
-            clientList,
-            login,
-            newPosition.direction,
-            newPosition.x,
-            newPosition.y);
+            this.webAPI.sendChangePositionBroadcast(
+              clientList,
+              login,
+              newPosition.direction,
+              newPosition.x,
+              newPosition.y);
+          }
         }
+      } else {
+        this.userPositionCache[login].direction = message.direction;
+        const clientList = this.getClientsForLocation(this.userPositionCache[login].location);
+
+        this.webAPI.sendChangeDirectionBroadcast(
+          clientList,
+          login,
+          this.userPositionCache[login].direction,
+          this.userPositionCache[login].x,
+          this.userPositionCache[login].y);
       }
     } else if (message.command) {
       if (message.command === 'worldMap') {
