@@ -3,7 +3,7 @@
 const rethinkDB = require('rethinkdb');
 const program = require('commander');
 
-const UserDB = require('./UserDB');
+const Game = require('./Game');
 const metrics = require('./metrics');
 
 if (require.main === module) {
@@ -20,7 +20,7 @@ if (require.main === module) {
   rethinkDB.connect( {host: config.rethink.dbhost, port: config.rethink.dbport}, function(err, conn) {
     if (err) throw err;
 
-    const userDB = new UserDB.UserDB(
+    const game = new Game.Game(
       conn,
       config.rethink.dbname,
       config.rethink.dump,
@@ -29,6 +29,6 @@ if (require.main === module) {
       config.cartographer.period
     );
 
-    userDB.run();
+    game.run();
   });
 }

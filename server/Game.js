@@ -10,7 +10,7 @@ const WebAPI = require('./WebAPI');
 const customLocations = require('./worldGenerator/customLocations');
 
 
-export class UserDB{
+export class Game{
   constructor (conn, dbName, dumpPeriod, port, locationSize, cartographerPeriod) {
     this.conn = conn;
     this.dbName = dbName;
