@@ -58,6 +58,7 @@ $(document).ready(function() {
       if (message.initLocationScene) game.initLocationScene(message);
       if (message.changeMap) game.changeMap(message);
       if (message.changePosition) game.changePosition(message);
+      if (message.changeDirection) game.changeDirection(message);
       if (message.addUserToLocation) game.addUserToLocation(message);
       if (message.removeUserFromLocation) game.removeUserFromLocation(message);
       if (message.worldMap) game.initWorldMap(message);

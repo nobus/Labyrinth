@@ -117,6 +117,18 @@ class Game {
     }
   }
 
+  changeDirection (message) {
+    const login = message.changeDirection.login;
+
+    if (this.playerSprites[login]) {
+      if (login === this.myLogin) {
+        gameStage.removeChild(this.playerSprites[login]);
+      } else {
+        this.mapContainer.removeChild(this.playerSprites[login]);
+      }
+    }
+  }
+
   /**
    * Add user to the game stage
    * @param {object} message this is an object with some fields:
