@@ -13,7 +13,8 @@ export class ForestLocation extends randomLocation.RandomLocation {
     this.elements.tree0 = 170;
     this.elements.stump0 = 15;
     this.elements.stump1 = 15;
-    this.elements.berry0 = 15;
+    this.elements.berry0 = 14;
+    this.elements.berry1 = 1;
 
     this.minMutationRate = 1;
     this.maxMutationRate = 20;
@@ -67,7 +68,7 @@ export class Swamp extends randomLocation.RandomLocation {
 
     this.elements.swamp0 = 900;
     this.elements.flower0 = 1;
-    this.elements.berry0 = 24;
+    this.elements.berry1 = 24;
     this.elements.stump2 = 25;
     this.elements.tree1 = 50;
 

@@ -189,6 +189,7 @@
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">src/berry0.png</key>
+            <key type="filename">src/berry1.png</key>
             <key type="filename">src/dungeon_entrance0.png</key>
             <key type="filename">src/dungeon_exit0.png</key>
             <key type="filename">src/dungeon_exit1.png</key>
@@ -225,6 +226,7 @@
             <filename>src/stump2.png</filename>
             <filename>src/tree1.png</filename>
             <filename>src/berry0.png</filename>
+            <filename>src/berry1.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
