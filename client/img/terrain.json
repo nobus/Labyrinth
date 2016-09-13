@@ -1,6 +1,6 @@
 {"frames": {
 
-"dungeon_entrance0.png":
+"berry0.png":
 {
 	"frame": {"x":1,"y":1,"w":32,"h":32},
 	"rotated": false,
@@ -8,7 +8,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"dungeon_exit0.png":
+"dungeon_entrance0.png":
 {
 	"frame": {"x":34,"y":1,"w":32,"h":32},
 	"rotated": false,
@@ -16,7 +16,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"dungeon_exit1.png":
+"dungeon_exit0.png":
 {
 	"frame": {"x":67,"y":1,"w":32,"h":32},
 	"rotated": false,
@@ -24,39 +24,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"flower0.png":
-{
-	"frame": {"x":100,"y":1,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-"grass0.png":
-{
-	"frame": {"x":133,"y":1,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-"ground0.png":
-{
-	"frame": {"x":166,"y":1,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-"lava0.png":
-{
-	"frame": {"x":199,"y":1,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-"rock0.png":
+"dungeon_exit1.png":
 {
 	"frame": {"x":1,"y":34,"w":32,"h":32},
 	"rotated": false,
@@ -64,7 +32,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"stump0.png":
+"flower0.png":
 {
 	"frame": {"x":34,"y":34,"w":32,"h":32},
 	"rotated": false,
@@ -72,7 +40,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
-"stump1.png":
+"grass0.png":
 {
 	"frame": {"x":67,"y":34,"w":32,"h":32},
 	"rotated": false,
@@ -80,9 +48,49 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
 },
+"ground0.png":
+{
+	"frame": {"x":1,"y":67,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"lava0.png":
+{
+	"frame": {"x":34,"y":67,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"rock0.png":
+{
+	"frame": {"x":67,"y":67,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"stump0.png":
+{
+	"frame": {"x":1,"y":100,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"stump1.png":
+{
+	"frame": {"x":34,"y":100,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
 "stump2.png":
 {
-	"frame": {"x":100,"y":34,"w":32,"h":32},
+	"frame": {"x":67,"y":100,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -90,7 +98,7 @@
 },
 "swamp0.png":
 {
-	"frame": {"x":133,"y":34,"w":32,"h":32},
+	"frame": {"x":1,"y":133,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -98,7 +106,7 @@
 },
 "tree0.png":
 {
-	"frame": {"x":166,"y":34,"w":32,"h":32},
+	"frame": {"x":34,"y":133,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -106,7 +114,7 @@
 },
 "tree1.png":
 {
-	"frame": {"x":199,"y":34,"w":32,"h":32},
+	"frame": {"x":67,"y":133,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -117,8 +125,8 @@
 	"version": "1.0",
 	"image": "terrain.png",
 	"format": "RGBA8888",
-	"size": {"w":232,"h":67},
+	"size": {"w":100,"h":166},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:3ec64e83a7a00f91911df5c4b906523a:e7704a9a745872d5ae6599028d5de4b9:a52c91d73586a2a634ceb55ad22f4949$"
+	"smartupdate": "$TexturePacker:SmartUpdate:e01cf4dbf75d414f4cbc1a178ddc0f5f:c86cebaf883a7c4b1ebdbd24904481ee:a52c91d73586a2a634ceb55ad22f4949$"
 }
 }

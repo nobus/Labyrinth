@@ -9,10 +9,11 @@ export class ForestLocation extends randomLocation.RandomLocation {
   setUp () {
     this.background = 'grass0';
 
-    this.elements.grass0 = 800;
+    this.elements.grass0 = 785;
     this.elements.tree0 = 170;
     this.elements.stump0 = 15;
     this.elements.stump1 = 15;
+    this.elements.berry0 = 15;
 
     this.minMutationRate = 1;
     this.maxMutationRate = 20;
@@ -23,11 +24,12 @@ export class MeadowLocation extends randomLocation.RandomLocation {
   setUp () {
     this.background = 'grass0';
 
-    this.elements.grass0 = 850;
+    this.elements.grass0 = 750;
     this.elements.flower0 = 100;
     this.elements.tree0 = 40;
     this.elements.stump0 = 5;
     this.elements.stump1 = 5;
+    this.elements.berry0 = 100;
 
     this.minMutationRate = 1;
     this.maxMutationRate = 20;
@@ -64,7 +66,8 @@ export class Swamp extends randomLocation.RandomLocation {
     this.background = 'swamp0';
 
     this.elements.swamp0 = 900;
-    this.elements.flower0 = 25;
+    this.elements.flower0 = 1;
+    this.elements.berry0 = 24;
     this.elements.stump2 = 25;
     this.elements.tree1 = 50;
 
