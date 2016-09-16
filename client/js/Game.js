@@ -185,6 +185,11 @@ class Game {
     this.removeAnotherPlayerSprite(message.removeUserFromLocation);
   }
 
+  /**
+   * Remove player sprite from the gameStage. Use for himself only.
+   *
+   * @param {string} login
+   */
   removeCurrentPlayerSprite (login) {
     const playerSprite = this.playerSprites[login];
 
@@ -195,7 +200,7 @@ class Game {
   }
 
   /**
-   * Remove player sprite from the mapContainer. Don't use for yourself.
+   * Remove player sprite from the mapContainer. Don't use for himself.
    *
    * @param {string} login
    */
@@ -208,6 +213,11 @@ class Game {
     }
   }
 
+  /**
+   * Create player sprite.
+   *
+   * @param {string} login
+   */
   createPlayerSprite (direction='left') {
     return new PIXI.Sprite(
         PIXI.loader.resources['img/player.json'].textures[`player_${direction}.png`]);
