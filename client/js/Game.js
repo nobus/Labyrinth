@@ -135,7 +135,7 @@ class Game {
       const direction = message.changeDirection.direction;
 
       if (login === this.myLogin) {
-        gameStage.removeChild(this.playerSprites[login]);
+        this.removeCurrentPlayerSprite(login);
         const playerSprite = this.createPlayerSprite(direction);
 
         playerSprite.y = SIZE / 2;
@@ -185,17 +185,26 @@ class Game {
     this.removeAnotherPlayerSprite(message.removeUserFromLocation);
   }
 
+  removeCurrentPlayerSprite (login) {
+    const playerSprite = this.playerSprites[login];
+
+    if (playerSprite) {
+      gameStage.removeChild(playerSprite);
+      delete this.playerSprites[login];
+    }
+  }
+
   /**
    * Remove player sprite from the mapContainer. Don't use for yourself.
    *
    * @param {string} login
    */
   removeAnotherPlayerSprite (login) {
-    const playerSprite = playerSprites[login];
+    const playerSprite = this.playerSprites[login];
 
     if (playerSprite) {
       this.mapContainer.removeChild(playerSprite);
-      delete playerSprites[login];
+      delete this.playerSprites[login];
     }
   }
 
