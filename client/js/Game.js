@@ -66,12 +66,7 @@ class Game {
     const x = message.initLocationScene.x;
 
     // add sprite for user
-    this.playerSprites[this.myLogin] = createPlayerSprite(this.myLogin,
-                                                          this.myLogin,
-                                                          y, x,
-                                                          gameStage,
-                                                          this.mapContainer,
-                                                          message.initLocationScene.direction);
+    this.createCurrentPlayer(this.myLogin, x, y, message.initLocationScene.direction);
 
     // move location's map
     this.mapContainer.y -= y * SPRITE_SIZE;
@@ -80,13 +75,9 @@ class Game {
     // add another users to the stage
     message.initLocationScene.anotherUsers.forEach(user => {
       if (user.login !== this.myLogin)
-          this.playerSprites[user.login] = createPlayerSprite(user.login,
-                                                              this.myLogin,
-                                                              user.position.y,
-                                                              user.position.x,
-                                                              gameStage,
-                                                              this.mapContainer,
-                                                              user.position.direction);
+        this.createAnotherPlayer(user.login,
+          user.position.x, user.position.y,
+          user.position.direction)
     });
   }
 
@@ -106,7 +97,8 @@ class Game {
     const x = message.changePosition.x;
 
     if (this.playerSprites[login] === undefined || message.allMap) {
-      this.playerSprites[login] = createPlayerSprite(login, this.myLogin, y, x, gameStage, this.mapContainer);
+      if (login === this.myLogin) this.createCurrentPlayer(login, x, y);
+      else this.createAnotherPlayer(login, x, y);
     }
 
     if (login === this.myLogin) {
@@ -143,6 +135,7 @@ class Game {
 
       if (login === this.myLogin) {
         this.removeCurrentPlayerSprite(login);
+
         const playerSprite = this.createPlayerSprite(direction);
 
         playerSprite.y = SIZE / 2;
@@ -152,13 +145,7 @@ class Game {
         this.playerSprites[login] = playerSprite;
       } else {
         this.removeAnotherPlayerSprite(login);
-        const playerSprite = this.createPlayerSprite(direction);
-
-        playerSprite.y = y * SPRITE_SIZE;
-        playerSprite.x = x * SPRITE_SIZE;
-
-        this.playerSprites[login] = playerSprite;
-        this.mapContainer.addChild(playerSprite);
+        this.createAnotherPlayer(login, x, y, direction);
       }
     }
   }
@@ -228,5 +215,27 @@ class Game {
   createPlayerSprite (direction='left') {
     return new PIXI.Sprite(
         PIXI.loader.resources['img/player.json'].textures[`player_${direction}.png`]);
+  }
+
+  createCurrentPlayer (login, x, y, direction) {
+    const playerSprite = this.createPlayerSprite(direction);
+
+    playerSprite.y = SIZE / 2;
+    playerSprite.x = SIZE / 2;
+
+    gameStage.addChild(playerSprite);
+    setMapAroundPlayer(this.mapContainer, y, x);
+
+    this.playerSprites[login] = playerSprite;
+  }
+
+  createAnotherPlayer (login, x, y, direction) {
+    const playerSprite = this.createPlayerSprite(direction);
+
+    playerSprite.y = y * SPRITE_SIZE;
+    playerSprite.x = x * SPRITE_SIZE;
+
+    this.mapContainer.addChild(playerSprite);
+    this.playerSprites[login] = playerSprite;
   }
 }
