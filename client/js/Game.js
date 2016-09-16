@@ -205,7 +205,7 @@ class Game {
   /**
    * Create player sprite.
    *
-   * @param {string} login
+   * @param {string} direction
    */
   createPlayerSprite (direction='left') {
     return new PIXI.Sprite(
