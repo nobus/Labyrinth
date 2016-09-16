@@ -66,7 +66,8 @@ class Game {
     const x = message.initLocationScene.x;
 
     // add sprite for user
-    this.createCurrentPlayer(this.myLogin, x, y, message.initLocationScene.direction);
+    this.createCurrentPlayer(message.initLocationScene.direction);
+    setMapAroundPlayer(this.mapContainer, y, x);
 
     // move location's map
     this.mapContainer.y -= y * SPRITE_SIZE;
@@ -97,8 +98,12 @@ class Game {
     const x = message.changePosition.x;
 
     if (this.playerSprites[login] === undefined || message.allMap) {
-      if (login === this.myLogin) this.createCurrentPlayer(login, x, y);
-      else this.createAnotherPlayer(login, x, y);
+      if (login === this.myLogin) {
+        this.createCurrentPlayer();
+        setMapAroundPlayer(this.mapContainer, y, x);
+      } else {
+        this.createAnotherPlayer(login, x, y);
+      }
     }
 
     if (login === this.myLogin) {
@@ -164,10 +169,7 @@ class Game {
     const x = message.addUserToLocation.position.x;
 
     if (login !== this.myLogin)
-      this.playerSprites[login] = createPlayerSprite(login,
-                                                     this.myLogin, y, x,
-                                                     gameStage, this.mapContainer,
-                                                     message.addUserToLocation.position.direction);
+      this.createAnotherPlayer(login, x, y, message.addUserToLocation.position.direction);
   }
 
   /**
@@ -217,16 +219,14 @@ class Game {
         PIXI.loader.resources['img/player.json'].textures[`player_${direction}.png`]);
   }
 
-  createCurrentPlayer (login, x, y, direction) {
+  createCurrentPlayer (direction) {
     const playerSprite = this.createPlayerSprite(direction);
 
     playerSprite.y = SIZE / 2;
     playerSprite.x = SIZE / 2;
 
     gameStage.addChild(playerSprite);
-    setMapAroundPlayer(this.mapContainer, y, x);
-
-    this.playerSprites[login] = playerSprite;
+    this.playerSprites[this.myLogin] = playerSprite;
   }
 
   createAnotherPlayer (login, x, y, direction) {
