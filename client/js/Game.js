@@ -110,7 +110,14 @@ class Game {
     }
 
     if (login === this.myLogin) {
-      changePosition(this.mapContainer, message.changePosition.direction, y, x);
+      if (message.changePosition.direction === undefined) {
+        // it is first message after connect
+        this.mapContainer.y -= y * SPRITE_SIZE;
+        this.mapContainer.x -= x * SPRITE_SIZE;
+      } else {
+        moveMapAroundPlayer(this.mapContainer, message.changePosition.direction);
+      }
+
     } else {
       this.playerSprites[login].y = y * SPRITE_SIZE;
       this.playerSprites[login].x = x * SPRITE_SIZE;

@@ -22,22 +22,3 @@ function createPlayerSprite(login, myLogin, y, x, stage, mapContainer, direction
 
   return playerSprite;
 }
-
-function removePlayerSprite(login, mapContainer) {
-  const playerSprite = playerSprites[login];
-
-  if (playerSprite) {
-    mapContainer.removeChild(playerSprite);
-    delete playerSprites[login];
-  }
-}
-
-function changePosition(mapContainer, direction, y, x) {
-  if (direction === undefined) {
-    // it is first message after connect
-    mapContainer.y -= y * SPRITE_SIZE;
-    mapContainer.x -= x * SPRITE_SIZE;
-  } else {
-    moveMapAroundPlayer(mapContainer, direction);
-  }
-}
