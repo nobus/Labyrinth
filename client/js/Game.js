@@ -140,14 +140,7 @@ class Game {
 
       if (login === this.myLogin) {
         this.removeCurrentPlayerSprite(login);
-
-        const playerSprite = this.createPlayerSprite(direction);
-
-        playerSprite.y = SIZE / 2;
-        playerSprite.x = SIZE / 2;
-
-        gameStage.addChild(playerSprite);
-        this.playerSprites[login] = playerSprite;
+        this.createCurrentPlayer(direction);
       } else {
         this.removeAnotherPlayerSprite(login);
         this.createAnotherPlayer(login, x, y, direction);
