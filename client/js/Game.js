@@ -212,6 +212,11 @@ class Game {
         PIXI.loader.resources['img/player.json'].textures[`player_${direction}.png`]);
   }
 
+  /**
+   * Create player sprite for current user.
+   *
+   * @param {string} direction
+   */
   createCurrentPlayer (direction) {
     const playerSprite = this.createPlayerSprite(direction);
 
@@ -222,6 +227,14 @@ class Game {
     this.playerSprites[this.myLogin] = playerSprite;
   }
 
+  /**
+   * Create player sprite for another user.
+   *
+   * @param {string} login
+   * @param {number} x
+   * @param {number} y
+   * @param {string} direction
+   */
   createAnotherPlayer (login, x, y, direction) {
     const playerSprite = this.createPlayerSprite(direction);
 
