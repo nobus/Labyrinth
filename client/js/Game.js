@@ -117,14 +117,41 @@ class Game {
     }
   }
 
+  /**
+   * change direction
+   *
+   * @param {object} message this is an object with some fields:
+   *        changeDirection.login
+   *        changeDirection.x
+   *        changeDirection.y
+   *        changeDirection.direction
+   */
   changeDirection (message) {
     const login = message.changeDirection.login;
 
     if (this.playerSprites[login]) {
+      const x = message.changeDirection.x;
+      const y = message.changeDirection.y;
+      const direction = message.changeDirection.direction;
+
       if (login === this.myLogin) {
         gameStage.removeChild(this.playerSprites[login]);
+        const playerSprite = this.createPlayerSprite(direction);
+
+        playerSprite.y = SIZE / 2;
+        playerSprite.x = SIZE / 2;
+
+        gameStage.addChild(playerSprite);
+        this.playerSprites[login] = playerSprite;
       } else {
-        this.mapContainer.removeChild(this.playerSprites[login]);
+        this.removeAnotherPlayerSprite(login);
+        const playerSprite = this.createPlayerSprite(direction);
+
+        playerSprite.y = y * SPRITE_SIZE;
+        playerSprite.x = x * SPRITE_SIZE;
+
+        this.playerSprites[login] = playerSprite;
+        this.mapContainer.addChild(playerSprite);
       }
     }
   }
@@ -155,7 +182,25 @@ class Game {
    *                 removeUserToLocation.login
    */
   removeUserFromLocation (message) {
-    removePlayerSprite(message.removeUserFromLocation, this.mapContainer);
+    this.removeAnotherPlayerSprite(message.removeUserFromLocation);
   }
 
+  /**
+   * Remove player sprite from the mapContainer. Don't use for yourself.
+   *
+   * @param {string} login
+   */
+  removeAnotherPlayerSprite (login) {
+    const playerSprite = playerSprites[login];
+
+    if (playerSprite) {
+      this.mapContainer.removeChild(playerSprite);
+      delete playerSprites[login];
+    }
+  }
+
+  createPlayerSprite (direction='left') {
+    return new PIXI.Sprite(
+        PIXI.loader.resources['img/player.json'].textures[`player_${direction}.png`]);
+  }
 }
