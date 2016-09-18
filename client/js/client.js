@@ -14,6 +14,8 @@ $(document).ready(function() {
         'img/worldmap.json'
         ])
   .load(function () {
+    var chatDisabled = true;
+
     const myLogin = getURLParameter('login');
     const game = new Game(myLogin);
 
@@ -28,21 +30,42 @@ $(document).ready(function() {
 
       socket.send(JSON.stringify({'login': myLogin, 'command': 'worldMap'}));
 
+      $('.chat-input').focusin(function () {
+        chatDisabled = false;
+      });
+
+      $('.chat-input').focusout(function () {
+        chatDisabled = true;
+      });
+
+      $('.chat-button').click(function () {
+        $('.chat-input').val("");
+      });
+
       $(document).keypress(function (event) {
         if (socket) {
-          let direction;
-          if (event.charCode === 119 || event.charCode === 1094) {          // w
-            direction = 'up';
-          } else if (event.charCode === 115 || event.charCode === 1099) {   // s
-            direction = 'down';
-          } else if (event.charCode === 97 || event.charCode === 1092) {    // a
-            direction = 'left';
-          } else if (event.charCode === 100 || event.charCode === 1074) {   // d
-            direction = 'right';
-          }
+          if (event.charCode === 13 && !chatDisabled) {
+            // enter
+            $('.chat-input').val("");
+          } else if (chatDisabled) {
+            let direction;
+            if (event.charCode === 119 || event.charCode === 1094) {
+              // w
+              direction = 'up';
+            } else if (event.charCode === 115 || event.charCode === 1099) {
+              // s
+              direction = 'down';
+            } else if (event.charCode === 97 || event.charCode === 1092) {
+              // a
+              direction = 'left';
+            } else if (event.charCode === 100 || event.charCode === 1074) {
+              // d
+              direction = 'right';
+            }
 
-          if (direction) {
-            socket.send(JSON.stringify({'login': myLogin, 'direction': direction}));
+            if (direction) {
+              socket.send(JSON.stringify({'login': myLogin, 'direction': direction}));
+            }
           }
         }
 
