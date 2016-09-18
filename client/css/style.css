@@ -7,6 +7,26 @@
   border: 4px outset;
 }
 
+.chat {
+  position: absolute;
+  top: 650px;
+}
+
+.chat-button {
+  position: absolute;
+  top: 650px;
+  left: 650px;
+}
+
+.chat-input {
+  width: 640px;
+  height: 46px;
+  font-size: 18pt;
+  border-width: 2px;
+  color: #ffffff;
+  background-color: #000000;
+}
+
 .world-map {
   position: absolute;
   left: 650px;
@@ -22,6 +42,8 @@
 }
 
 .ibutton {
+  border-width: 1px;
+  font-size: 14pt;
   width: 100px;
   height: 50px;
 }
