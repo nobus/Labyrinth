@@ -44,7 +44,7 @@ $(document).ready(function() {
 
       $(document).keydown(function (event) {
         if (socket) {
-          if (event.charCode === 13 && !chatDisabled) {
+          if (event.keyCode === 13 && !chatDisabled) {
             // enter
             $('.chat-input').val("");
           } else if (chatDisabled) {
