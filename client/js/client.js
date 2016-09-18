@@ -42,23 +42,23 @@ $(document).ready(function() {
         $('.chat-input').val("");
       });
 
-      $(document).keypress(function (event) {
+      $(document).keydown(function (event) {
         if (socket) {
           if (event.charCode === 13 && !chatDisabled) {
             // enter
             $('.chat-input').val("");
           } else if (chatDisabled) {
             let direction;
-            if (event.charCode === 119 || event.charCode === 1094) {
+            if (event.keyCode === 38 || event.keyCode === 87) {
               // w
               direction = 'up';
-            } else if (event.charCode === 115 || event.charCode === 1099) {
+            } else if (event.keyCode === 40 || event.keyCode === 83) {
               // s
               direction = 'down';
-            } else if (event.charCode === 97 || event.charCode === 1092) {
+            } else if (event.keyCode === 37 || event.keyCode === 65) {
               // a
               direction = 'left';
-            } else if (event.charCode === 100 || event.charCode === 1074) {
+            } else if (event.keyCode === 39 || event.keyCode === 68) {
               // d
               direction = 'right';
             }
