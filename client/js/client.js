@@ -25,6 +25,13 @@ $(document).ready(function() {
     const socket = new WebSocket('ws://' + host + ':' + port + '/');
 
     socket.onopen = function () {
+      const messageHelper = function () {
+        const message = $('.chat-input').val();
+        $('.chat-input').val("");
+
+        messageContainer.printMyMessage(message);
+      }
+
       socket.send(JSON.stringify({'login': myLogin}));
 
       console.log('Connection done.');
@@ -39,17 +46,13 @@ $(document).ready(function() {
         chatDisabled = true;
       });
 
-      $('.chat-button').click(function () {
-        messageContainer.printMyMessage($('.chat-input').val());
-        $('.chat-input').val("");
-      });
+      $('.chat-button').click(messageHelper);
 
       $(document).keydown(function (event) {
         if (socket) {
           if (event.keyCode === 13 && !chatDisabled) {
             // enter
-            messageContainer.printMyMessage($('.chat-input').val());
-            $('.chat-input').val("");
+            messageHelper();
           } else if (chatDisabled) {
             let direction;
             if (event.keyCode === 38 || event.keyCode === 87) {
