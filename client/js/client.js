@@ -27,6 +27,7 @@ $(document).ready(function() {
       const messageHelper = function () {
         const message = $('.chat-input').val();
         $('.chat-input').val("");
+        $('.chat-input').blur();
 
         socket.send(JSON.stringify({'login': myLogin, 'message': message}));
       }
@@ -49,7 +50,10 @@ $(document).ready(function() {
 
       $(document).keydown(function (event) {
         if (socket) {
-          if (event.keyCode === 13 && !chatDisabled) {
+          if (event.keyCode === 84 && chatDisabled) {
+            // bug: t will add to the chat
+            $('.chat-input').focus();
+          } else if (event.keyCode === 13 && !chatDisabled) {
             // enter
             messageHelper();
           } else if (chatDisabled) {
