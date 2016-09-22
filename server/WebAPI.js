@@ -115,4 +115,9 @@ export class WebAPI {
     const resp = {'worldMap': worldMap, 'locationId': locationId};
     client.send(JSON.stringify(resp));
   }
+
+  sendMessageBroadcast(clientList, login, message) {
+    const resp = {login: login, message: message};
+    this.wss.broadcast(JSON.stringify(resp), clientList);
+  }
 }

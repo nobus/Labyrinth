@@ -349,6 +349,16 @@ export class Game{
       }
     } else if (message.message) {
       log.warn(message);
+      const login = message.login;
+
+      if (login) {
+        const clientList = this.getClientsForLocation(this.userPositionCache[login].location);
+        this.webAPI.sendMessageBroadcast(
+          clientList,
+          login,
+          message
+        );
+      }
     } else {
       // we have a new user connection
       this.clients[login] = {
