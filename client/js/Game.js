@@ -244,4 +244,15 @@ class Game {
     this.mapContainer.addChild(playerSprite);
     this.playerSprites[login] = playerSprite;
   }
+
+  printMyMessage (message) {
+    const messageObj = new PIXI.Text(
+        message,
+        { font: '15px Snippet', fill: 'white', align: 'left' }
+      );
+    messageObj.position.y = SIZE / 2 - SPRITE_SIZE;
+    messageObj.position.x = SIZE / 2;
+
+    gameStage.addChild(messageObj);
+  }
 }

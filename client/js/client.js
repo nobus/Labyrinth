@@ -18,6 +18,7 @@ $(document).ready(function() {
 
     const myLogin = getURLParameter('login');
     const game = new Game(myLogin);
+    const messageContainer = new MessageContainer(7000, myLogin);
 
     const port = getURLParameter('port');
     const host = window.document.location.host.replace(/:.*/, '');
@@ -39,6 +40,7 @@ $(document).ready(function() {
       });
 
       $('.chat-button').click(function () {
+        messageContainer.printMyMessage($('.chat-input').val());
         $('.chat-input').val("");
       });
 
@@ -46,6 +48,7 @@ $(document).ready(function() {
         if (socket) {
           if (event.keyCode === 13 && !chatDisabled) {
             // enter
+            messageContainer.printMyMessage($('.chat-input').val());
             $('.chat-input').val("");
           } else if (chatDisabled) {
             let direction;
