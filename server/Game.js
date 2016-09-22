@@ -347,6 +347,8 @@ export class Game{
       if (message.command === 'worldMap') {
         this.webAPI.sendWorldMap(client, this.worldMapCache, this.userPositionCache[login]['location']);
       }
+    } else if (message.message) {
+      log.warn(message);
     } else {
       // we have a new user connection
       this.clients[login] = {

@@ -30,6 +30,7 @@ $(document).ready(function() {
         $('.chat-input').val("");
 
         messageContainer.printMyMessage(message);
+        socket.send(JSON.stringify({'login': myLogin, 'message': message}));
       }
 
       socket.send(JSON.stringify({'login': myLogin}));
