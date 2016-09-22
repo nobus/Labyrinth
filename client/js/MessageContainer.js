@@ -6,33 +6,11 @@ class MessageContainer {
    * @param {string} myLogin login of the current player
    * @param {object} mapContainer PIXI container
    */
-  constructor (ttl, myLogin, mapContainer) {
+  constructor (ttl, myLogin) {
     this.ttl = ttl;
     this.myLogin = myLogin;
-    this.mapContainer = mapContainer;
 
     this.messages = new Map();
-
-    this.garbageCollector();
-  }
-
-  /**
-   * This method remove old messages
-   * from the game stage.
-   */
-  garbageCollector () {
-    setInterval ( () => {
-        for (let elem of this.messages) {
-          const messageObj = elem[1];
-
-          if (messageObj && messageObj.gameTTL && messageObj.gameTTL < Date.now()) {
-            const login = elem[0];
-
-            if (login === this.myLogin) this.deleteMyMessage();
-            else this.deleteAnotherMessage(login);
-          }
-        }
-    }, 1000);
   }
 
   /**
@@ -72,15 +50,15 @@ class MessageContainer {
    * @param {number} x
    * @param {number} y
    */
-  printAnotherMessage (message, login, x, y) {
+  printAnotherMessage (message, login, mapContainer, x, y) {
     const messageObj = this.getMessageObj(message);
     messageObj.position.y = y - SPRITE_SIZE;
     messageObj.position.x = x;
     messageObj.gameTTL = Date.now() + this.ttl;
 
-    if (this.messages.has(login)) this.deleteAnotherMessage(login);
+    if (this.messages.has(login)) this.deleteAnotherMessage(login, mapContainer);
 
-    this.mapContainer.addChild(messageObj);
+    mapContainer.addChild(messageObj);
     this.messages.set(login, messageObj);
   }
 
@@ -88,8 +66,7 @@ class MessageContainer {
    * Delete mesage of current user from the gameStage
    */
   deleteMyMessage () {
-    const messageObj = this.messages.get(this.myLogin);
-    gameStage.removeChild(messageObj);
+    gameStage.removeChild(this.messages.get(this.myLogin));
     this.messages.delete(this.myLogin);
   }
 
@@ -98,9 +75,8 @@ class MessageContainer {
    *
    * @param {string} login
    */
-  deleteAnotherMessage (login) {
-    const messageObj = this.messages.get(login);
-    gameStage.removeChild(messageObj);
-    this.messages.delete(this.myLogin);
+  deleteAnotherMessage (login, mapContainer) {
+    mapContainer.removeChild(this.messages.get(login));
+    this.messages.delete(login);
   }
 }

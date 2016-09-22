@@ -18,7 +18,6 @@ $(document).ready(function() {
 
     const myLogin = getURLParameter('login');
     const game = new Game(myLogin);
-    const messageContainer = new MessageContainer(7000, myLogin);
 
     const port = getURLParameter('port');
     const host = window.document.location.host.replace(/:.*/, '');
@@ -29,7 +28,6 @@ $(document).ready(function() {
         const message = $('.chat-input').val();
         $('.chat-input').val("");
 
-        messageContainer.printMyMessage(message);
         socket.send(JSON.stringify({'login': myLogin, 'message': message}));
       }
 
@@ -92,6 +90,7 @@ $(document).ready(function() {
       if (message.addUserToLocation) game.addUserToLocation(message);
       if (message.removeUserFromLocation) game.removeUserFromLocation(message);
       if (message.worldMap) game.initWorldMap(message);
+      if (message.message) game.printMessage(message);
     };
 
     socket.onerror = function (error) {

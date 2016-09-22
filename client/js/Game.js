@@ -10,12 +10,35 @@ class Game {
 
     this.initGameStage();
 
+    this.messageContainer = new MessageContainer(7000, this.myLogin, this.mapContainer);
+
     animate();
+
+    this.garbageCollector(this.mapContainer);
 
     function animate () {
       requestAnimationFrame(animate);
       gameRenderer.render(gameStage);
     }
+  }
+
+  /**
+   * This method remove old messages
+   * from the game stage or mapContainer.
+   */
+  garbageCollector () {
+    setInterval ( () => {
+        for (let elem of this.messageContainer.messages) {
+          const messageObj = elem[1];
+
+          if (messageObj && messageObj.gameTTL && messageObj.gameTTL < Date.now()) {
+            const login = elem[0];
+
+            if (login === this.myLogin) this.messageContainer.deleteMyMessage();
+            else this.messageContainer.deleteAnotherMessage(login, this.mapContainer);
+          }
+        }
+    }, 1000);
   }
 
   initGameStage () {
@@ -243,5 +266,24 @@ class Game {
 
     this.mapContainer.addChild(playerSprite);
     this.playerSprites[login] = playerSprite;
+  }
+
+  /**
+   * Print message from player.
+   *
+   * @param {string} message
+   */
+  printMessage (message) {
+    // strange protocol =(((
+    const login = message.message.login;
+    const messageText = message.message.message;
+
+    if (login === this.myLogin) {
+      this.messageContainer.printMyMessage(messageText);
+    } else {
+      const x = this.playerSprites[login].x;
+      const y = this.playerSprites[login].y;
+      this.messageContainer.printAnotherMessage(messageText, login, this.mapContainer, x, y);
+    }
   }
 }
