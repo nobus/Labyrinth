@@ -2,14 +2,11 @@
 
 class MessageContainer {
   /**
-   * @param {number} ttl time-to-live
    * @param {string} myLogin login of the current player
    * @param {object} mapContainer PIXI container
    */
-  constructor (ttl, myLogin) {
-    this.ttl = ttl;
+  constructor (myLogin) {
     this.myLogin = myLogin;
-
     this.messages = new Map();
   }
 
@@ -26,6 +23,16 @@ class MessageContainer {
   }
 
   /**
+   * Calculate TTL for message
+   *
+   * @param {string} message
+   */
+  getTTL (message) {
+    // each word in the message adds 2 sec for TTL
+    return message.split(' ').length * 2000;
+  }
+
+  /**
    * Print mesage of current user to the gameStage
    *
    * @param {string} message
@@ -34,7 +41,7 @@ class MessageContainer {
     const messageObj = this.getMessageObj(message);
     messageObj.position.y = SIZE / 2 - SPRITE_SIZE;
     messageObj.position.x = SIZE / 2;
-    messageObj.gameTTL = Date.now() + this.ttl;
+    messageObj.gameTTL = Date.now() + this.getTTL(message);
 
     if (this.messages.has(this.myLogin)) this.deleteMyMessage();
 
@@ -54,7 +61,7 @@ class MessageContainer {
     const messageObj = this.getMessageObj(message);
     messageObj.position.y = y - SPRITE_SIZE;
     messageObj.position.x = x;
-    messageObj.gameTTL = Date.now() + this.ttl;
+    messageObj.gameTTL = Date.now() + this.getTTL(message);
 
     if (this.messages.has(login)) this.deleteAnotherMessage(login, mapContainer);
 

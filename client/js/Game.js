@@ -10,7 +10,7 @@ class Game {
 
     this.initGameStage();
 
-    this.messageContainer = new MessageContainer(7000, this.myLogin, this.mapContainer);
+    this.messageContainer = new MessageContainer(this.myLogin);
 
     animate();
 
