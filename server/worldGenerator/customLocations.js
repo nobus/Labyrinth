@@ -2,10 +2,11 @@
 
 const common = require('./../common');
 const location = require('./Location');
-const randomLocation = require('./RandomLocation');
+const randomSurfaceLocation = require('./randomSurfaceLocation');
+const randomDungeonLocation = require('./randomDungeonLocation');
 
 
-export class ForestLocation extends randomLocation.RandomLocation {
+export class ForestLocation extends randomSurfaceLocation.RandomSurfaceLocation {
   setUp () {
     this.background = 'grass0';
 
@@ -22,7 +23,7 @@ export class ForestLocation extends randomLocation.RandomLocation {
   }
 }
 
-export class MeadowLocation extends randomLocation.RandomLocation {
+export class MeadowLocation extends randomSurfaceLocation.RandomSurfaceLocation {
   setUp () {
     this.background = 'grass0';
 
@@ -38,7 +39,7 @@ export class MeadowLocation extends randomLocation.RandomLocation {
   }
 }
 
-export class Cave extends randomLocation.RandomLocation {
+export class Cave extends randomDungeonLocation.RandomDungeonLocation {
   setUp () {
     this.background = 'ground0';
 
@@ -50,7 +51,7 @@ export class Cave extends randomLocation.RandomLocation {
   }
 }
 
-export class FireCave extends randomLocation.RandomLocation {
+export class FireCave extends randomDungeonLocation.RandomDungeonLocation {
   setUp () {
     this.background = 'ground0';
 
@@ -63,7 +64,7 @@ export class FireCave extends randomLocation.RandomLocation {
   }
 }
 
-export class Swamp extends randomLocation.RandomLocation {
+export class Swamp extends randomSurfaceLocation.RandomSurfaceLocation {
   setUp () {
     this.background = 'swamp0';
 

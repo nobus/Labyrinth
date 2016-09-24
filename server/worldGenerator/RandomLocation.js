@@ -40,6 +40,8 @@ export class RandomLocation extends location.Location {
     }
   }
 
+  generateDungeonEntrances (level) {}
+
   generate (level) {
     const r = this.calculateRanges();
     const ranges = r[0];
@@ -51,7 +53,7 @@ export class RandomLocation extends location.Location {
       }
     }
 
-    this.createDungeonEntrance(-1);
+    this.generateDungeonEntrances(level);
     this.writeNewLocationMap();
   }
 
