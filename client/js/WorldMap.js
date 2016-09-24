@@ -53,7 +53,7 @@ class WorldMap {
    }
 
   createMap () {
-    this.gamerSprite;
+    this.gamerSprite = this.getSprite('gamer');
 
     const locations = Object.keys(this.worldMap).filter( (e) => {
       if (e.indexOf('location_') === 0) return e;
@@ -80,7 +80,6 @@ class WorldMap {
       }
 
       if (k === this.locationId) {
-        this.gamerSprite = this.getSprite('gamer');
         this.gamerSprite.x = coord.x * SPRITE_SIZE;
         this.gamerSprite.y = coord.y * SPRITE_SIZE;
 

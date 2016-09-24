@@ -206,15 +206,16 @@ export class Game{
               'direction': direction
             };
           } else  if (this.idMapper.isEntrance(locationElem) || this.idMapper.isExit(locationElem)) {
+            let neighbor;
+
             if (this.idMapper.isEntrance(locationElem)) {
               // entrance to the dungeon's level
-              direction = 'under';
+              neighbor = this.getNeighborLocation(curPosition.location, 'under');
             } else if (this.idMapper.isExit(locationElem)) {
               // exit from dungeon's level
-              direction = 'over';
+              neighbor = this.getNeighborLocation(curPosition.location, 'over');
             }
 
-            const neighbor = this.getNeighborLocation(curPosition.location, direction);
             if (neighbor) {
               return {
                 'location': neighbor,
