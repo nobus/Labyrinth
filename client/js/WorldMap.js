@@ -89,9 +89,15 @@ class WorldMap {
   }
 
   moveGamer (locationId) {
+    // hack for pixi.js which has too many strange things =(
+    this.stage.removeChild(this.gamerSprite);
+
     const coord = this.getLocationCoord(locationId);
 
     if (coord) {
+      this.gamerSprite = this.getSprite('gamer');
+      this.stage.addChild(this.gamerSprite);
+
       this.gamerSprite.x = coord.x * SPRITE_SIZE;
       this.gamerSprite.y = coord.y * SPRITE_SIZE;
     }
