@@ -43,6 +43,7 @@
   },
   "scripts": {
     "test": "node_modules/mocha/bin/mocha test",
+    "lint": "./node_modules/.bin/eslint src test coral config.js",
     "create-world": "node build/server/worldGenerator/generator.js --config ../../../config.js",
     "start": "NODE_ENV=production node build/server/server.js --config ../../config.js",
     "client": "node_modules/.bin/webpack-dev-server --host 0.0.0.0 --port 8000 --content-base src/client/"
